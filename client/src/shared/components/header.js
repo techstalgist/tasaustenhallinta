@@ -1,0 +1,64 @@
+import React from 'react';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+
+class Header extends React.Component {
+
+  render() {
+    const {loggedIn} = this.props;
+    const links = !loggedIn ? [
+      {
+        title: "Kirjautuminen",
+        url: "/login"
+      },
+    ] : [
+      {
+        title: "Kirjaudu ulos",
+        url: "/login"
+      },
+      {
+        title: "Tasaukset",
+        url: "/auth/adjustments"
+      }
+    ];
+    const updatedLinks = links.map((link) => {
+      link.className = "nav-item nav-link";
+      link.className = link.url === this.props.currentRoute ? link.className + " active" : link.className;
+      return link;
+    });
+    return(
+        <header>
+          <div className="container">
+            <div className="row">
+              <div className="col">
+                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                  <Link to="/login" className="navbar-brand">Tasaustenhallinta</Link>
+                  <div className="navbar-nav">
+                    {updatedLinks.map( link =>
+                       (
+                           <Link key={link.url} className={link.className} to={link.url}>{link.title}</Link>
+                       )
+                     )}
+                  </div>
+                </nav>
+              </div>
+            </div>
+          </div>
+       </header>
+    )
+  }
+}
+
+
+const mapStateToProps = (state) => (
+  {
+    loggedIn: state.loginData.logInInfo.loggedIn
+  }
+);
+
+Header = connect(
+  mapStateToProps,
+  null
+)(Header)
+
+export default Header;
