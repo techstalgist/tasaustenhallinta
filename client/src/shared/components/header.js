@@ -19,6 +19,14 @@ class Header extends React.Component {
       {
         title: "Tasaukset",
         url: "/auth/adjustments"
+      },
+      {
+        title: "Laskut",
+        url: "/auth/bills"
+      },
+      {
+        title: "Kategoriat",
+        url: "/auth/categories"
       }
     ];
     const updatedLinks = links.map((link) => {
