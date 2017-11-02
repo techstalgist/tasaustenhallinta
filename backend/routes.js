@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const bcryptSalt = 10;
 
 const Adjustment = require('./adjustment');
+const Bill = require('./bill');
 const UserDao = require('./user-dao');
 const router = express.Router();
 
@@ -87,5 +88,6 @@ router.post('/login', (req, res, next) => {
 router.get('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.getAdjustments);
 router.post('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.createAdjustments);
 router.put('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.updateAdjustments);
+router.get('/bills/:year/:month', passport.authenticate('jwt', { session: false }), Bill.getBills);
 
 module.exports = router;

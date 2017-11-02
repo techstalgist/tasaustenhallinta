@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchAdjustments, dataNotReceived, addAdjustment, changeAmount, createAdjustments, updateAdjustments, changeDate} from '../actions';
+import {fetchAdjustments, addAdjustment, changeAmount, createAdjustments, updateAdjustments, changeDate} from '../actions';
 import { toFinnishDateString, toISOCompatibleString, isValidFinnishDate } from '../../shared/helpers';
 
 class AdjustmentsTable extends React.Component {
@@ -9,10 +9,6 @@ class AdjustmentsTable extends React.Component {
     if (!this.props.dataReceived) {
       this.props.dispatch(fetchAdjustments());
     }
-  }
-
-  componentWillUnmount() {
-    this.props.dispatch(dataNotReceived());
   }
 
   handleAmountChange = (id, e) => {
@@ -54,7 +50,7 @@ class AdjustmentsTable extends React.Component {
             </thead>
             <tbody>
               {adjustments.map((a, i) =>
-                <tr key={i+1} id={i+1} className={a.newadjustment ? "table-success" : null}>
+                <tr key={a.id} id={i+1} className={a.newadjustment ? "table-success" : null}>
                     <th scope="row">
                       {i+1}
                     </th>

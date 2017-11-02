@@ -8,15 +8,15 @@ export function Month(year, month) {
   this.getAsDate = function() {
     return new Date(this.year, this.month-1, 1);
   };
-  this.isCurrent = function() {
-    const curDate = new Date();
-    curDate.setDate(1);
-    return curDate.toDateString() === this.getAsDate().toDateString();
-  };
 }
 
-export function getCurrentMonth(months) {
-  return months.filter((m) => m.isCurrent())[0];
+export function getCurrentMonth() {
+  const curDate = new Date();
+  return new Month(curDate.getFullYear(), curDate.getMonth()+1);
+}
+
+export function getMonth(monthString, months) {
+  return months.filter((m) => m.toString() === monthString)[0];
 }
 
 export function compareMonths(m1, m2) {

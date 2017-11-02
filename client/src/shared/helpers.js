@@ -20,3 +20,7 @@ export function toISOCompatibleString(finDate) {
 export function isValidFinnishDate(date) {
   return moment(date, 'DD.MM.YYYY').isValid();
 }
+
+export function showRounded(number) {
+  return number.toFixed(2).replace(".", ",");
+}

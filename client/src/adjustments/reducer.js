@@ -30,8 +30,6 @@ export function reducer(state = getInitialState(), action) {
         adjustments: adjustmentsDataReducer(action.data, updateDateAndId),
         dataReceived: true
       };
-    case 'DATA_NOT_RECEIVED':
-      return getInitialState();
     case 'NEW_ADJUSTMENT':
       return {
         ...state,

@@ -26,12 +26,6 @@ export function receiveAdjustments(json) {
   };
 }
 
-export function dataNotReceived() {
-  return {
-    type: 'DATA_NOT_RECEIVED'
-  };
-}
-
 export function newAdjustment(user) {
   return {
     type: 'NEW_ADJUSTMENT',
