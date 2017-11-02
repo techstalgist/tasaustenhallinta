@@ -48,6 +48,12 @@ export function reducer(state = getInitialState(), action) {
         adjustments: changeOneAdjustment(state.adjustments, action.id, setDate, action.newDate)
       }
     case 'CREATION_SUCCESS':
+      if (action.data === null) {
+        return {
+          ...state,
+          successMessage: action.message
+        }
+      }
       return {
           ...state,
           successMessage: action.message,

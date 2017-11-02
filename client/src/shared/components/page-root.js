@@ -6,7 +6,7 @@ export default class PageRoot extends React.Component {
     return(
       <section id="content">
         <div className="container">
-          <div className="row">
+          <div className="row mb-3">
             <div className="col">
               <h2>{this.props.heading}</h2>
             </div>

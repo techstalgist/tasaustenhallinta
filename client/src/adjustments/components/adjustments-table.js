@@ -54,7 +54,7 @@ class AdjustmentsTable extends React.Component {
             </thead>
             <tbody>
               {adjustments.map((a, i) =>
-                <tr key={i+1} id={i+1}>
+                <tr key={i+1} id={i+1} className={a.newadjustment ? "table-success" : null}>
                     <th scope="row">
                       {i+1}
                     </th>

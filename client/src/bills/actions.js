@@ -1,1 +1,1 @@
-import fetch from 'isomorphic-fetch';
+  import fetch from 'isomorphic-fetch';
