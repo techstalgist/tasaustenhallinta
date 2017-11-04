@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 class Header extends React.Component {
 
   render() {
-    const {loggedIn} = this.props;
+    const {loggedIn, currentRoute} = this.props;
     const links = !loggedIn ? [
       {
         title: "Kirjautuminen",
@@ -31,7 +31,7 @@ class Header extends React.Component {
     ];
     const updatedLinks = links.map((link) => {
       link.className = "nav-item nav-link";
-      link.className = link.url === this.props.currentRoute ? link.className + " active" : link.className;
+      link.className = link.url === currentRoute ? link.className + " active" : link.className;
       return link;
     });
     return(
