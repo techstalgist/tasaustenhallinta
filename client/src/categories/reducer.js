@@ -1,4 +1,4 @@
-import { v4 } from 'node-uuid';
+//import { v4 } from 'node-uuid';
 
 function getInitialState() {
   return {
@@ -11,6 +11,17 @@ function getInitialState() {
 
 export function reducer(state = getInitialState(), action) {
   switch (action.type) {
+    case 'REQUEST_CATEGORIES':
+      return {
+        ...state,
+        dataReceived: false
+      }
+    case 'RECEIVE_CATEGORIES':
+      return {
+        ...state,
+        dataReceived: true,
+        categories: action.data
+      }
     default:
       return state;
   }

@@ -35,8 +35,8 @@ class AdjustmentsTable extends React.Component {
     const headersData = [
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
-      {cssClass: "col-4 text-right", title: "Summa"},
-      {cssClass: "col-4 text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col text-right", title: "Summa"},
+      {cssClass: "col text-right", title: "Pvm (pp.kk.vvvv)"},
     ];
     const table = (
         <div>
@@ -57,13 +57,13 @@ class AdjustmentsTable extends React.Component {
                     <td className="col-2">
                       {a.username}
                     </td>
-                    <td className="col-4 text-right">
+                    <td className="col text-right">
                       <input type="number" name="amount"
                           defaultValue={a.amount}
                           onBlur={(e) => this.handleAmountChange(a.id, e)}
                           className="text-right"/>
                     </td>
-                    <td className="col-4 text-right">
+                    <td className="col text-right">
                     <input type="text" name="date"
                         defaultValue={toFinnishDateString(a.date)}
                         onBlur={(e) => this.handleDateChange(a.id, e)}

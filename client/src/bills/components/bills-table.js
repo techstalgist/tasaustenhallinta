@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { fetchBills, changeMonth } from '../actions';
+import { fetchBills, changeMonth, addBill } from '../actions';
 import { getBillsForSelectedMonth } from '../selectors';
 import { toFinnishDateString } from '../../shared/helpers';
 import MonthSelection from './month-selection';
@@ -22,11 +22,11 @@ class BillsTable extends React.Component {
   }
 
   render() {
-    const { bills, months, selectedMonth } = this.props;
+    const { addBill, bills, months, selectedMonth, categories } = this.props;
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
     const headersData = [
-      {cssClass: "col-1", title: "#"},
-      {cssClass: "col-2", title: "Käyttäjä"},
+      {cssClass: "col-2", title: "#"},
+      {cssClass: "col-1", title: "Käyttäjä"},
       {cssClass: "col-3 text-right", title: "Summa"},
       {cssClass: "col-3", title: "Kategoria"},
       {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
@@ -42,17 +42,17 @@ class BillsTable extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-9">
+          <div className="col-10">
           <table className="table border">
             <TableHeaders headers={headersData} rowClass="table-row"/>
             <tbody>
             {billsForSelectedMonth.length > 0 ? billsForSelectedMonth.map((b, i) =>
               (
                 <tr key={b.id} id={b.id} className="table-row">
-                    <th className="col-1">
-                      {i+1}
+                    <th className="col-2">
+                      {i+1} {b.newbill ? <span className="badge badge-secondary">Uusi</span> : null}
                     </th>
-                    <td className="col-2">
+                    <td className="col-1">
                       {b.username}
                     </td>
                     <td className="col-3 text-right">
@@ -61,7 +61,11 @@ class BillsTable extends React.Component {
                           className="text-right"/>
                     </td>
                     <td className="col-3">
-                      {b.categoryname}
+                      <select className="form-control" id="categoriesForBill" defaultValue={b.categoryid}>
+                        {categories.map((c) => {
+                          return (<option value={c.id} key={c.id}>{c.name}</option>);
+                        })}
+                      </select>
                     </td>
                     <td className="col-3 text-right">
                       <input type="text" name="date"
@@ -74,7 +78,7 @@ class BillsTable extends React.Component {
           </table>
           </div>
         </div>
-        <button type="button" className="btn btn-primary">Lisää uusi lasku</button>
+        <button onClick={addBill} type="button" className="btn btn-primary">Lisää uusi lasku</button>
         <button type="button" className="btn btn-primary ml-1">Tallenna uudet laskut</button>
         <button type="button" className="btn btn-primary ml-1">Päivitä vanhat laskut</button>
       </div>
@@ -90,7 +94,8 @@ const mapStateToProps = (state) => (
     dataReceived: state.billsData.dataReceived,
     successMessage: state.billsData.successMessage,
     months: state.billsData.months,
-    selectedMonth: state.billsData.selectedMonth
+    selectedMonth: state.billsData.selectedMonth,
+    categories: state.categoriesData.categories
   }
 );
 
@@ -99,6 +104,9 @@ const mapDispatchToProps = (dispatch) => (
     dispatch: dispatch,
     changeMonth: (newMonth) => {
       dispatch(changeMonth(newMonth))
+    },
+    addBill: () => {
+      dispatch(addBill())
     }
   }
 );

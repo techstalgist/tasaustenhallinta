@@ -9,7 +9,7 @@ function calculateAmountsForUsers(bills) {
     };
     for (let i = 0; i < bills.length; i++) {
       let b = bills[i];
-      const amount = parseFloat(b.amount);
+      const amount = parseFloat(b.amount) || 0;
       if(!amountsForUsers.users.hasOwnProperty(b.username)) {
         amountsForUsers.users[b.username] = amount;
       } else {
