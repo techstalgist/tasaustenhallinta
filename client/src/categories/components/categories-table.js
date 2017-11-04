@@ -1,4 +1,5 @@
 import React from 'react';
+import TableHeaders from '../../shared/components/table-headers';
 
 class CategoriesTable extends React.Component {
 
@@ -13,21 +14,20 @@ class CategoriesTable extends React.Component {
   }
 
   render() {
+    const headersData = [
+      {cssClass: "col-1", title: "#"},
+      {cssClass: "col-3", title: "Kategoria"}
+    ];
     const table = (
         <div>
           <table className="table">
-            <thead className="thead-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Kategoria</th>
-              </tr>
-            </thead>
+            <TableHeaders headers={headersData} />
             <tbody>
-                <tr>
-                    <th scope="row">
+                <tr className="row">
+                    <th className="col-1">
                     1
                     </th>
-                    <td>
+                    <td className="col-3">
                     Ruokaostokset
                     </td>
                 </tr>

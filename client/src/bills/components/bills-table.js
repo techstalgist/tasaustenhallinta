@@ -5,6 +5,7 @@ import { getBillsForSelectedMonth } from '../selectors';
 import { toFinnishDateString } from '../../shared/helpers';
 import MonthSelection from './month-selection';
 import AmountsForUsers from './amounts-for-users';
+import TableHeaders from '../../shared/components/table-headers';
 
 class BillsTable extends React.Component {
 
@@ -23,17 +24,13 @@ class BillsTable extends React.Component {
   render() {
     const { bills, months, selectedMonth } = this.props;
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
-    const headers = (
-      <thead className="thead-light">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Käyttäjä</th>
-          <th scope="col">Summa</th>
-          <th scope="col">Kategoria</th>
-          <th scope="col">Pvm (pp.kk.vvvv)</th>
-        </tr>
-      </thead>
-    );
+    const headersData = [
+      {cssClass: "col-1", title: "#"},
+      {cssClass: "col-1", title: "Käyttäjä"},
+      {cssClass: "col-2 text-right", title: "Summa"},
+      {cssClass: "col-1", title: "Kategoria"},
+      {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
+    ];
     return (
       <div>
         <div className="row">
@@ -47,29 +44,29 @@ class BillsTable extends React.Component {
         <div className="row">
           <div className="col-12">
           <table className="table">
-            {headers}
+            <TableHeaders headers={headersData} />
             <tbody>
             {billsForSelectedMonth.length > 0 ? billsForSelectedMonth.map((b, i) =>
               (
-                <tr key={b.id} id={b.id}>
-                    <th scope="row">
+                <tr key={b.id} id={b.id} className="row">
+                    <th className="col-1">
                       {i+1}
                     </th>
-                    <td>
+                    <td className="col-1">
                       {b.username}
                     </td>
-                    <td>
+                    <td className="col-2 text-right">
                       <input type="number" name="amount"
                           defaultValue={b.amount}
                           className="text-right"/>
                     </td>
-                    <td>
+                    <td className="col-1">
                       {b.categoryname}
                     </td>
-                    <td>
-                    <input type="text" name="date"
-                        defaultValue={toFinnishDateString(b.date)}
-                        className="text-right"/>
+                    <td className="col-3 text-right">
+                      <input type="text" name="date"
+                          defaultValue={toFinnishDateString(b.date)}
+                          className="text-right"/>
                     </td>
                 </tr>
               )) : null}

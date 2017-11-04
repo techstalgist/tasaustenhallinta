@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {fetchAdjustments, addAdjustment, changeAmount, createAdjustments, updateAdjustments, changeDate} from '../actions';
 import { toFinnishDateString, toISOCompatibleString, isValidFinnishDate } from '../../shared/helpers';
+import TableHeaders from '../../shared/components/table-headers';
 
 class AdjustmentsTable extends React.Component {
 
@@ -31,6 +32,12 @@ class AdjustmentsTable extends React.Component {
   render() {
 
     const {adjustments, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
+    const headersData = [
+      {cssClass: "col-1", title: "#"},
+      {cssClass: "col-1", title: "Käyttäjä"},
+      {cssClass: "col-2 text-right", title: "Summa"},
+      {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
+    ];
     const table = (
         <div>
           {successMessage
@@ -40,30 +47,23 @@ class AdjustmentsTable extends React.Component {
             : null
            }
           <table className="table">
-            <thead className="thead-light">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Käyttäjä</th>
-                <th scope="col">Summa</th>
-                <th scope="col">Pvm (pp.kk.vvvv)</th>
-              </tr>
-            </thead>
+            <TableHeaders headers={headersData} />
             <tbody>
               {adjustments.map((a, i) =>
-                <tr key={a.id} id={i+1} className={a.newadjustment ? "table-success" : null}>
-                    <th scope="row">
-                      {i+1}
+                <tr key={a.id} id={i+1} className="row">
+                    <th scope="row" className="col-1">
+                      {i+1} {a.newadjustment ? <span className="badge badge-secondary">Uusi</span> : null}
                     </th>
-                    <td>
+                    <td className="col-1">
                       {a.username}
                     </td>
-                    <td>
+                    <td className="col-2 text-right">
                       <input type="number" name="amount"
                           defaultValue={a.amount}
                           onBlur={(e) => this.handleAmountChange(a.id, e)}
                           className="text-right"/>
                     </td>
-                    <td>
+                    <td className="col-3 text-right">
                     <input type="text" name="date"
                         defaultValue={toFinnishDateString(a.date)}
                         onBlur={(e) => this.handleDateChange(a.id, e)}
