@@ -25,6 +25,10 @@ class Header extends React.Component {
         url: "/auth/categories"
       },
       {
+        title: "Analyysi",
+        url: "/auth/analysis"
+      },
+      {
         title: "Kirjaudu ulos",
         url: "/login"
       }

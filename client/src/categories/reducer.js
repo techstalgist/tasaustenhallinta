@@ -5,7 +5,9 @@ function getInitialState() {
     categories: [],
     dataReceived: false,
     successMessage: null,
-    errorMessage: null
+    errorMessage: null,
+    analysisDataReceived: false,
+    analysisData: {}
   };
 }
 
@@ -21,6 +23,12 @@ export function reducer(state = getInitialState(), action) {
         ...state,
         dataReceived: true,
         categories: action.data
+      }
+    case 'RECEIVE_ANALYSIS_DATA':
+      return {
+        ...state,
+        analysisDataReceived: true,
+        analysisData: action.data
       }
     default:
       return state;

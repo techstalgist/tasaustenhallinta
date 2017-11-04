@@ -42,10 +42,10 @@ const AmountsForUsers = (props) => {
                     {k}
                   </td>
                   <td className="text-right">
-                    {showRounded(amountsForUsers.users[k])} €
+                    {showRounded(amountsForUsers.users[k], 2)} €
                   </td>
                   <td className="text-right">
-                    {showRounded(calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total))} €
+                    {showRounded(calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total), 2)} €
                   </td>
                 </tr>
              )
@@ -54,7 +54,7 @@ const AmountsForUsers = (props) => {
               <td className="text-right">
                  <strong>Yhteensä</strong>
               </td>
-              <td className="text-right"><strong> {showRounded(amountsForUsers.total)} € </strong>
+              <td className="text-right"><strong> {showRounded(amountsForUsers.total, 2)} € </strong>
               </td>
               <td></td>
             </tr>

@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import {fetchCategories} from '../categories/actions';
+import {getDefaultCategory} from '../categories/selectors';
 
 export function requestBills() {
   return {
@@ -27,17 +28,19 @@ export function changeMonth(newMonth) {
   };
 }
 
-export function newBill(user) {
+export function newBill(user, category) {
   return {
     type: 'NEW_BILL',
-    user: user
+    user: user,
+    category: category
   };
 }
 
 export function addBill() {
   return function (dispatch, getState) {
     const user = getState().loginData.logInInfo.user;
-    dispatch(newBill(user));
+    const defaultCategory = getDefaultCategory(getState().categoriesData.categories);
+    dispatch(newBill(user, defaultCategory));
   };
 }
 

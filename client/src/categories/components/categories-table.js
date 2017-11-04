@@ -21,7 +21,7 @@ class CategoriesTable extends React.Component {
     const table = (
         <div className="row">
           <div className="col-4">
-            <table className="table border">
+            <table className="table table-sm border">
               <TableHeaders headers={headersData} rowClass="table-row"/>
               <tbody>
               {categories.map((c, i) =>

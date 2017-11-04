@@ -34,7 +34,7 @@ export function reducer(state = getInitialState(), action) {
     case 'NEW_BILL':
       return {
         ...state,
-        bills: newBillReducer(state.bills, state.selectedMonth, action.user)
+        bills: newBillReducer(state.bills, state.selectedMonth, action.user, action.category)
       }
     default:
       return state;
@@ -73,14 +73,17 @@ function handleBillFromBackend(b) {
 }
 
 
-function newBillReducer(currentBills, selectedMonth, user) {
+function newBillReducer(currentBills, selectedMonth, user, category) {
   return {
     ...currentBills,
-    [selectedMonth.toString()]: newBillToMonthReducer(currentBills[selectedMonth.toString()], user)
+    [selectedMonth.toString()]: newBillToMonthReducer(currentBills[selectedMonth.toString()], user, category)
   }
 }
 
-function newBillToMonthReducer(currentBillsForMonth,user) {
+function newBillToMonthReducer(currentBillsForMonth, user, category) {
+  if (currentBillsForMonth === undefined) {
+    currentBillsForMonth = [];
+  }
   return [
     ...currentBillsForMonth,
     {
@@ -88,8 +91,8 @@ function newBillToMonthReducer(currentBillsForMonth,user) {
       userid: user.id,
       username: user.username,
       amount: null,
-      categoryname: null,
-      categoryid: null,
+      categoryname: category.name,
+      categoryid: category.id,
       date: new Date().toISOString().substr(0,10),
       newbill: true
     }

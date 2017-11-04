@@ -21,6 +21,6 @@ export function isValidFinnishDate(date) {
   return moment(date, 'DD.MM.YYYY').isValid();
 }
 
-export function showRounded(number) {
-  return number.toFixed(2).replace(".", ",");
+export function showRounded(number, precision) {
+  return number.toFixed(precision).replace(".", ",");
 }

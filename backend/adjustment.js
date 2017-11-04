@@ -25,7 +25,7 @@ function createAdjustments(req, res, next) {
     res.status(200)
       .json({
         status: 'success',
-        data: null, // first two queries return nothing, 3rd one returns back all adjustments (incl. new ones)
+        data: null,
         message: 'Ei uusia tasauksia.'
       });
     return;

@@ -9,6 +9,7 @@ const Adjustment = require('./adjustment');
 const Bill = require('./bill');
 const Category = require('./category');
 const UserDao = require('./user-dao');
+const Analysis = require('./analysis');
 
 const router = express.Router();
 
@@ -94,5 +95,7 @@ router.put('/adjustments', passport.authenticate('jwt', { session: false }), Adj
 router.get('/bills', passport.authenticate('jwt', { session: false }), Bill.getBills);
 
 router.get('/categories', passport.authenticate('jwt', { session: false }), Category.getCategories);
+
+router.post('/analysis', passport.authenticate('jwt', { session: false }), Analysis.getDataForUser);
 
 module.exports = router;
