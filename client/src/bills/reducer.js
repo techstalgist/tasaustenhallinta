@@ -23,10 +23,7 @@ export function reducer(state = getInitialState(), action) {
     return {
       ...state,
       dataReceived: true,
-      bills: {
-        ...state.bills,
-        [action.monthYear]: billsDataReducer(action.data, handleBillFromBackend)
-      }
+      bills: billsDataReducer(action.data, handleBillFromBackend)
     }
     case 'CHANGE_MONTH':
       const monthInState = getMonth(action.monthString, state.months);
@@ -45,16 +42,26 @@ export function reducer(state = getInitialState(), action) {
 }
 
 function billsDataReducer(newData, updateFunction) {
-  let i;
   let updated = newData;
-  for(i = 0; i < newData.length; i++) {
-    updated = [
-      ...updated.slice(0, i),
-      updateFunction(updated[i]),
-      ...updated.slice(i+1),
-    ]
+  for(let i = 0; i < Object.keys(newData).length; i++) {
+    updated = {
+      ...updated,
+      [Object.keys(newData)[i]]: handleOneMonth(newData[Object.keys(newData)[i]], updateFunction)
+    }
   }
   return updated;
+}
+
+function handleOneMonth(bills, updateFunction) {
+  let updatedBillsForMonth = bills;
+  for(let i = 0; i < bills.length; i++) {
+    updatedBillsForMonth = [
+      ...updatedBillsForMonth.slice(0, i),
+      updateFunction(updatedBillsForMonth[i]),
+      ...updatedBillsForMonth.slice(i+1),
+    ]
+  }
+  return updatedBillsForMonth;
 }
 
 function handleBillFromBackend(b) {

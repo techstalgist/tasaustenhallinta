@@ -84,7 +84,7 @@ function adjustmentsDataReducer(newData, updateFunction) {
     updatedAdjustments = [
       ...updatedAdjustments.slice(0, i),
       updateFunction(updatedAdjustments[i]),
-      ...updatedAdjustments.slice(i+1),
+      ...updatedAdjustments.slice(i+1)
     ]
   }
   return updatedAdjustments;

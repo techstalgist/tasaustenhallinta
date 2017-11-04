@@ -1,21 +1,41 @@
 const db = require('./db');
 
+function Month(year, month) {
+  this.year = year;
+  this.month = month;
+  this.toString = function() {
+    return this.month + "/" + this.year;
+  };
+}
+
 const SELECT = 'select '+
                'bills.id,users.username,users.id as userid, bills.amount, '+
                'categories.id as categoryid, categories.name as categoryname, bills.date '+
                'from bills inner join users on bills.user_id = users.id inner join categories on bills.category_id = categories.id '+
-               'where date_part(\'year\',date)=$1 and date_part(\'month\',date)=$2'+
                'order by bills.date asc;';
 
+function groupBillsByMonth(allBills) {
+  let billsPerMonth = {};
+  for (let i = 0; i < allBills.length; i++) {
+    let b = allBills[i];
+    const date = new Date(b.date);
+    const monthYear = new Month(date.getFullYear(),date.getMonth()+1);
+    if(!billsPerMonth.hasOwnProperty(monthYear.toString())) {
+      billsPerMonth[monthYear.toString()] = [b];
+    } else {
+      billsPerMonth[monthYear.toString()].push(b);
+    }
+  }
+  return billsPerMonth;
+}
+
 function getBills(req, res, next) {
-  const monthYear = req.params.month + "/" + req.params.year;
-  db.any(SELECT, [req.params.year, req.params.month])
+  db.any(SELECT)
     .then((data) => {
       res.status(200)
         .json({
           status: 'success',
-          data: data,
-          monthYear: monthYear,
+          data: groupBillsByMonth(data),
           message: 'Laskut haettu.'
         });
     })

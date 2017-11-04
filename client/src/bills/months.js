@@ -1,4 +1,3 @@
-
 export function Month(year, month) {
   this.year = year;
   this.month = month;

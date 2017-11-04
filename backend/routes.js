@@ -91,7 +91,7 @@ router.get('/adjustments', passport.authenticate('jwt', { session: false }), Adj
 router.post('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.createAdjustments);
 router.put('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.updateAdjustments);
 
-router.get('/bills/:year/:month', passport.authenticate('jwt', { session: false }), Bill.getBills);
+router.get('/bills', passport.authenticate('jwt', { session: false }), Bill.getBills);
 
 router.get('/categories', passport.authenticate('jwt', { session: false }), Category.getCategories);
 

@@ -44,8 +44,7 @@ export function addBill() {
 export function fetchBills() {
   return function (dispatch, getState) {
     dispatch(requestBills());
-    const selectedMonth = getState().billsData.selectedMonth;
-    const apiCallAddress = '/bills/' + selectedMonth.year + '/' + selectedMonth.month;
+    const apiCallAddress = '/bills';
     const mustFetchCategories = !getState().categoriesData.dataReceived;
     const token = getState().loginData.logInInfo.token;
     const headers = new Headers({ 'Authorization': `JWT ${token}` });
