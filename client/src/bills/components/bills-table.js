@@ -26,9 +26,9 @@ class BillsTable extends React.Component {
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
     const headersData = [
       {cssClass: "col-1", title: "#"},
-      {cssClass: "col-1", title: "Käyttäjä"},
-      {cssClass: "col-2 text-right", title: "Summa"},
-      {cssClass: "col-1", title: "Kategoria"},
+      {cssClass: "col-2", title: "Käyttäjä"},
+      {cssClass: "col-3 text-right", title: "Summa"},
+      {cssClass: "col-3", title: "Kategoria"},
       {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
     ];
     return (
@@ -37,30 +37,30 @@ class BillsTable extends React.Component {
           <div className="col-2">
             <MonthSelection months={months} selectedMonth={selectedMonth} handleChange={this.handleChange}/>
           </div>
-          <div className="col-8">
+          <div className="col-5">
             <AmountsForUsers bills={billsForSelectedMonth} />
           </div>
         </div>
         <div className="row">
-          <div className="col-12">
-          <table className="table">
-            <TableHeaders headers={headersData} />
+          <div className="col-9">
+          <table className="table border">
+            <TableHeaders headers={headersData} rowClass="table-row"/>
             <tbody>
             {billsForSelectedMonth.length > 0 ? billsForSelectedMonth.map((b, i) =>
               (
-                <tr key={b.id} id={b.id} className="row">
+                <tr key={b.id} id={b.id} className="table-row">
                     <th className="col-1">
                       {i+1}
                     </th>
-                    <td className="col-1">
+                    <td className="col-2">
                       {b.username}
                     </td>
-                    <td className="col-2 text-right">
+                    <td className="col-3 text-right">
                       <input type="number" name="amount"
                           defaultValue={b.amount}
                           className="text-right"/>
                     </td>
-                    <td className="col-1">
+                    <td className="col-3">
                       {b.categoryname}
                     </td>
                     <td className="col-3 text-right">

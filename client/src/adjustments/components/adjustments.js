@@ -5,7 +5,7 @@ const Adjustments = props => {
 
     return(
       <div className="row">
-        <div className="col">
+        <div className="col-8">
           <AdjustmentsTable />
         </div>
       </div>

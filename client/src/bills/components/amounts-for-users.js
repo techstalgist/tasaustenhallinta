@@ -1,5 +1,6 @@
 import React from 'react';
 import { showRounded } from '../../shared/helpers';
+import TableHeaders from '../../shared/components/table-headers';
 
 function calculateAmountsForUsers(bills) {
     let amountsForUsers = {
@@ -26,16 +27,14 @@ function calculateAdjustment(paid, total) {
 const AmountsForUsers = (props) => {
     const {bills} = props;
     const amountsForUsers = calculateAmountsForUsers(bills);
+    const headersData = [
+      {cssClass: "text-right", title: "Käyttäjä"},
+      {cssClass: "text-right", title: "Maksanut yht"},
+      {cssClass: "text-right", title: "Tasaus €"}
+    ];
     return(
-
-        <table className="table-sm">
-          <thead className="thead-light">
-            <tr>
-              <th>Käyttäjä</th>
-              <th>Maksanut yht</th>
-              <th>Tasaus €</th>
-            </tr>
-          </thead>
+        <table className="table table-sm border">
+          <TableHeaders headers={headersData} rowClass=""/>
           <tbody>
             {Object.keys(amountsForUsers.users).map((k) => (
                 <tr key={k}>
@@ -53,10 +52,11 @@ const AmountsForUsers = (props) => {
             )}
             <tr>
               <td className="text-right">
-                 Yht
+                 <strong>Yhteensä</strong>
               </td>
               <td className="text-right"><strong> {showRounded(amountsForUsers.total)} € </strong>
               </td>
+              <td></td>
             </tr>
           </tbody>
         </table>

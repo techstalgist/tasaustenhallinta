@@ -3,11 +3,20 @@ import {connect} from 'react-redux';
 import { submitLogout } from '../actions';
 
 let Logout = props => {
-    const {handleLogout} = props;
+    const {handleLogout, user} = props;
     return(
-      <button type="button" className="btn btn-primary" onClick={handleLogout}>Kirjaudu ulos</button>
+      <div>
+        <p>Olet kirjautuneena sisään käyttäjänä {user.username}.</p>
+        <button type="button" className="btn btn-primary" onClick={handleLogout}>Kirjaudu ulos</button>
+      </div>
     )
 }
+
+const mapStateToProps = (state) => (
+  {
+    user: state.loginData.logInInfo.user
+  }
+);
 
 const mapDispatchToProps = (dispatch) => (
   {
@@ -18,7 +27,7 @@ const mapDispatchToProps = (dispatch) => (
 );
 
 Logout = connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Logout)
 

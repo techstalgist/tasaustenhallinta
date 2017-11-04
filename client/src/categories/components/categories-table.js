@@ -15,24 +15,26 @@ class CategoriesTable extends React.Component {
 
   render() {
     const headersData = [
-      {cssClass: "col-1", title: "#"},
-      {cssClass: "col-3", title: "Kategoria"}
+      {cssClass: "col-4", title: "#"},
+      {cssClass: "col-8", title: "Kategoria"}
     ];
     const table = (
-        <div>
-          <table className="table">
-            <TableHeaders headers={headersData} />
-            <tbody>
-                <tr className="row">
-                    <th className="col-1">
-                    1
-                    </th>
-                    <td className="col-3">
-                    Ruokaostokset
-                    </td>
-                </tr>
-            </tbody>
-          </table>
+        <div className="row">
+          <div className="col-4">
+            <table className="table border">
+              <TableHeaders headers={headersData} rowClass="table-row"/>
+              <tbody>
+                  <tr className="table-row">
+                      <th className="col-4">
+                      1
+                      </th>
+                      <td className="col-8">
+                      Ruokaostokset
+                      </td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
     )
     return (

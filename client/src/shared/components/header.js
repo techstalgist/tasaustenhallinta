@@ -39,7 +39,7 @@ class Header extends React.Component {
           <div className="container">
             <div className="row">
               <div className="col">
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
+                <nav className="navbar navbar-expand-lg navbar-light bg-light no-left-padding">
                   <Link to="/login" className="navbar-brand">Tasaustenhallinta</Link>
                   <div className="navbar-nav">
                     {updatedLinks.map( link =>

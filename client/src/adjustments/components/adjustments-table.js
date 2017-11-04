@@ -33,10 +33,10 @@ class AdjustmentsTable extends React.Component {
 
     const {adjustments, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
     const headersData = [
-      {cssClass: "col-1", title: "#"},
-      {cssClass: "col-1", title: "Käyttäjä"},
-      {cssClass: "col-2 text-right", title: "Summa"},
-      {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col-2", title: "#"},
+      {cssClass: "col-2", title: "Käyttäjä"},
+      {cssClass: "col-4 text-right", title: "Summa"},
+      {cssClass: "col-4 text-right", title: "Pvm (pp.kk.vvvv)"},
     ];
     const table = (
         <div>
@@ -46,24 +46,24 @@ class AdjustmentsTable extends React.Component {
               </div>
             : null
            }
-          <table className="table">
-            <TableHeaders headers={headersData} />
+          <table className="table border">
+            <TableHeaders headers={headersData} rowClass="table-row"/>
             <tbody>
               {adjustments.map((a, i) =>
-                <tr key={a.id} id={i+1} className="row">
-                    <th scope="row" className="col-1">
+                <tr key={a.id} id={i+1} className="table-row">
+                    <th scope="row" className="col-2">
                       {i+1} {a.newadjustment ? <span className="badge badge-secondary">Uusi</span> : null}
                     </th>
-                    <td className="col-1">
+                    <td className="col-2">
                       {a.username}
                     </td>
-                    <td className="col-2 text-right">
+                    <td className="col-4 text-right">
                       <input type="number" name="amount"
                           defaultValue={a.amount}
                           onBlur={(e) => this.handleAmountChange(a.id, e)}
                           className="text-right"/>
                     </td>
-                    <td className="col-3 text-right">
+                    <td className="col-4 text-right">
                     <input type="text" name="date"
                         defaultValue={toFinnishDateString(a.date)}
                         onBlur={(e) => this.handleDateChange(a.id, e)}
