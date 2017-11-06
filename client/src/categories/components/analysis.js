@@ -44,6 +44,7 @@ class Analysis extends React.Component {
     return (
       <div className="row">
         <div className="col-7">
+         TODO tähän checkboxit joka käyttäjälle. Niiden perusteella rajataan analyysin dataa.
           {table}
         </div>
       </div>

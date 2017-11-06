@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import {fetchCategories} from '../categories/actions';
 import {getDefaultCategory} from '../categories/selectors';
+import {fetchUsers} from '../shared/actions';
 
 export function requestBills() {
   return {
@@ -11,20 +12,14 @@ export function requestBills() {
 export function receiveBills(json) {
   return {
     type: 'RECEIVE_BILLS',
-    monthYear: json.monthYear,
     data: json.data
   };
 }
 
 export function changeMonth(newMonth) {
-  return (dispatch, getState) => {
-    dispatch({
-      type: 'CHANGE_MONTH',
-      monthString: newMonth
-    });
-    if (!getState().billsData.bills.hasOwnProperty(newMonth)) {
-      dispatch(fetchBills());
-    }
+  return {
+    type: 'CHANGE_MONTH',
+    monthString: newMonth
   };
 }
 
@@ -49,6 +44,7 @@ export function fetchBills() {
     dispatch(requestBills());
     const apiCallAddress = '/bills';
     const mustFetchCategories = !getState().categoriesData.dataReceived;
+    const mustFetchUsers = !getState().sharedData.usersDataReceived;
     const token = getState().loginData.logInInfo.token;
     const headers = new Headers({ 'Authorization': `JWT ${token}` });
     const request = new Request(apiCallAddress, {
@@ -62,6 +58,10 @@ export function fetchBills() {
       ).then(() => {
         if (mustFetchCategories) {
           dispatch(fetchCategories());
+        }
+      }).then(() => {
+        if (mustFetchUsers) {
+          dispatch(fetchUsers());
         }
       })
       .catch(err => console.error(err));

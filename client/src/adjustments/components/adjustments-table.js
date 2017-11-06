@@ -1,8 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchAdjustments, addAdjustment, changeAmount, createAdjustments, updateAdjustments, changeDate} from '../actions';
-import { toFinnishDateString, toISOCompatibleString, isValidFinnishDate } from '../../shared/helpers';
+import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments } from '../actions';
+import { toFinnishDateString, handleAmountChange, handleUserChange, handleDateChange } from '../../shared/helpers';
+import {changeAttribute} from '../../shared/actions';
+
 import TableHeaders from '../../shared/components/table-headers';
+import UserDropdown from '../../shared/components/user-dropdown';
 
 class AdjustmentsTable extends React.Component {
 
@@ -12,32 +15,16 @@ class AdjustmentsTable extends React.Component {
     }
   }
 
-  handleAmountChange = (id, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.handleAmountChange(id, e.target.value);
-  }
-
-  handleDateChange = (id, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (isValidFinnishDate(e.target.value)) {
-      const isoDate = toISOCompatibleString(e.target.value);
-      this.props.handleDateChange(id, isoDate);
-    } else {
-      // change CSS style, maybe via Redux dispatch
-    }
-  }
-
   render() {
 
-    const {adjustments, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
+    const {adjustments, users, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
     const headersData = [
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
       {cssClass: "col text-right", title: "Summa"},
       {cssClass: "col text-right", title: "Pvm (pp.kk.vvvv)"},
     ];
+    const target = "adjustment";
     const table = (
         <div>
           {successMessage
@@ -55,18 +42,18 @@ class AdjustmentsTable extends React.Component {
                       {i+1} {a.newadjustment ? <span className="badge badge-secondary">Uusi</span> : null}
                     </th>
                     <td className="col-2">
-                      {a.username}
+                      <UserDropdown next={this.props.handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
                     </td>
                     <td className="col text-right">
                       <input type="number" name="amount"
                           defaultValue={a.amount}
-                          onBlur={(e) => this.handleAmountChange(a.id, e)}
+                          onBlur={(e) => handleAmountChange(this.props.handleAttributeChange, a.id, e, target)}
                           className="text-right"/>
                     </td>
                     <td className="col text-right">
                     <input type="text" name="date"
                         defaultValue={toFinnishDateString(a.date)}
-                        onBlur={(e) => this.handleDateChange(a.id, e)}
+                        onBlur={(e) => handleDateChange(this.props.handleAttributeChange, a.id, e, target)}
                         className="text-right"/>
                     </td>
                 </tr>
@@ -90,6 +77,7 @@ class AdjustmentsTable extends React.Component {
 const mapStateToProps = (state) => (
   {
     adjustments: state.adjustmentsData.adjustments,
+    users: state.sharedData.users,
     dataReceived: state.adjustmentsData.dataReceived,
     successMessage: state.adjustmentsData.successMessage
   }
@@ -107,11 +95,8 @@ const mapDispatchToProps = (dispatch) => (
     updateAdjustments: () => (
       dispatch(updateAdjustments())
     ),
-    handleAmountChange: (id, value) => (
-      dispatch(changeAmount(id,value))
-    ),
-    handleDateChange: (id, value) => (
-      dispatch(changeDate(id,value))
+    handleAttributeChange: (attribute, id, value, target) => (
+      dispatch(changeAttribute(attribute, id, value, target))
     )
   }
 );

@@ -20,16 +20,21 @@ export function reducer(state = getInitialState(), action) {
         dataReceived: false
       };
     case 'RECEIVE_BILLS':
-    return {
-      ...state,
-      dataReceived: true,
-      bills: billsDataReducer(action.data, handleBillFromBackend)
-    }
+      return {
+        ...state,
+        dataReceived: true,
+        bills: billsDataReducer(action.data, handleBillFromBackend)
+      }
     case 'CHANGE_MONTH':
       const monthInState = getMonth(action.monthString, state.months);
       return {
         ...state,
         selectedMonth: monthInState
+      }
+    case 'CHANGE_BILL_USER':
+      return {
+        ...state,
+        bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setUser, action.newUser)
       }
     case 'NEW_BILL':
       return {
@@ -72,7 +77,6 @@ function handleBillFromBackend(b) {
   }
 }
 
-
 function newBillReducer(currentBills, selectedMonth, user, category) {
   return {
     ...currentBills,
@@ -97,4 +101,35 @@ function newBillToMonthReducer(currentBillsForMonth, user, category) {
       newbill: true
     }
   ]
+}
+
+function updateBillReducer(currentBills, selectedMonth, id, updateFunction, newValue) {
+  return {
+    ...currentBills,
+    [selectedMonth.toString()]: updateBillInMonth(currentBills[selectedMonth.toString()], updateFunction, id, newValue)
+  }
+}
+
+function updateBillInMonth(bills, updateFunction, id, newValue) {
+  let updatedBillsForMonth = bills;
+  const index = getBillIndexById(id, updatedBillsForMonth);
+  updatedBillsForMonth = [
+    ...updatedBillsForMonth.slice(0, index),
+    updateFunction(updatedBillsForMonth[index], newValue),
+    ...updatedBillsForMonth.slice(index+1),
+  ]
+  return updatedBillsForMonth;
+}
+
+function getBillIndexById(id, bills) {
+  const ids = bills.map( (b) => b.id );
+  return ids.indexOf(id);
+}
+
+function setUser(bill, newUser) {
+  return {
+    ...bill,
+    userid: newUser.id,
+    username: newUser.username
+  }
 }

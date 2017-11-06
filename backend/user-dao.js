@@ -7,7 +7,7 @@ function User(userData) {
 }
 
 function save(user, next) {
-  db.one('INSERT INTO users(username, password) VALUES($1, $2) RETURNING id', [user.username, user.password])
+  db.one('insert into users(username, password) values($1, $2) returning id', [user.username, user.password])
     .then(data => {
       const newUser = Object.assign({}, user);
       delete newUser.password; // cannot send password to frontend
@@ -20,7 +20,7 @@ function save(user, next) {
 }
 
 function findOne(data, next) {
-  db.any('SELECT * FROM USERS WHERE USERNAME=$1',[data.username])
+  db.any('select * from users where username=$1',[data.username])
     .then((data) => {
       if (data.length == 0) {
         return next(null, false);
@@ -33,7 +33,7 @@ function findOne(data, next) {
 }
 
 function findById(id, next) {
-  db.any('SELECT * FROM USERS WHERE ID=$1',[id])
+  db.any('select * from users where id=$1',[id])
     .then((data) => {
       if (data.length == 0) {
         return next(null, false);
@@ -45,9 +45,25 @@ function findById(id, next) {
     });
 }
 
+function getUsers(req, res, next) {
+  db.any('select id, username from users')
+    .then((data) => {
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Käyttäjät haettu.'
+        });
+    })
+    .catch((err) => {
+      return next(err);
+    });
+}
+
 module.exports = {
   User: User,
   findOne: findOne,
   findById: findById,
-  save: save
+  save: save,
+  getUsers: getUsers
 };

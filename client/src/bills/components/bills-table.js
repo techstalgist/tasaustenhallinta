@@ -2,10 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { fetchBills, changeMonth, addBill } from '../actions';
 import { getBillsForSelectedMonth } from '../selectors';
-import { toFinnishDateString } from '../../shared/helpers';
+import { toFinnishDateString, handleUserChange } from '../../shared/helpers';
 import MonthSelection from './month-selection';
 import AmountsForUsers from './amounts-for-users';
 import TableHeaders from '../../shared/components/table-headers';
+import UserDropdown from '../../shared/components/user-dropdown';
+import {changeAttribute } from '../../shared/actions';
 
 class BillsTable extends React.Component {
 
@@ -15,14 +17,14 @@ class BillsTable extends React.Component {
     }
   }
 
-  handleChange = (e) => {
+  handleMonthChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
     this.props.changeMonth(e.target.value);
   }
 
   render() {
-    const { addBill, bills, months, selectedMonth, categories } = this.props;
+    const { addBill, bills, users, months, selectedMonth, categories } = this.props;
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
     const headersData = [
       {cssClass: "col-2", title: "#"},
@@ -31,11 +33,12 @@ class BillsTable extends React.Component {
       {cssClass: "col-3", title: "Kategoria"},
       {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
     ];
+    const target = "bill";
     return (
       <div>
         <div className="row">
           <div className="col-2">
-            <MonthSelection months={months} selectedMonth={selectedMonth} handleChange={this.handleChange}/>
+            <MonthSelection months={months} selectedMonth={selectedMonth} handleMonthChange={this.handleMonthChange}/>
           </div>
           <div className="col-5">
             <AmountsForUsers bills={billsForSelectedMonth} />
@@ -53,7 +56,7 @@ class BillsTable extends React.Component {
                       {i+1} {b.newbill ? <span className="badge badge-secondary">Uusi</span> : null}
                     </th>
                     <td className="col-1">
-                      {b.username}
+                      <UserDropdown next={this.props.handleAttributeChange} target={target} dataID={b.id} defaultValue={b.userid} users={users} domID="userForBill" changeFunction={handleUserChange} />
                     </td>
                     <td className="col-3 text-right">
                       <input type="number" name="amount"
@@ -95,7 +98,8 @@ const mapStateToProps = (state) => (
     successMessage: state.billsData.successMessage,
     months: state.billsData.months,
     selectedMonth: state.billsData.selectedMonth,
-    categories: state.categoriesData.categories
+    categories: state.categoriesData.categories,
+    users: state.sharedData.users
   }
 );
 
@@ -107,7 +111,10 @@ const mapDispatchToProps = (dispatch) => (
     },
     addBill: () => {
       dispatch(addBill())
-    }
+    },
+    handleAttributeChange: (attribute, id, value, target) => (
+      dispatch(changeAttribute(attribute, id, value, target))
+    )
   }
 );
 

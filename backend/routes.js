@@ -88,6 +88,8 @@ router.post('/login', (req, res, next) => {
 //  res.json({user});
 //});
 
+router.get('/users', passport.authenticate('jwt', { session: false }), UserDao.getUsers);
+
 router.get('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.getAdjustments);
 router.post('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.createAdjustments);
 router.put('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.updateAdjustments);

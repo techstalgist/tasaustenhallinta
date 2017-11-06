@@ -35,15 +35,20 @@ export function reducer(state = getInitialState(), action) {
         ...state,
         adjustments: newAdjustmentReducer(state.adjustments, action.user)
       }
-    case 'CHANGE_AMOUNT':
+    case 'CHANGE_ADJUSTMENT_AMOUNT':
       return {
         ...state,
         adjustments: changeOneAdjustment(state.adjustments, action.id, setAmount, action.newAmount)
       }
-    case 'CHANGE_DATE':
+    case 'CHANGE_ADJUSTMENT_DATE':
       return {
         ...state,
         adjustments: changeOneAdjustment(state.adjustments, action.id, setDate, action.newDate)
+      }
+    case 'CHANGE_ADJUSTMENT_USER':
+      return {
+        ...state,
+        adjustments: changeOneAdjustment(state.adjustments, action.id, setUserIDAndUsername, action.newUser)
       }
     case 'CREATION_SUCCESS':
       if (action.data === null) {
@@ -136,6 +141,14 @@ function setDate(a, date) {
   return {
     ...a,
     date: date
+  }
+}
+
+function setUserIDAndUsername(a, user) {
+  return {
+    ...a,
+    userid: user.id,
+    username: user.username
   }
 }
 

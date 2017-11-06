@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import { getAdjustments } from './selectors';
+import { fetchUsers } from '../shared/actions';
 
 export function requestAdjustments() {
   return {
@@ -40,22 +41,6 @@ export function addAdjustment() {
   };
 }
 
-export function changeAmount(id, value) {
-  return {
-    type: 'CHANGE_AMOUNT',
-    id: id,
-    newAmount: value
-  };
-}
-
-export function changeDate(id, value) {
-  return {
-    type: 'CHANGE_DATE',
-    id: id,
-    newDate: value
-  };
-}
-
 export function creationSuccess(message, data) {
   return {
     type: 'CREATION_SUCCESS',
@@ -90,6 +75,7 @@ export function fetchAdjustments() {
     dispatch(requestAdjustments());
     const apiCallAddress = '/adjustments';
     const token = getState().loginData.logInInfo.token;
+    const mustFetchUsers = !getState().sharedData.usersDataReceived;
     const headers = new Headers({ 'Authorization': `JWT ${token}` });
     const request = new Request(apiCallAddress, {
       method: 'GET',
@@ -99,7 +85,11 @@ export function fetchAdjustments() {
       .then(response => response.json())
       .then((json) =>
         dispatch(receiveAdjustments(json))
-      )
+      ).then(() => {
+        if (mustFetchUsers) {
+          dispatch(fetchUsers());
+        }
+      })
       .catch(err => console.error(err));
   };
 }
