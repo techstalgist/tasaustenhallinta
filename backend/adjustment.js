@@ -76,14 +76,14 @@ function updateAdjustments(req, res, next) {
 
   oldValuesStr = 'values ';
   req.body.map((a, i) => {
-    oldValuesStr = oldValuesStr + '(' + parseInt(a.id) + ',' + parseInt(a.amount) + ',\'' +  a.date + '\'::date)';
+    oldValuesStr = oldValuesStr + '(' + parseInt(a.id) + ',' + parseInt(a.userid) + ',' + parseInt(a.amount) + ',\'' +  a.date + '\'::date)';
     if (i+1 != req.body.length) {
       oldValuesStr = oldValuesStr + ',';
     }
   });
 
-  db.none('update adjustments as a set amount = a2.amount, date = a2.date from (' + oldValuesStr +
-                    ') as a2(id, amount, date) where a2.id = a.id')
+  db.none('update adjustments as a set amount = a2.amount, user_id = a2.user_id, date = a2.date from (' + oldValuesStr +
+                    ') as a2(id, user_id, amount, date) where a2.id = a.id')
     .then(() => {
       res.status(200)
         .json({

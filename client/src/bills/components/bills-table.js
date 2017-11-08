@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { fetchBills, changeMonth, addBill } from '../actions';
+import { fetchBills, changeMonth, addBill, createBills, updateBills } from '../actions';
 import { getBillsForSelectedMonth } from '../selectors';
 import { toFinnishDateString } from '../../shared/helpers';
 import { handleUserChange, handleAmountChange, handleDateChange, handleCategoryChange } from '../../shared/components/table/change-handlers';
@@ -25,7 +25,7 @@ class BillsTable extends React.Component {
   }
 
   render() {
-    const { addBill, bills, users, months, selectedMonth, categories, handleAttributeChange } = this.props;
+    const { addBill, createBills, updateBills, bills, users, months, selectedMonth, categories, handleAttributeChange, successMessage } = this.props;
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
     const headersData = [
       {cssClass: "col-2", title: "#"},
@@ -47,7 +47,7 @@ class BillsTable extends React.Component {
         </div>
         <div className="row">
           <div className="col-11">
-          <table className="table border">
+          <table className="table table-sm border">
             <TableHeaders headers={headersData} rowClass="table-row"/>
             <tbody>
             {billsForSelectedMonth.length > 0 ? billsForSelectedMonth.map((b, i) =>
@@ -84,9 +84,21 @@ class BillsTable extends React.Component {
           </table>
           </div>
         </div>
-        <button onClick={addBill} type="button" className="btn btn-primary">Lisää uusi lasku</button>
-        <button type="button" className="btn btn-primary ml-1">Tallenna uudet laskut</button>
-        <button type="button" className="btn btn-primary ml-1">Päivitä vanhat laskut</button>
+        <div className="row mb-3">
+          <div className="col-6">
+            <button onClick={addBill} type="button" className="btn btn-primary">Lisää uusi lasku</button>
+            <button onClick={createBills} type="button" className="btn btn-primary ml-1">Tallenna uudet laskut</button>
+            <button onClick={updateBills} type="button" className="btn btn-primary ml-1">Päivitä vanhat laskut</button>
+          </div>
+          <div className="col-6">
+            {successMessage
+              ? <div className="alert alert-success" role="alert">
+                  {successMessage}
+                </div>
+              : null
+             }
+          </div>
+        </div>
       </div>
     )
   }
@@ -99,6 +111,7 @@ const mapStateToProps = (state) => (
     bills: state.billsData.bills,
     dataReceived: state.billsData.dataReceived,
     successMessage: state.billsData.successMessage,
+    errorMessage: state.billsData.errorMessage,
     months: state.billsData.months,
     selectedMonth: state.billsData.selectedMonth,
     categories: state.categoriesData.categories,
@@ -115,6 +128,12 @@ const mapDispatchToProps = (dispatch) => (
     addBill: () => {
       dispatch(addBill())
     },
+    createBills: () => (
+      dispatch(createBills())
+    ),
+    updateBills: () => (
+      dispatch(updateBills())
+    ),
     handleAttributeChange: (attribute, id, value, target) => (
       dispatch(changeAttribute(attribute, id, value, target))
     )

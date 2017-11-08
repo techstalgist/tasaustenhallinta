@@ -18,37 +18,51 @@ export function reducer(state = getInitialState(), action) {
       };
     case 'SUBMIT':
       return {
-        ...state
-      };
+        ...state,
+        successMessage: null,
+        errorMessage: null
+      }
     case 'SUBMIT_UPDATE':
-      return {
-        ...state
-      };
+       return {
+        ...state,
+        successMessage: null,
+        errorMessage: null
+      }
     case 'RECEIVE':
       return {
         ...state,
         adjustments: adjustmentsDataReducer(action.data, updateDateAndId),
-        dataReceived: true
+        dataReceived: true,
+        successMessage: null,
+        errorMessage: null
       };
     case 'NEW_ADJUSTMENT':
       return {
         ...state,
-        adjustments: newAdjustmentReducer(state.adjustments, action.user)
+        adjustments: newAdjustmentReducer(state.adjustments, action.user),
+        successMessage: null,
+        errorMessage: null
       }
     case 'CHANGE_ADJUSTMENT_AMOUNT':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setAmount, action.newAmount)
+        adjustments: changeOneAdjustment(state.adjustments, action.id, setAmount, action.newAmount),
+        successMessage: null,
+        errorMessage: null
       }
     case 'CHANGE_ADJUSTMENT_DATE':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setDate, action.newDate)
+        adjustments: changeOneAdjustment(state.adjustments, action.id, setDate, action.newDate),
+        successMessage: null,
+        errorMessage: null
       }
     case 'CHANGE_ADJUSTMENT_USER':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setUserIDAndUsername, action.newUser)
+        adjustments: changeOneAdjustment(state.adjustments, action.id, setUserIDAndUsername, action.newUser),
+        successMessage: null,
+        errorMessage: null
       }
     case 'CREATION_SUCCESS':
       if (action.data === null) {

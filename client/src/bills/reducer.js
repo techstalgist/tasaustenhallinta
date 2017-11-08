@@ -25,25 +25,45 @@ export function reducer(state = getInitialState(), action) {
         dataReceived: true,
         bills: billsDataReducer(action.data, handleBillFromBackend)
       }
+    case 'SUBMIT_BILLS':
+      return {
+        ...state,
+        successMessage: null,
+        errorMessage: null
+      };
+    case 'SUBMIT_BILLS_UPDATE':
+      return {
+        ...state,
+        successMessage: null,
+        errorMessage: null
+      };
     case 'CHANGE_MONTH':
       const monthInState = getMonth(action.monthString, state.months);
       return {
         ...state,
-        selectedMonth: monthInState
+        selectedMonth: monthInState,
+        successMessage: null,
+        errorMessage: null
       }
     case 'CHANGE_BILL_USER':
       return {
         ...state,
+        successMessage: null,
+        errorMessage: null,
         bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setUser, action.newUser)
       }
     case 'CHANGE_BILL_AMOUNT':
       return {
         ...state,
+        successMessage: null,
+        errorMessage: null,
         bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setAmount, action.newAmount)
       }
     case 'CHANGE_BILL_CATEGORY':
       return {
         ...state,
+        successMessage: null,
+        errorMessage: null,
         bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setCategory, action.newCategory)
       }
     case 'CHANGE_BILL_DATE':
@@ -52,11 +72,15 @@ export function reducer(state = getInitialState(), action) {
       if (monthUnchanged) {
         return {
           ...state,
+          successMessage: null,
+          errorMessage: null,
           bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setDate, action.newDate)
         }
       } else {
           return {
             ...state,
+            successMessage: null,
+            errorMessage: null,
             bills: dateAndMonthChangeReducer(state.bills, state.selectedMonth.toString(), action.id, newDateObj)
           }
       }
@@ -64,7 +88,36 @@ export function reducer(state = getInitialState(), action) {
       const newBill = createNewBill(action.user, action.category);
       return {
         ...state,
-        bills: newBillReducer(state.bills, state.selectedMonth.toString(), newBill)
+        bills: newBillReducer(state.bills, state.selectedMonth.toString(), newBill),
+        successMessage: null,
+        errorMessage: null
+      }
+    case 'BILL_CREATION_SUCCESS':
+      if (action.data === null) {
+        return {
+          ...state,
+          successMessage: action.message
+        }
+      }
+      return {
+          ...state,
+          successMessage: action.message,
+          bills: billsDataReducer(action.data, handleBillFromBackend)
+      }
+    case 'BILL_CREATION_FAILURE':
+      return {
+        ...state,
+        errorMessage: action.message
+      }
+    case 'BILL_UPDATE_SUCCESS':
+      return {
+        ...state,
+        successMessage: action.message
+      }
+    case 'BILL_UPDATE_FAILURE':
+      return {
+        ...state,
+        errorMessage: action.message
       }
     default:
       return state;
