@@ -1,5 +1,5 @@
 import { v4 } from 'node-uuid';
-import { getCurrentMonth, getMonths, getMonth } from './months';
+import { getCurrentMonth, getMonths, getMonth, createMonthFromDate } from './months';
 
 function getInitialState() {
   return {
@@ -36,10 +36,35 @@ export function reducer(state = getInitialState(), action) {
         ...state,
         bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setUser, action.newUser)
       }
-    case 'NEW_BILL':
+    case 'CHANGE_BILL_AMOUNT':
       return {
         ...state,
-        bills: newBillReducer(state.bills, state.selectedMonth, action.user, action.category)
+        bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setAmount, action.newAmount)
+      }
+    case 'CHANGE_BILL_CATEGORY':
+      return {
+        ...state,
+        bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setCategory, action.newCategory)
+      }
+    case 'CHANGE_BILL_DATE':
+      const newDateObj = new Date(action.newDate);
+      const monthUnchanged = (newDateObj.getFullYear() === state.selectedMonth.year) && ((newDateObj.getMonth()+1) === state.selectedMonth.month);
+      if (monthUnchanged) {
+        return {
+          ...state,
+          bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setDate, action.newDate)
+        }
+      } else {
+          return {
+            ...state,
+            bills: dateAndMonthChangeReducer(state.bills, state.selectedMonth.toString(), action.id, newDateObj)
+          }
+      }
+    case 'NEW_BILL':
+      const newBill = createNewBill(action.user, action.category);
+      return {
+        ...state,
+        bills: newBillReducer(state.bills, state.selectedMonth.toString(), newBill)
       }
     default:
       return state;
@@ -77,30 +102,45 @@ function handleBillFromBackend(b) {
   }
 }
 
-function newBillReducer(currentBills, selectedMonth, user, category) {
+function dateAndMonthChangeReducer(bills, oldMonthStr, billId, newDateObj) {
+  const newMonthStr = createMonthFromDate(newDateObj).toString();
+  const bill = bills[oldMonthStr].filter((b) => b.id === billId)[0];
+  const updatedBill = setDate(bill, newDateObj.toISOString().substr(0,10));
   return {
-    ...currentBills,
-    [selectedMonth.toString()]: newBillToMonthReducer(currentBills[selectedMonth.toString()], user, category)
+    ...bills,
+    [oldMonthStr]: deleteBillInMonth(bills[oldMonthStr], billId),
+    [newMonthStr]: newBillToMonthReducer(bills[newMonthStr], updatedBill)
   }
 }
 
-function newBillToMonthReducer(currentBillsForMonth, user, category) {
+function newBillReducer(currentBills, monthStr, newBill) {
+  return {
+    ...currentBills,
+    [monthStr]: newBillToMonthReducer(currentBills[monthStr], newBill)
+  }
+}
+
+function newBillToMonthReducer(currentBillsForMonth, newBill) {
   if (currentBillsForMonth === undefined) {
     currentBillsForMonth = [];
   }
   return [
     ...currentBillsForMonth,
-    {
-      id: v4(),
-      userid: user.id,
-      username: user.username,
-      amount: null,
-      categoryname: category.name,
-      categoryid: category.id,
-      date: new Date().toISOString().substr(0,10),
-      newbill: true
-    }
+    newBill
   ]
+}
+
+function createNewBill(user, category) {
+  return {
+    id: v4(),
+    userid: user.id,
+    username: user.username,
+    amount: null,
+    categoryname: category.name,
+    categoryid: category.id,
+    date: new Date().toISOString().substr(0,10),
+    newbill: true
+  }
 }
 
 function updateBillReducer(currentBills, selectedMonth, id, updateFunction, newValue) {
@@ -121,6 +161,16 @@ function updateBillInMonth(bills, updateFunction, id, newValue) {
   return updatedBillsForMonth;
 }
 
+function deleteBillInMonth(bills, id) {
+  let billsToReturn = bills;
+  const index = getBillIndexById(id, billsToReturn);
+  billsToReturn = [
+    ...billsToReturn.slice(0, index),
+    ...billsToReturn.slice(index+1)
+  ]
+  return billsToReturn;
+}
+
 function getBillIndexById(id, bills) {
   const ids = bills.map( (b) => b.id );
   return ids.indexOf(id);
@@ -131,5 +181,27 @@ function setUser(bill, newUser) {
     ...bill,
     userid: newUser.id,
     username: newUser.username
+  }
+}
+
+function setCategory(bill, newCategory) {
+  return {
+    ...bill,
+    categoryid: newCategory.id,
+    categoryname: newCategory.name
+  }
+}
+
+function setDate(bill, newDate) {
+  return {
+    ...bill,
+    date: newDate
+  }
+}
+
+function setAmount(bill, newAmount) {
+  return {
+    ...bill,
+    amount: newAmount
   }
 }

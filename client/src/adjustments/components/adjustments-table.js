@@ -1,7 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments } from '../actions';
-import { toFinnishDateString, handleAmountChange, handleUserChange, handleDateChange } from '../../shared/helpers';
+import { toFinnishDateString } from '../../shared/helpers';
+import { handleAmountChange, handleUserChange, handleDateChange } from '../../shared/components/table/change-handlers';
 import {changeAttribute} from '../../shared/actions';
 
 import TableHeaders from '../../shared/components/table-headers';
@@ -17,7 +18,7 @@ class AdjustmentsTable extends React.Component {
 
   render() {
 
-    const {adjustments, users, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
+    const {handleAttributeChange, adjustments, users, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
     const headersData = [
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
@@ -42,19 +43,19 @@ class AdjustmentsTable extends React.Component {
                       {i+1} {a.newadjustment ? <span className="badge badge-secondary">Uusi</span> : null}
                     </th>
                     <td className="col-2">
-                      <UserDropdown next={this.props.handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
+                      <UserDropdown next={handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
                     </td>
                     <td className="col text-right">
                       <input type="number" name="amount"
                           defaultValue={a.amount}
-                          onBlur={(e) => handleAmountChange(this.props.handleAttributeChange, a.id, e, target)}
+                          onBlur={(e) => handleAmountChange(handleAttributeChange, a.id, e, target)}
                           className="text-right"/>
                     </td>
                     <td className="col text-right">
-                    <input type="text" name="date"
-                        defaultValue={toFinnishDateString(a.date)}
-                        onBlur={(e) => handleDateChange(this.props.handleAttributeChange, a.id, e, target)}
-                        className="text-right"/>
+                      <input type="text" name="date"
+                          defaultValue={toFinnishDateString(a.date)}
+                          onBlur={(e) => handleDateChange(handleAttributeChange, a.id, e, target)}
+                          className="text-right"/>
                     </td>
                 </tr>
               )}

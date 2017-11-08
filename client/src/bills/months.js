@@ -9,9 +9,12 @@ export function Month(year, month) {
   };
 }
 
+export function createMonthFromDate(date) {
+  return new Month(date.getFullYear(), date.getMonth()+1);
+}
+
 export function getCurrentMonth() {
-  const curDate = new Date();
-  return new Month(curDate.getFullYear(), curDate.getMonth()+1);
+  return createMonthFromDate(new Date());
 }
 
 export function getMonth(monthString, months) {
@@ -29,7 +32,7 @@ export function compareMonths(m1, m2) {
 export function getMonths(untilDate) {
   const untilDatePlusOneMonth = new Date(untilDate);
   untilDatePlusOneMonth.setMonth(untilDatePlusOneMonth.getMonth()+1);
-  let rollingDate = new Date('2013-01-01');
+  let rollingDate = new Date('2014-01-01');
   let months = [];
   while(rollingDate <= untilDatePlusOneMonth) {
     let m = new Month(rollingDate.getFullYear(),rollingDate.getMonth()+1);
