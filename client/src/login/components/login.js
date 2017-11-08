@@ -2,8 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import LoginForm from './login-form';
 import Logout from './logout';
+import {hideLoginSuccess} from '../actions';
 
 class Login extends React.Component {
+  componentWillUnmount() {
+    this.props.dispatch(hideLoginSuccess());
+  }
 
   render() {
     const {from, loggedIn, successMessage, errorMessage} = this.props;
@@ -45,9 +49,15 @@ const mapStateToProps = (state) => (
   }
 );
 
+const mapDispatchToProps = (dispatch) => (
+  {
+    dispatch: dispatch
+  }
+)
+
 Login = connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Login)
 
 export default Login;

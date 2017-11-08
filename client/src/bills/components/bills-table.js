@@ -46,7 +46,7 @@ class BillsTable extends React.Component {
           </div>
         </div>
         <div className="row">
-          <div className="col-11">
+          <div className="col-10">
           <table className="table table-sm border">
             <TableHeaders headers={headersData} rowClass="table-row"/>
             <tbody>

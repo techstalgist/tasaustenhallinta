@@ -28,7 +28,7 @@ class AdjustmentsTable extends React.Component {
     const target = "adjustment";
     const table = (
         <div className="row">
-          <div className="col-8">
+          <div className="col-7">
             <table className="table table-sm border">
               <TableHeaders headers={headersData} rowClass="table-row"/>
               <tbody>

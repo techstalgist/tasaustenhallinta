@@ -23,6 +23,12 @@ export function logOut(json) {
   };
 }
 
+export function hideLoginSuccess() {
+  return {
+    type: 'HIDE_LOGIN_SUCCESS'
+  };
+}
+
 export function submitLogin(data) {
   return function (dispatch) {
     const apiCallAddress = '/login';
