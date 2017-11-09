@@ -1,13 +1,23 @@
-# Development
+# Devaus
 
-1. Run `npm start`. It starts both client and server. Go to `localhost:3000` to inspect the app.
-When changes are made to the code, browser should automatically reload.
+1. Aja `npm start` => käynnistää sekä clientin että palvelimen. Avaa `localhost:3000` selaimessa käyttääksesi sovellusta. Kun teet muutoksia, sovelluksen pitäisi käynnistyä automaattisesti.
 
-# Deploy to production
+# Deploy
 
-1. Run `./deploy.sh` to deploy. It will build the frontend first, move files to server and run backend build on server.
-2. Run `./open_prod.sh` to see the results live on Google Chrome, OR point your browser to https://ruuskmik.users.cs.helsinki.fi/. Use Command+R for hard refresh.
+1. Aja `./deploy.sh` deployataksesi muutokset tuotantoympäristöön. Skripti buildaa client JS:t ensin, ja siirtää client buildin ja backend-koodit palvelimelle. Riippuvuudet asennetaan palvelimella.
+2. Aja `./open_prod.sh` avataksesi sivun https://ruuskmik.users.cs.helsinki.fi/ Google Chromella. Joudut tekemään hard refreshin, jos sivu on välimuistissa.
 
-# Documentation
+# Tuotantoympäristö
 
-[Documentation](https://github.com/techstalgist/tasaustenhallinta/blob/master/doc/dokumentaatio.pdf)
+Testikäyttäjä: "eka", salasana: "testaa"
+
+Käyttöliittymän sivut:
+* [tasaukset](https://ruuskmik.users.cs.helsinki.fi/auth/adjustments)
+* [laskut](https://ruuskmik.users.cs.helsinki.fi/auth/bills)
+* [kategoriat](https://ruuskmik.users.cs.helsinki.fi/auth/categories)
+* [analyysi](https://ruuskmik.users.cs.helsinki.fi/auth/analysis)
+
+
+# Dokumentaatio
+
+[Dokumentaatio](https://github.com/techstalgist/tasaustenhallinta/blob/master/doc/dokumentaatio.pdf)

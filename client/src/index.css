@@ -5,6 +5,6 @@
     flex-wrap: wrap;
 }
 
-.no-left-padding {
-  padding-left: 0px
+.short-left-padding {
+  padding-left: 5px
 }
