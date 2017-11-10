@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-fetch';
+import {toProperCase} from './helpers';
 
 export function changeAttribute(attribute, id, newValue, target) {
-  const objAttribute = "new" + attribute.charAt(0).toUpperCase() + attribute.substring(1);
+  const objAttribute = "new" + toProperCase(attribute);
   return {
     type: 'CHANGE_' + target.toUpperCase() + "_" + attribute.toUpperCase(),
     id: id,

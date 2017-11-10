@@ -132,12 +132,12 @@ function adjustmentsDataReducer(newData, updateFunction) {
 }
 
 
-function changeOneAdjustment(currentAdjustments, id, callback, newValue) {
+function changeOneAdjustment(currentAdjustments, id, next, newValue) {
   let updatedAdjustments = currentAdjustments;
   const i = getAdjustmentIndexById(id, updatedAdjustments);
   updatedAdjustments = [
     ...updatedAdjustments.slice(0, i),
-    callback(updatedAdjustments[i], newValue),
+    next(updatedAdjustments[i], newValue),
     ...updatedAdjustments.slice(i+1),
   ]
   return updatedAdjustments;

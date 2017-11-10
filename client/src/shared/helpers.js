@@ -24,3 +24,7 @@ export function isValidFinnishDate(date) {
 export function showRounded(number, precision) {
   return number.toFixed(precision).replace(".", ",");
 }
+
+export function toProperCase(text) {
+  return text.charAt(0).toUpperCase() + text.substring(1);
+}

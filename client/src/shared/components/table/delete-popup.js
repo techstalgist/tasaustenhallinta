@@ -1,4 +1,5 @@
 import React from 'react';
+import {toProperCase} from '../../helpers';
 
 const DeletePopup = (props) => {
 
@@ -6,7 +7,7 @@ const DeletePopup = (props) => {
     let successAlert;
     if (success) {
       successAlert = (<div className="alert alert-success">
-        {title.charAt(0).toUpperCase() + title.substring(1)} poistettiin onnistuneesti.
+        {toProperCase(title)} poistettiin onnistuneesti.
       </div>);
     } else {
       successAlert = null;
