@@ -145,7 +145,7 @@ function changeOneAdjustment(currentAdjustments, id, callback, newValue) {
 
 function adjustmentToString() {
   return function() {
-    return "Maksaja: " + this.username + ", Määrä: " + this.amount + ", Pvm: " + toFinnishDateString(this.date);
+    return "Käyttäjä: " + this.username + ", Määrä: " + (this.amount || 0) + ", Pvm: " + toFinnishDateString(this.date);
   }
 }
 
