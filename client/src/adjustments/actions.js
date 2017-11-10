@@ -14,6 +14,25 @@ export function submitNewAdjustments() {
   };
 }
 
+export function setAdjustmentToRemove(id) {
+  return {
+    type: 'SET_ADJUSTMENT_TO_REMOVE',
+    id: id
+  };
+}
+
+export function submitDeleteAdjustment() {
+  return {
+    type: 'SUBMIT_DELETE_ADJUSTMENT'
+  };
+}
+
+export function closeDeletePopup() {
+  return {
+    type: 'CLOSE_DELETE_ADJUSTMENT_POPUP'
+  };
+}
+
 export function submitUpdate() {
   return {
     type: 'SUBMIT_UPDATE'

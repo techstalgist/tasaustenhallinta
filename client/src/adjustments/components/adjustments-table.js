@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments } from '../actions';
+import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments, setAdjustmentToRemove, submitDeleteAdjustment, closeDeletePopup  } from '../actions';
 import { toFinnishDateString } from '../../shared/helpers';
 import { handleAmountChange, handleUserChange, handleDateChange } from '../../shared/components/table/change-handlers';
 import {changeAttribute} from '../../shared/actions';
 
-import TableHeaders from '../../shared/components/table-headers';
-import UserDropdown from '../../shared/components/user-dropdown';
+import TableHeaders from '../../shared/components/table/table-headers';
+import UserDropdown from '../../shared/components/table/user-dropdown';
+import DeletePopup from '../../shared/components/table/delete-popup';
 
 class AdjustmentsTable extends React.Component {
 
@@ -18,7 +19,7 @@ class AdjustmentsTable extends React.Component {
 
   render() {
 
-    const {handleAttributeChange, adjustments, users, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
+    const {showPopup, submitDeleteAdjustment, closeDeletePopup, handleRemoveButtonClick, handleAttributeChange, removeSuccess, toRemove, adjustments, users, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
     const headersData = [
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
@@ -52,6 +53,11 @@ class AdjustmentsTable extends React.Component {
                             onBlur={(e) => handleDateChange(handleAttributeChange, a.id, e, target)}
                             className="text-right"/>
                       </td>
+                      <td>
+                        <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(a.id)}>
+                      	  <span aria-hidden="true">&times;</span>
+                    		</button>
+                      </td>
                   </tr>
                 )}
               </tbody>
@@ -77,6 +83,9 @@ class AdjustmentsTable extends React.Component {
              }
           </div>
         </div>
+        {showPopup ?
+           <DeletePopup title="tasaus" onSubmit={submitDeleteAdjustment} objectToRemove={toRemove} success={removeSuccess} onPopupClose={closeDeletePopup} />
+         : null}
       </div>
     )
   }
@@ -88,7 +97,10 @@ const mapStateToProps = (state) => (
     adjustments: state.adjustmentsData.adjustments,
     users: state.sharedData.users,
     dataReceived: state.adjustmentsData.dataReceived,
-    successMessage: state.adjustmentsData.successMessage
+    successMessage: state.adjustmentsData.successMessage,
+    toRemove: state.adjustmentsData.toRemove,
+    showPopup: state.adjustmentsData.showPopup,
+    removeSuccess: state.adjustmentsData.removeSuccess
   }
 );
 
@@ -106,6 +118,15 @@ const mapDispatchToProps = (dispatch) => (
     ),
     handleAttributeChange: (attribute, id, value, target) => (
       dispatch(changeAttribute(attribute, id, value, target))
+    ),
+    handleRemoveButtonClick: (id) => (
+      dispatch(setAdjustmentToRemove(id))
+    ),
+    submitDeleteAdjustment: () => (
+      dispatch(submitDeleteAdjustment())
+    ),
+    closeDeletePopup: () => (
+      dispatch(closeDeletePopup())
     )
   }
 );

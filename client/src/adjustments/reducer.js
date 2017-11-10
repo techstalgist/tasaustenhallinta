@@ -1,11 +1,15 @@
 import { v4 } from 'node-uuid';
+import {toFinnishDateString} from '../shared/helpers';
 
 function getInitialState() {
   return {
     adjustments: [],
     dataReceived: false,
     successMessage: null,
-    errorMessage: null
+    errorMessage: null,
+    toRemove: {},
+    showPopup: false,
+    removeSuccess: false
   };
 }
 
@@ -91,6 +95,24 @@ export function reducer(state = getInitialState(), action) {
         ...state,
         errorMessage: action.message
       }
+    case 'SET_ADJUSTMENT_TO_REMOVE':
+      return {
+        ...state,
+        toRemove: state.adjustments[getAdjustmentIndexById(action.id, state.adjustments)],
+        showPopup: true
+      }
+    case 'SUBMIT_DELETE_ADJUSTMENT':
+      return {
+        ...state,
+        removeSuccess: true
+      }
+    case 'CLOSE_DELETE_ADJUSTMENT_POPUP':
+      return {
+        ...state,
+        toRemove: {},
+        showPopup: false,
+        removeSuccess: false
+      }
     default:
       return state;
   }
@@ -121,6 +143,12 @@ function changeOneAdjustment(currentAdjustments, id, callback, newValue) {
   return updatedAdjustments;
 }
 
+function adjustmentToString() {
+  return function() {
+    return "Maksaja: " + this.username + ", Määrä: " + this.amount + ", Pvm: " + toFinnishDateString(this.date);
+  }
+}
+
 function newAdjustmentReducer(currentAdjustments, user) {
   return [
     ...currentAdjustments,
@@ -130,7 +158,8 @@ function newAdjustmentReducer(currentAdjustments, user) {
       username: user.username,
       amount: null,
       date: new Date().toISOString().substr(0,10),
-      newadjustment: true
+      newadjustment: true,
+      toString: adjustmentToString()
     }
   ]
 }
@@ -140,7 +169,8 @@ function updateDateAndId(a) {
     ...a,
     date: a.date,
     id: a.id.toString(),
-    newadjustment: false
+    newadjustment: false,
+    toString: adjustmentToString()
   }
 }
 

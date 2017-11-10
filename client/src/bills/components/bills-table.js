@@ -6,8 +6,8 @@ import { toFinnishDateString } from '../../shared/helpers';
 import { handleUserChange, handleAmountChange, handleDateChange, handleCategoryChange } from '../../shared/components/table/change-handlers';
 import MonthSelection from './month-selection';
 import AmountsForUsers from './amounts-for-users';
-import TableHeaders from '../../shared/components/table-headers';
-import UserDropdown from '../../shared/components/user-dropdown';
+import TableHeaders from '../../shared/components/table/table-headers';
+import UserDropdown from '../../shared/components/table/user-dropdown';
 import {changeAttribute } from '../../shared/actions';
 
 class BillsTable extends React.Component {

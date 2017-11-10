@@ -1,6 +1,6 @@
 import React from 'react';
 import { showRounded } from '../../shared/helpers';
-import TableHeaders from '../../shared/components/table-headers';
+import TableHeaders from '../../shared/components/table/table-headers';
 
 function calculateAmountsForUsers(bills) {
     let amountsForUsers = {

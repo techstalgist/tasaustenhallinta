@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import TableHeaders from '../../shared/components/table-headers';
+import TableHeaders from '../../shared/components/table/table-headers';
 import {fetchCategories} from '../actions';
 
 class CategoriesTable extends React.Component {
