@@ -11,6 +11,10 @@ class Header extends React.Component {
         title: "Kirjautuminen",
         url: "/login"
       },
+      {
+        title: "Rekisteröityminen",
+        url: "/signup"
+      }
     ] : [
       {
         title: "Tasaukset",

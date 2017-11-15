@@ -43,7 +43,7 @@ router.post('/signup', (req, res, next) => {
       else {
         const payload = {id: user.id, user: user.username};
         const token = jwt.sign(payload, jwtOptions.secretOrKey);
-        res.status(200).json({ token, user });
+        res.status(200).json({ token, user, message: 'Rekisteröityminen onnistui!' });
       }
     });
   });
