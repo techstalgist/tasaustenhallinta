@@ -1,5 +1,4 @@
-import fetch from 'isomorphic-fetch';
-import { serialize } from '../shared/helpers';
+import { Interface, callApi } from '../shared/actions';
 
 export function logIn(json) {
   return {
@@ -30,28 +29,10 @@ export function hideLoginSuccess() {
 }
 
 export function submitLogin(data) {
-  return function (dispatch) {
-    const apiCallAddress = '/login';
-    const reqBody = serialize(data);
-    const headers = new Headers({
-      "Content-Type": "application/x-www-form-urlencoded"
-    });
-    const request = new Request(apiCallAddress, {
-      method: 'POST',
-      headers: headers,
-      body: reqBody
-    });
-    return fetch(request)
-      .then(response => response.json()
-        .then((json) => {
-            if(!response.ok) {
-              dispatch(failedLogin(json));
-            } else {
-              dispatch(logIn(json));
-            }
-        })
-      ).catch(err => console.error(err));
-  };
+  const loginInterface = new Interface('/login', 'POST', logIn, failedLogin, null);
+  loginInterface.setHeaders(null, "application/x-www-form-urlencoded");
+  loginInterface.setBody(data, false);
+  return callApi(loginInterface);
 }
 
 export function submitLogout() {

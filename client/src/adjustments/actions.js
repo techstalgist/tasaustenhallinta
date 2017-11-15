@@ -1,6 +1,5 @@
-import fetch from 'isomorphic-fetch';
 import { getAdjustments } from './selectors';
-import { fetchUsers } from '../shared/actions';
+import { fetchUsers, callApi, Interface } from '../shared/actions';
 
 export function requestAdjustments() {
   return {
@@ -21,9 +20,23 @@ export function setAdjustmentToRemove(id) {
   };
 }
 
-export function submitDeleteAdjustment() {
+export function deleteAdjustmentToRemove() {
   return {
-    type: 'SUBMIT_DELETE_ADJUSTMENT'
+    type: 'DELETE_ADJUSTMENT_TO_REMOVE'
+  };
+}
+
+
+export function submitDeleteAdjustment() {
+  return function (dispatch, getState) {
+    /* TODO
+    const toRemove = getState().adjustmentsData.toRemove;
+    if (toRemove.newadjustment) {
+      dispatch(deleteAdjustmentToRemove());
+    } else {
+      callApi('/adjustments/'+toRemove.id, 'DELETE', null, deleteAdjustmentToRemove, deleteFailure);
+    }
+    */
   };
 }
 
@@ -60,97 +73,68 @@ export function addAdjustment() {
   };
 }
 
-export function creationSuccess(message, data) {
+export function creationSuccess(json) {
   return {
     type: 'CREATION_SUCCESS',
-    message: message,
-    data: data
+    message: json.message,
+    data: json.data
   };
 }
 
-export function creationFailure(message) {
+export function creationFailure(json) {
   return {
     type: 'CREATION_FAILURE',
+    message: json.message
+  };
+}
+
+export function deleteFailure(message) {
+  return {
+    type: 'DELETE_FAILURE',
     message: message
   };
 }
 
-export function updateSuccess(message) {
+export function updateSuccess(json) {
   return {
     type: 'UPDATE_SUCCESS',
-    message: message
+    message: json.message
   };
 }
 
-export function updateFailure(message) {
+export function updateFailure(json) {
   return {
     type: 'UPDATE_FAILURE',
-    message: message
+    message: json.message
   };
 }
 
 export function fetchAdjustments() {
   return function (dispatch, getState) {
-    dispatch(requestAdjustments());
-    const apiCallAddress = '/adjustments';
+    const fetchAdjustmentsInterface = new Interface('/adjustments', 'GET', receiveAdjustments, null, requestAdjustments);
     const token = getState().loginData.logInInfo.token;
-    const mustFetchUsers = !getState().sharedData.usersDataReceived;
-    const headers = new Headers({ 'Authorization': `JWT ${token}` });
-    const request = new Request(apiCallAddress, {
-      method: 'GET',
-      headers: headers
-    });
-    return fetch(request)
-      .then(response => response.json())
-      .then((json) =>
-        dispatch(receiveAdjustments(json))
-      ).then(() => {
-        if (mustFetchUsers) {
-          dispatch(fetchUsers());
-        }
-      })
-      .catch(err => console.error(err));
+    fetchAdjustmentsInterface.setHeaders(token, null);
+    dispatch(callApi(fetchAdjustmentsInterface));
+    dispatch(fetchUsers()); // TODO these dispatches are now run in async manner. second one doesn't wait for the completion of 1st one.
   };
 }
 
-export function callApiToCreateOrUpdate(submitCall, newOnes, httpVerb, successCall, failureCall) {
+export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
   return function (dispatch, getState) {
-    dispatch(submitCall());
-    const apiCallAddress = '/adjustments';
     const allAdjustments = getState().adjustmentsData.adjustments;
-    const neededAdjustments = getAdjustments(allAdjustments, newOnes);
-    const data = JSON.stringify(neededAdjustments);
+    const neededAdjustments = getAdjustments(allAdjustments, isCreate);
+    const adjustmentsInterface = new Interface('/adjustments', httpVerb, success, failure, submit);
     const token = getState().loginData.logInInfo.token;
-    const headers = new Headers({
-      "Content-Type": "application/json",
-      "Authorization": `JWT ${token}`
-    });
-    const request = new Request(apiCallAddress, {
-      method: httpVerb,
-      headers: headers,
-      body: data
-    });
-    return fetch(request)
-      .then(response => response.json()
-        .then((json) => {
-            if(!response.ok) {
-              dispatch(failureCall(json.message));
-            } else {
-              if (newOnes) {
-                dispatch(successCall(json.message, json.data));
-              } else {
-                dispatch(successCall(json.message));
-              }
-            }
-        })
-      ).catch(err => console.error(err));
+    adjustmentsInterface.setHeaders(token, "application/json");
+    adjustmentsInterface.setBody(neededAdjustments, true);
+    dispatch(callApi(adjustmentsInterface));
   };
 }
 
 export function createAdjustments() {
-  return callApiToCreateOrUpdate(submitNewAdjustments, true, 'POST', creationSuccess, creationFailure);
+  return createOrUpdate(true, 'POST', creationSuccess, creationFailure, submitNewAdjustments);
 }
 
 export function updateAdjustments() {
-  return callApiToCreateOrUpdate(submitUpdate, false, 'PUT', updateSuccess, updateFailure);
+  return createOrUpdate(false, 'PUT', updateSuccess, updateFailure, submitUpdate);
 }

@@ -1,6 +1,6 @@
 # Devaus
 
-1. Aja `npm start` => käynnistää sekä clientin että palvelimen. Avaa `localhost:3000` selaimessa käyttääksesi sovellusta. Kun teet muutoksia, sovelluksen pitäisi käynnistyä automaattisesti.
+1. Aja `npm start` => käynnistää sekä clientin että palvelimen. Avaa `localhost:3000` selaimessa käyttääksesi sovellusta. Kun teet muutoksia, sovelluksen pitäisi käynnistyä uudelleen automaattisesti.
 
 # Deploy
 

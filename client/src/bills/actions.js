@@ -1,9 +1,7 @@
-import fetch from 'isomorphic-fetch';
 import {fetchCategories} from '../categories/actions';
 import {getDefaultCategory} from '../categories/selectors';
-import {fetchUsers} from '../shared/actions';
+import {fetchUsers, Interface, callApi} from '../shared/actions';
 import {getBills} from './selectors';
-
 
 export function submitNewBills() {
   return {
@@ -46,32 +44,32 @@ export function newBill(user, category) {
   };
 }
 
-export function creationSuccess(message, data) {
+export function creationSuccess(json) {
   return {
     type: 'BILL_CREATION_SUCCESS',
-    message: message,
-    data: data
+    message: json.message,
+    data: json.data
   };
 }
 
-export function creationFailure(message) {
+export function creationFailure(json) {
   return {
     type: 'BILL_CREATION_FAILURE',
-    message: message
+    message: json.message
   };
 }
 
-export function updateSuccess(message) {
+export function updateSuccess(json) {
   return {
     type: 'BILL_UPDATE_SUCCESS',
-    message: message
+    message: json.message
   };
 }
 
-export function updateFailure(message) {
+export function updateFailure(json) {
   return {
     type: 'BILL_UPDATE_FAILURE',
-    message: message
+    message: json.message
   };
 }
 
@@ -85,72 +83,31 @@ export function addBill() {
 
 export function fetchBills() {
   return function (dispatch, getState) {
-    dispatch(requestBills());
-    const apiCallAddress = '/bills';
-    const mustFetchCategories = !getState().categoriesData.dataReceived;
-    const mustFetchUsers = !getState().sharedData.usersDataReceived;
+    const fetchInterface = new Interface('/bills', 'GET', receiveBills, null, requestBills);
     const token = getState().loginData.logInInfo.token;
-    const headers = new Headers({ 'Authorization': `JWT ${token}` });
-    const request = new Request(apiCallAddress, {
-      method: 'GET',
-      headers: headers
-    });
-    return fetch(request)
-      .then(response => response.json())
-      .then((json) =>
-        dispatch(receiveBills(json))
-      ).then(() => {
-        if (mustFetchCategories) {
-          dispatch(fetchCategories());
-        }
-      }).then(() => {
-        if (mustFetchUsers) {
-          dispatch(fetchUsers());
-        }
-      })
-      .catch(err => console.error(err));
+    fetchInterface.setHeaders(token, null);
+    dispatch(callApi(fetchInterface));
+    dispatch(fetchCategories()); // TODO same as below
+    dispatch(fetchUsers()); // TODO these dispatches are now run in async manner. second one doesn't wait for the completion of 1st one.
   };
 }
 
-
-export function callApiToCreateOrUpdate(submitCall, newOnes, httpVerb, successCall, failureCall) {
+export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
   return function (dispatch, getState) {
-    dispatch(submitCall());
-    const apiCallAddress = '/bills';
     const allBills = getState().billsData.bills;
-    const neededBills = getBills(allBills, newOnes);
-    const data = JSON.stringify(neededBills);
+    const neededBills = getBills(allBills, isCreate);
+    const billsInterface = new Interface('/bills', httpVerb, success, failure, submit);
     const token = getState().loginData.logInInfo.token;
-    const headers = new Headers({
-      "Content-Type": "application/json",
-      "Authorization": `JWT ${token}`
-    });
-    const request = new Request(apiCallAddress, {
-      method: httpVerb,
-      headers: headers,
-      body: data
-    });
-    return fetch(request)
-      .then(response => response.json()
-        .then((json) => {
-            if(!response.ok) {
-              dispatch(failureCall(json.message));
-            } else {
-              if (newOnes) {
-                dispatch(successCall(json.message, json.data));
-              } else {
-                dispatch(successCall(json.message));
-              }
-            }
-        })
-      ).catch(err => console.error(err));
+    billsInterface.setHeaders(token, "application/json");
+    billsInterface.setBody(neededBills, true);
+    dispatch(callApi(billsInterface));
   };
 }
 
 export function createBills() {
-  return callApiToCreateOrUpdate(submitNewBills, true, 'POST', creationSuccess, creationFailure);
+  return createOrUpdate(true, 'POST', creationSuccess, creationFailure, submitNewBills);
 }
 
 export function updateBills() {
-  return callApiToCreateOrUpdate(submitBillsUpdate, false, 'PUT', updateSuccess, updateFailure);
+  return createOrUpdate(false, 'PUT', updateSuccess, updateFailure, submitBillsUpdate);
 }

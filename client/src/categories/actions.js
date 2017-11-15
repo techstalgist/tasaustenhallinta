@@ -1,5 +1,4 @@
-import fetch from 'isomorphic-fetch';
-import { serialize } from '../shared/helpers';
+import { callApi, Interface } from '../shared/actions';
 
 export function requestCategories() {
   return {
@@ -23,43 +22,23 @@ export function receiveAnalysisData(json) {
 
 export function fetchAnalysisData() {
   return function (dispatch, getState) {
-    const apiCallAddress = '/analysis';
+    const analysisInterface = new Interface('/analysis', 'POST', receiveAnalysisData, null, null);
     const token = getState().loginData.logInInfo.token;
-    const headers = new Headers({
-      'Authorization': `JWT ${token}`,
-      'Content-Type': "application/x-www-form-urlencoded"
-    });
-    const body = serialize({users: [1, 2]});
-    const request = new Request(apiCallAddress, {
-      method: 'POST',
-      headers: headers,
-      body: body
-    });
-    return fetch(request)
-      .then(response => response.json())
-      .then((json) =>
-        dispatch(receiveAnalysisData(json))
-      )
-      .catch(err => console.error(err));
+    const data = {users: [1, 2]}; // TODO
+    analysisInterface.setHeaders(token, "application/x-www-form-urlencoded");
+    analysisInterface.setBody(data, false);
+    dispatch(callApi(analysisInterface));
   };
 }
 
-
 export function fetchCategories() {
   return function (dispatch, getState) {
-    dispatch(requestCategories());
-    const apiCallAddress = '/categories';
+    if (getState().categoriesData.dataReceived) {
+      return;
+    }
+    const fetchCategoriesInterface = new Interface('/categories', 'GET', receiveCategories, null, requestCategories);
     const token = getState().loginData.logInInfo.token;
-    const headers = new Headers({ 'Authorization': `JWT ${token}` });
-    const request = new Request(apiCallAddress, {
-      method: 'GET',
-      headers: headers
-    });
-    return fetch(request)
-      .then(response => response.json())
-      .then((json) =>
-        dispatch(receiveCategories(json))
-      )
-      .catch(err => console.error(err));
+    fetchCategoriesInterface.setHeaders(token, null);
+    dispatch(callApi(fetchCategoriesInterface));
   };
 }

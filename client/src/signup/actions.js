@@ -1,6 +1,5 @@
-import fetch from 'isomorphic-fetch';
-import { serialize } from '../shared/helpers';
 import { logIn } from '../login/actions';
+import { Interface, callApi } from '../shared/actions';
 
 export function failedSignup(json) {
   return {
@@ -16,26 +15,8 @@ export function hideSignUpMessages() {
 }
 
 export function submitSignup(data) {
-  return function (dispatch) {
-    const apiCallAddress = '/signup';
-    const reqBody = serialize(data);
-    const headers = new Headers({
-      "Content-Type": "application/x-www-form-urlencoded"
-    });
-    const request = new Request(apiCallAddress, {
-      method: 'POST',
-      headers: headers,
-      body: reqBody
-    });
-    return fetch(request)
-      .then(response => response.json()
-        .then((json) => {
-            if(!response.ok) {
-              dispatch(failedSignup(json));
-            } else {
-              dispatch(logIn(json));
-            }
-        })
-      ).catch(err => console.error(err));
-  };
+  const signUpInterface = new Interface('/signup', 'POST', logIn, failedSignup, null);
+  signUpInterface.setHeaders(null, "application/x-www-form-urlencoded");
+  signUpInterface.setBody(data, false);
+  return callApi(signUpInterface);
 }

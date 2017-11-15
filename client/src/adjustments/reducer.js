@@ -95,16 +95,16 @@ export function reducer(state = getInitialState(), action) {
         ...state,
         errorMessage: action.message
       }
+    case 'DELETE_FAILURE':
+      return {
+        ...state,
+        errorMessage: action.message
+      }
     case 'SET_ADJUSTMENT_TO_REMOVE':
       return {
         ...state,
         toRemove: state.adjustments[getAdjustmentIndexById(action.id, state.adjustments)],
         showPopup: true
-      }
-    case 'SUBMIT_DELETE_ADJUSTMENT':
-      return {
-        ...state,
-        removeSuccess: true
       }
     case 'CLOSE_DELETE_ADJUSTMENT_POPUP':
       return {
@@ -113,9 +113,25 @@ export function reducer(state = getInitialState(), action) {
         showPopup: false,
         removeSuccess: false
       }
+    case 'DELETE_ADJUSTMENT_TO_REMOVE':
+      return {
+        ...state,
+        adjustments: removeAdjustmentFromState(state.adjustments, state.toRemove),
+        removeSuccess: true
+      }
     default:
       return state;
   }
+}
+
+function removeAdjustmentFromState(newData, toRemove) {
+  const i = getAdjustmentIndexById(toRemove.id, newData);
+  let updatedAdjustments = newData;
+  updatedAdjustments = [
+    ...updatedAdjustments.slice(0, i),
+    ...updatedAdjustments.slice(i+1)
+  ]
+  return updatedAdjustments;
 }
 
 function adjustmentsDataReducer(newData, updateFunction) {
