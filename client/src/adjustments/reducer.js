@@ -117,6 +117,10 @@ export function reducer(state = getInitialState(), action) {
       return {
         ...state,
         adjustments: removeAdjustmentFromState(state.adjustments, state.toRemove),
+        toRemove: {
+          ...state.toRemove,
+          removed: true
+        },
         removeSuccess: true
       }
     default:

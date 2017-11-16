@@ -76,23 +76,12 @@ router.post('/login', (req, res, next) => {
   });
 });
 
-// login process: POST to /login returns a token if login successful.
-// then provide Authorization: JWT [token] header in the /auth GET request
-// passport tries to find a payload that matches the token.
-// if found it probably returns the payload, which in turn contains the id and user as defined above in payload -object.
-// then user id is used to find the user from DB.
-
-//router.get('/auth', passport.authenticate('jwt', { session: false }), (req, res) => {
-//  const user = req.user;
-//  delete user.password; // cannot send password to frontend
-//  res.json({user});
-//});
-
 router.get('/users', passport.authenticate('jwt', { session: false }), UserDao.getUsers);
 
 router.get('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.getAdjustments);
 router.post('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.createAdjustments);
 router.put('/adjustments', passport.authenticate('jwt', { session: false }), Adjustment.updateAdjustments);
+router.delete('/adjustments/:id', passport.authenticate('jwt', { session: false }), Adjustment.deleteAdjustment);
 
 router.get('/bills', passport.authenticate('jwt', { session: false }), Bill.getBills);
 router.post('/bills', passport.authenticate('jwt', { session: false }), Bill.createBills);

@@ -17,6 +17,20 @@ function getAdjustments(req, res, next) {
     });
 }
 
+function deleteAdjustment(req, res, next) {
+  db.any('delete from adjustments where id = $1', req.params.id)
+    .then(() => {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Tasaus poistettu.'
+        });
+    })
+    .catch((err) => {
+      return next(err);
+    });
+}
+
 function createAdjustments(req, res, next) {
   let newValuesStr;
   const newOnesExist = req.body.length > 0;
@@ -99,5 +113,6 @@ function updateAdjustments(req, res, next) {
 module.exports = {
   getAdjustments: getAdjustments,
   createAdjustments: createAdjustments,
-  updateAdjustments: updateAdjustments
+  updateAdjustments: updateAdjustments,
+  deleteAdjustment: deleteAdjustment
 };

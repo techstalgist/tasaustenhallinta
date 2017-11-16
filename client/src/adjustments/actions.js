@@ -29,14 +29,18 @@ export function deleteAdjustmentToRemove() {
 
 export function submitDeleteAdjustment() {
   return function (dispatch, getState) {
-    /* TODO
     const toRemove = getState().adjustmentsData.toRemove;
+    if (toRemove.removed) {
+      return;
+    }
     if (toRemove.newadjustment) {
       dispatch(deleteAdjustmentToRemove());
     } else {
-      callApi('/adjustments/'+toRemove.id, 'DELETE', null, deleteAdjustmentToRemove, deleteFailure);
+      const deleteAdjustmentInterface = new Interface('/adjustments/'+toRemove.id, 'DELETE', deleteAdjustmentToRemove, deleteFailure, null);
+      const token = getState().loginData.logInInfo.token;
+      deleteAdjustmentInterface.setHeaders(token, null);
+      dispatch(callApi(deleteAdjustmentInterface));
     }
-    */
   };
 }
 
