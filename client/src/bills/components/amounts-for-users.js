@@ -2,9 +2,9 @@ import React from 'react';
 import { showRounded } from '../../shared/helpers';
 import TableHeaders from '../../shared/components/table/table-headers';
 
-function calculateAmountsForUsers(bills) {
+function calculateAmountsForUsers(bills, users) {
     let amountsForUsers = {
-      users: {},
+      users: initializeUsers(users),
       total: 0.0
     };
     for (let i = 0; i < bills.length; i++) {
@@ -20,13 +20,22 @@ function calculateAmountsForUsers(bills) {
     return amountsForUsers;
 }
 
-function calculateAdjustment(paid, total) {
-  return Math.max(total/2-paid,0);
+function initializeUsers(users) {
+  let obj = {};
+  for (let i = 0; i < users.length; i++) {
+    obj[users[i].username] = 0.0;
+  }
+  return obj;
+}
+
+function calculateAdjustment(paid, total, userCount) {
+  return Math.max(total/userCount-paid,0);
 }
 
 const AmountsForUsers = (props) => {
-    const {bills} = props;
-    const amountsForUsers = calculateAmountsForUsers(bills);
+    const {bills, users} = props;
+    const amountsForUsers = calculateAmountsForUsers(bills, users);
+    const userCount = Object.keys(amountsForUsers.users).length;
     const headersData = [
       {cssClass: "text-right", title: "Käyttäjä"},
       {cssClass: "text-right", title: "Maksanut yht"},
@@ -45,7 +54,7 @@ const AmountsForUsers = (props) => {
                     {showRounded(amountsForUsers.users[k], 2)} €
                   </td>
                   <td className="text-right">
-                    {showRounded(calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total), 2)} €
+                    {showRounded(calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total, userCount), 2)} €
                   </td>
                 </tr>
              )

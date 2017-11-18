@@ -23,13 +23,14 @@ class AdjustmentsTable extends React.Component {
     const headersData = [
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
-      {cssClass: "col text-right", title: "Summa"},
-      {cssClass: "col text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col-3 text-right", title: "Summa"},
+      {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col-2", title:""}
     ];
     const target = "adjustment";
     const table = (
         <div className="row">
-          <div className="col-7">
+          <div className="col-8">
             <table className="table table-sm border">
               <TableHeaders headers={headersData} rowClass="table-row"/>
               <tbody>
@@ -41,19 +42,19 @@ class AdjustmentsTable extends React.Component {
                       <td className="col-2">
                         <UserDropdown next={handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
                       </td>
-                      <td className="col text-right">
+                      <td className="col-3 text-right">
                         <input type="number" name="amount"
                             defaultValue={a.amount}
                             onBlur={(e) => handleAmountChange(handleAttributeChange, a.id, e, target)}
                             className="text-right"/>
                       </td>
-                      <td className="col text-right">
+                      <td className="col-3 text-right">
                         <input type="text" name="date"
                             defaultValue={toFinnishDateString(a.date)}
                             onBlur={(e) => handleDateChange(handleAttributeChange, a.id, e, target)}
                             className="text-right"/>
                       </td>
-                      <td>
+                      <td className="col-2 text-center">
                         <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(a.id)}>
                       	  <span aria-hidden="true">&times;</span>
                     		</button>

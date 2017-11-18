@@ -86,6 +86,7 @@ router.delete('/adjustments/:id', passport.authenticate('jwt', { session: false 
 router.get('/bills', passport.authenticate('jwt', { session: false }), Bill.getBills);
 router.post('/bills', passport.authenticate('jwt', { session: false }), Bill.createBills);
 router.put('/bills', passport.authenticate('jwt', { session: false }), Bill.updateBills);
+router.delete('/bills/:id', passport.authenticate('jwt', { session: false }), Bill.deleteBill);
 
 router.get('/categories', passport.authenticate('jwt', { session: false }), Category.getCategories);
 

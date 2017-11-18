@@ -1,5 +1,6 @@
 import { v4 } from 'node-uuid';
 import { getCurrentMonth, getMonths, getMonth, createMonthFromDate } from './months';
+import {toFinnishDateString} from '../shared/helpers';
 
 function getInitialState() {
   return {
@@ -8,7 +9,10 @@ function getInitialState() {
     successMessage: null,
     errorMessage: null,
     selectedMonth: getCurrentMonth(),
-    months: getMonths(new Date())
+    months: getMonths(new Date()),
+    toRemove: {},
+    showPopup: false,
+    removeSuccess: false
   };
 }
 
@@ -119,6 +123,36 @@ export function reducer(state = getInitialState(), action) {
         ...state,
         errorMessage: action.message
       }
+    case 'DELETE_BILL_FAILURE':
+      return {
+        ...state,
+        errorMessage: action.message
+      }
+    case 'SET_BILL_TO_REMOVE':
+      return {
+        ...state,
+        toRemove: findBillToRemove(state.bills, state.selectedMonth.toString(), action.id),
+        showPopup: true,
+        successMessage: null,
+        errorMessage: null
+      }
+    case 'CLOSE_DELETE_BILL_POPUP':
+      return {
+        ...state,
+        toRemove: {},
+        showPopup: false,
+        removeSuccess: false
+      }
+    case 'DELETE_BILL_TO_REMOVE':
+      return {
+        ...state,
+        bills: deleteBillReducer(state.bills, state.selectedMonth.toString(), state.toRemove.id),
+        toRemove: {
+          ...state.toRemove,
+          removed: true
+        },
+        removeSuccess: true
+      }
     default:
       return state;
   }
@@ -151,8 +185,20 @@ function handleBillFromBackend(b) {
   return {
     ...b,
     id: b.id.toString(),
-    newbill: false
+    newbill: false,
+    toString: billToString()
   }
+}
+
+function deleteBillReducer(bills, monthStr, billId) {
+  return {
+    ...bills,
+    [monthStr]: deleteBillInMonth(bills[monthStr], billId)
+  }
+}
+
+function findBillToRemove(bills, monthStr, billId) {
+  return bills[monthStr].filter((b) => b.id === billId)[0];
 }
 
 function dateAndMonthChangeReducer(bills, oldMonthStr, billId, newDateObj) {
@@ -192,7 +238,8 @@ function createNewBill(user, category) {
     categoryname: category.name,
     categoryid: category.id,
     date: new Date().toISOString().substr(0,10),
-    newbill: true
+    newbill: true,
+    toString: billToString()
   }
 }
 
@@ -256,5 +303,14 @@ function setAmount(bill, newAmount) {
   return {
     ...bill,
     amount: newAmount
+  }
+}
+
+function billToString() {
+  return function() {
+    return "Käyttäjä: " + this.username
+           + ", Määrä: " + (this.amount || 0)
+           + ", Kategoria: " + this.categoryname
+           + ", Pvm: " + toFinnishDateString(this.date);
   }
 }

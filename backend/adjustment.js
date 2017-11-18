@@ -18,7 +18,7 @@ function getAdjustments(req, res, next) {
 }
 
 function deleteAdjustment(req, res, next) {
-  db.any('delete from adjustments where id = $1', req.params.id)
+  db.none('delete from adjustments where id = $1', req.params.id)
     .then(() => {
       res.status(200)
         .json({

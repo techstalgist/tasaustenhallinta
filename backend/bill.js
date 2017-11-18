@@ -44,6 +44,20 @@ function getBills(req, res, next) {
     });
 }
 
+function deleteBill(req, res, next) {
+  db.none('delete from bills where id = $1', req.params.id)
+    .then(() => {
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Lasku poistettu.'
+        });
+    })
+    .catch((err) => {
+      return next(err);
+    });
+}
+
 function createBills(req, res, next) {
   let newValuesStr;
   const newOnesExist = req.body.length > 0;
@@ -126,5 +140,6 @@ function updateBills(req, res, next) {
 module.exports = {
   getBills: getBills,
   createBills: createBills,
-  updateBills: updateBills
+  updateBills: updateBills,
+  deleteBill: deleteBill
 };

@@ -73,6 +73,32 @@ export function updateFailure(json) {
   };
 }
 
+export function deleteBillFailure(json) {
+  return {
+    type: 'DELETE_BILL_FAILURE',
+    message: json.message
+  };
+}
+
+export function setBillToRemove(id) {
+  return {
+    type: 'SET_BILL_TO_REMOVE',
+    id: id
+  };
+}
+
+export function deleteBillToRemove() {
+  return {
+    type: 'DELETE_BILL_TO_REMOVE'
+  };
+}
+
+export function closeDeletePopup() {
+  return {
+    type: 'CLOSE_DELETE_BILL_POPUP'
+  };
+}
+
 export function addBill() {
   return function (dispatch, getState) {
     const user = getState().loginData.logInInfo.user;
@@ -110,4 +136,21 @@ export function createBills() {
 
 export function updateBills() {
   return createOrUpdate(false, 'PUT', updateSuccess, updateFailure, submitBillsUpdate);
+}
+
+export function submitDeleteBill() {
+  return function (dispatch, getState) {
+    const toRemove = getState().billsData.toRemove;
+    if (toRemove.removed) {
+      return;
+    }
+    if (toRemove.newbill) {
+      dispatch(deleteBillToRemove());
+    } else {
+      const deleteInterface = new Interface('/bills/'+toRemove.id, 'DELETE', deleteBillToRemove, deleteBillFailure, null);
+      const token = getState().loginData.logInInfo.token;
+      deleteInterface.setHeaders(token, null);
+      dispatch(callApi(deleteInterface));
+    }
+  };
 }
