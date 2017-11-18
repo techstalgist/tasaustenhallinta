@@ -186,7 +186,7 @@ function handleBillFromBackend(b) {
     ...b,
     id: b.id.toString(),
     newbill: false,
-    toString: billToString()
+    toUIObject: billToUIObject()
   }
 }
 
@@ -239,7 +239,7 @@ function createNewBill(user, category) {
     categoryid: category.id,
     date: new Date().toISOString().substr(0,10),
     newbill: true,
-    toString: billToString()
+    toUIObject: billToUIObject()
   }
 }
 
@@ -306,11 +306,13 @@ function setAmount(bill, newAmount) {
   }
 }
 
-function billToString() {
+function billToUIObject() {
   return function() {
-    return "Käyttäjä: " + this.username
-           + ", Määrä: " + (this.amount || 0)
-           + ", Kategoria: " + this.categoryname
-           + ", Pvm: " + toFinnishDateString(this.date);
+    return {
+      "Käyttäjä": this.username,
+      "Määrä": this.amount || 0,
+      "Kategoria": this.categoryname,
+      "Pvm": toFinnishDateString(this.date)
+    }
   }
 }

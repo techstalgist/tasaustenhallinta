@@ -163,12 +163,6 @@ function changeOneAdjustment(currentAdjustments, id, next, newValue) {
   return updatedAdjustments;
 }
 
-function adjustmentToString() {
-  return function() {
-    return "Käyttäjä: " + this.username + ", Määrä: " + (this.amount || 0) + ", Pvm: " + toFinnishDateString(this.date);
-  }
-}
-
 function newAdjustmentReducer(currentAdjustments, user) {
   return [
     ...currentAdjustments,
@@ -179,7 +173,7 @@ function newAdjustmentReducer(currentAdjustments, user) {
       amount: null,
       date: new Date().toISOString().substr(0,10),
       newadjustment: true,
-      toString: adjustmentToString()
+      toUIObject: adjustmentToUIObject()
     }
   ]
 }
@@ -190,7 +184,7 @@ function updateDateAndId(a) {
     date: a.date,
     id: a.id.toString(),
     newadjustment: false,
-    toString: adjustmentToString()
+    toUIObject: adjustmentToUIObject()
   }
 }
 
@@ -219,4 +213,15 @@ function setUserIDAndUsername(a, user) {
 function getAdjustmentIndexById(id, adjustments) {
   const ids = adjustments.map( (a) => a.id );
   return ids.indexOf(id);
+}
+
+
+function adjustmentToUIObject() {
+  return function() {
+    return {
+      "Käyttäjä": this.username,
+      "Määrä": this.amount || 0,
+      "Pvm": toFinnishDateString(this.date)
+    }
+  }
 }

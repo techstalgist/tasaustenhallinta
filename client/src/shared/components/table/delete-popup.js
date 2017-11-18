@@ -12,6 +12,7 @@ const DeletePopup = (props) => {
     } else {
       successAlert = null;
     }
+    const objectToShow = objectToRemove.toUIObject();
     return(
         <div className="modal custom-modal" id={"deletePopup_"+title}>
           <div className="modal-dialog">
@@ -23,13 +24,17 @@ const DeletePopup = (props) => {
                 </button>
               </div>
               <div className="modal-body">
-                  <div className="row">
+                  <div className="row mb-2">
                     <div className="col">
-                        <p>Poistettava {title}: <br/>
-                          <span id={"objectToRemove_" + title}>
-                            <strong>{objectToRemove.toString()}</strong>
-                          </span>. <br/><br/>
-                        Vahvista poistaminen klikkaamalla Poista.</p>
+                        <strong>Poistettava {title}</strong>
+                          <hr/>
+                          <p>
+                            {Object.keys(objectToShow).map((k, i) => {
+                                  return (<span id={k} key={k}>{k}: {objectToShow[k]}<br/></span>)
+                              })}
+                          </p>
+                          <hr />
+                        Vahvista poistaminen klikkaamalla <strong>Poista.</strong>
                     </div>
                   </div>
                   <div className="row">
