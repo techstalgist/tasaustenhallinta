@@ -117,8 +117,8 @@ const mapDispatchToProps = (dispatch) => (
     updateAdjustments: () => (
       dispatch(updateAdjustments())
     ),
-    handleAttributeChange: (attribute, id, value, target) => (
-      dispatch(changeAttribute(attribute, id, value, target))
+    handleAttributeChange: (attribute, id, value, target, isValid) => (
+      dispatch(changeAttribute(attribute, id, value, target, isValid))
     ),
     handleRemoveButtonClick: (id) => (
       dispatch(setAdjustmentToRemove(id))

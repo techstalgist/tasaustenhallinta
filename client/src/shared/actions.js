@@ -36,12 +36,13 @@ export function Interface(endpoint, httpVerb, successCall, failureCall, submitCa
   };
 }
 
-export function changeAttribute(attribute, id, newValue, target) {
+export function changeAttribute(attribute, id, newValue, target, isValid) {
   const objAttribute = "new" + toProperCase(attribute);
   return {
     type: 'CHANGE_' + target.toUpperCase() + "_" + attribute.toUpperCase(),
     id: id,
-    [objAttribute]: newValue
+    [objAttribute]: newValue,
+    isValid: isValid !== "undefined" ? isValid : true
   };
 }
 

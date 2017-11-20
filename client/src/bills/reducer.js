@@ -71,9 +71,15 @@ export function reducer(state = getInitialState(), action) {
         bills: updateBillReducer(state.bills, state.selectedMonth, action.id, setCategory, action.newCategory)
       }
     case 'CHANGE_BILL_DATE':
-      const newDateObj = new Date(action.newDate);
-      const monthUnchanged = (newDateObj.getFullYear() === state.selectedMonth.year) && ((newDateObj.getMonth()+1) === state.selectedMonth.month);
-      if (monthUnchanged) {
+      let shouldChangeMonth;
+      let newDateObj
+      if (!action.isValid) {
+        shouldChangeMonth = false;
+      } else {
+        newDateObj = new Date(action.newDate);
+        shouldChangeMonth = (newDateObj.getFullYear() !== state.selectedMonth.year) || ((newDateObj.getMonth()+1) !== state.selectedMonth.month);
+      }
+      if (!shouldChangeMonth) {
         return {
           ...state,
           successMessage: null,

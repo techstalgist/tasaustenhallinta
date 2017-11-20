@@ -150,8 +150,8 @@ const mapDispatchToProps = (dispatch) => (
     updateBills: () => (
       dispatch(updateBills())
     ),
-    handleAttributeChange: (attribute, id, value, target) => (
-      dispatch(changeAttribute(attribute, id, value, target))
+    handleAttributeChange: (attribute, id, value, target, isValid) => (
+      dispatch(changeAttribute(attribute, id, value, target, isValid))
     ),
     handleRemoveButtonClick: (id) => {
       dispatch(setBillToRemove(id))

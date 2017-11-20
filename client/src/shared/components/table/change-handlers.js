@@ -3,7 +3,7 @@ import {isValidFinnishDate, toISOCompatibleString } from '../../helpers';
 export function handleAmountChange (next, id, e, target) {
   e.preventDefault();
   e.stopPropagation();
-  next("amount", id, e.target.value, target);
+  next("amount", id, e.target.value, target, e.target.value.length > 0);
 }
 
 export function handleUserChange (next, id, e, target) {
@@ -14,7 +14,7 @@ export function handleUserChange (next, id, e, target) {
     id: parseInt(e.target.value, 10),
     username: username
   };
-  next("user", id, user, target);
+  next("user", id, user, target, true);
 }
 
 export function handleCategoryChange (next, id, e, target) {
@@ -25,7 +25,7 @@ export function handleCategoryChange (next, id, e, target) {
     id: parseInt(e.target.value, 10),
     name: categoryname
   };
-  next("category", id, category, target);
+  next("category", id, category, target, true);
 }
 
 export function handleDateChange (next, id, e, target) {
@@ -33,8 +33,8 @@ export function handleDateChange (next, id, e, target) {
   e.stopPropagation();
   if (isValidFinnishDate(e.target.value)) {
     const isoDate = toISOCompatibleString(e.target.value);
-    next("date", id, isoDate, target);
+    next("date", id, isoDate, target, true);
   } else {
-    next("date", id, e.target.value, target);
+    next("date", id, e.target.value, target, false);
   }
 }
