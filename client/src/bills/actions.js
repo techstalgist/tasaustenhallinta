@@ -122,11 +122,15 @@ export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
   return function (dispatch, getState) {
     const allBills = getState().billsData.bills;
     const neededBills = getBills(allBills, isCreate);
-    const billsInterface = new Interface('/bills', httpVerb, success, failure, submit);
-    const token = getState().loginData.logInInfo.token;
-    billsInterface.setHeaders(token, "application/json");
-    billsInterface.setBody(neededBills, true);
-    dispatch(callApi(billsInterface));
+    if (!neededBills.allValid) {
+      dispatch(failure({message: neededBills.message}));
+    } else {
+      const billsInterface = new Interface('/bills', httpVerb, success, failure, submit);
+      const token = getState().loginData.logInInfo.token;
+      billsInterface.setHeaders(token, "application/json");
+      billsInterface.setBody(neededBills.bills, true);
+      dispatch(callApi(billsInterface));
+    }
   };
 }
 

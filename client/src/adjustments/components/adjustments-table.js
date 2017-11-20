@@ -19,7 +19,9 @@ class AdjustmentsTable extends React.Component {
 
   render() {
 
-    const {showPopup, submitDeleteAdjustment, closeDeletePopup, handleRemoveButtonClick, handleAttributeChange, removeSuccess, toRemove, adjustments, users, addAdjustment, createAdjustments, updateAdjustments, successMessage} = this.props;
+    const {showPopup, submitDeleteAdjustment, closeDeletePopup, handleRemoveButtonClick, handleAttributeChange,
+          removeSuccess, toRemove, adjustments, users, addAdjustment, createAdjustments,
+          updateAdjustments, successMessage, errorMessage} = this.props;
     const headersData = [
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
@@ -82,6 +84,12 @@ class AdjustmentsTable extends React.Component {
                 </div>
               : null
              }
+             {errorMessage
+               ? <div className="alert alert-danger" role="alert">
+                   {errorMessage}
+                 </div>
+               : null
+              }
           </div>
         </div>
         {showPopup ?
@@ -99,6 +107,7 @@ const mapStateToProps = (state) => (
     users: state.sharedData.users,
     dataReceived: state.adjustmentsData.dataReceived,
     successMessage: state.adjustmentsData.successMessage,
+    errorMessage: state.adjustmentsData.errorMessage,
     toRemove: state.adjustmentsData.toRemove,
     showPopup: state.adjustmentsData.showPopup,
     removeSuccess: state.adjustmentsData.removeSuccess

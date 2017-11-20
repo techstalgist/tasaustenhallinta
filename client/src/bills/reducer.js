@@ -1,6 +1,6 @@
 import { v4 } from 'node-uuid';
 import { getCurrentMonth, getMonths, getMonth, createMonthFromDate } from './months';
-import {toFinnishDateString} from '../shared/helpers';
+import {toFinnishDateString, isValidISODate, isValidAmount} from '../shared/helpers';
 
 function getInitialState() {
   return {
@@ -117,22 +117,26 @@ export function reducer(state = getInitialState(), action) {
     case 'BILL_CREATION_FAILURE':
       return {
         ...state,
-        errorMessage: action.message
+        errorMessage: action.message,
+        successMessage: null
       }
     case 'BILL_UPDATE_SUCCESS':
       return {
         ...state,
-        successMessage: action.message
+        successMessage: action.message,
+        errorMessage: null
       }
     case 'BILL_UPDATE_FAILURE':
       return {
         ...state,
-        errorMessage: action.message
+        errorMessage: action.message,
+        successMessage: null
       }
     case 'DELETE_BILL_FAILURE':
       return {
         ...state,
-        errorMessage: action.message
+        errorMessage: action.message,
+        successMessage: null
       }
     case 'SET_BILL_TO_REMOVE':
       return {
@@ -192,7 +196,10 @@ function handleBillFromBackend(b) {
     ...b,
     id: b.id.toString(),
     newbill: false,
-    toUIObject: billToUIObject()
+    toUIObject: billToUIObject(),
+    isValid: function() {
+      return isValidISODate(this.date) && isValidAmount(this.amount);
+    }
   }
 }
 
@@ -246,7 +253,10 @@ function createNewBill(user, category) {
     categoryid: category.id,
     date: new Date().toISOString().substr(0,10),
     newbill: true,
-    toUIObject: billToUIObject()
+    toUIObject: billToUIObject(),
+    isValid: function() {
+      return isValidISODate(this.date) && isValidAmount(this.amount);
+    }
   }
 }
 

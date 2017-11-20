@@ -1,5 +1,5 @@
 import { v4 } from 'node-uuid';
-import {toFinnishDateString} from '../shared/helpers';
+import {toFinnishDateString, isValidISODate, isValidAmount} from '../shared/helpers';
 
 function getInitialState() {
   return {
@@ -83,7 +83,8 @@ export function reducer(state = getInitialState(), action) {
     case 'CREATION_FAILURE':
       return {
         ...state,
-        errorMessage: action.message
+        errorMessage: action.message,
+        successMessage: null
       }
     case 'UPDATE_SUCCESS':
       return {
@@ -93,12 +94,14 @@ export function reducer(state = getInitialState(), action) {
     case 'UPDATE_FAILURE':
       return {
         ...state,
-        errorMessage: action.message
+        errorMessage: action.message,
+        successMessage: null
       }
     case 'DELETE_FAILURE':
       return {
         ...state,
-        errorMessage: action.message
+        errorMessage: action.message,
+        successMessage: null
       }
     case 'SET_ADJUSTMENT_TO_REMOVE':
       return {
@@ -173,7 +176,10 @@ function newAdjustmentReducer(currentAdjustments, user) {
       amount: null,
       date: new Date().toISOString().substr(0,10),
       newadjustment: true,
-      toUIObject: adjustmentToUIObject()
+      toUIObject: adjustmentToUIObject(),
+      isValid: function() {
+        return isValidISODate(this.date) && isValidAmount(this.amount);
+      }
     }
   ]
 }
@@ -184,7 +190,10 @@ function updateDateAndId(a) {
     date: a.date,
     id: a.id.toString(),
     newadjustment: false,
-    toUIObject: adjustmentToUIObject()
+    toUIObject: adjustmentToUIObject(),
+    isValid: function() {
+      return isValidISODate(this.date) && isValidAmount(this.amount);
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { getAdjustments } from './selectors';
+import { getAdjustments, validateAdjustments } from './selectors';
 import { fetchUsers, callApi, Interface } from '../shared/actions';
 
 export function requestAdjustments() {
@@ -127,11 +127,15 @@ export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
   return function (dispatch, getState) {
     const allAdjustments = getState().adjustmentsData.adjustments;
     const neededAdjustments = getAdjustments(allAdjustments, isCreate);
-    const adjustmentsInterface = new Interface('/adjustments', httpVerb, success, failure, submit);
-    const token = getState().loginData.logInInfo.token;
-    adjustmentsInterface.setHeaders(token, "application/json");
-    adjustmentsInterface.setBody(neededAdjustments, true);
-    dispatch(callApi(adjustmentsInterface));
+    if (!validateAdjustments(neededAdjustments)) {
+      dispatch(failure({message: "Antamissasi tiedoissa on virheitä."}));
+    } else {
+      const adjustmentsInterface = new Interface('/adjustments', httpVerb, success, failure, submit);
+      const token = getState().loginData.logInInfo.token;
+      adjustmentsInterface.setHeaders(token, "application/json");
+      adjustmentsInterface.setBody(neededAdjustments, true);
+      dispatch(callApi(adjustmentsInterface));
+    }
   };
 }
 

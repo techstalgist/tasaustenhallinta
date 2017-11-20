@@ -27,7 +27,7 @@ class BillsTable extends React.Component {
 
   render() {
     const { addBill, createBills, updateBills, bills, users, months, selectedMonth, categories, handleAttributeChange,
-            successMessage, handleRemoveButtonClick, closeDeletePopup, removeSuccess, toRemove, submitDeleteBill, showPopup } = this.props;
+            successMessage, errorMessage, handleRemoveButtonClick, closeDeletePopup, removeSuccess, toRemove, submitDeleteBill, showPopup } = this.props;
 
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
     const headersData = [
@@ -107,6 +107,12 @@ class BillsTable extends React.Component {
                 </div>
               : null
              }
+             {errorMessage
+               ? <div className="alert alert-danger" role="alert">
+                   {errorMessage}
+                 </div>
+               : null
+              }
           </div>
         </div>
         {showPopup ?

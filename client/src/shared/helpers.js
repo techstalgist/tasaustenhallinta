@@ -41,11 +41,15 @@ export function getCssForDateField(otherCss, value) {
   }
 }
 
+export function isValidAmount(value) {
+  return !(value === null || value.length === 0);
+}
+
 export function getCssForNumberField(otherCss, value) {
-  if (value === null || value.length === 0) {
-    return otherCss + " danger";
-  } else {
+  if (isValidAmount(value)) {
     return otherCss;
+  } else {
+    return otherCss + " danger";
   }
 }
 
