@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import { fetchBills, changeMonth, addBill, createBills, updateBills, setBillToRemove, closeDeletePopup, submitDeleteBill } from '../actions';
 import { getBillsForSelectedMonth } from '../selectors';
-import { toFinnishDateString } from '../../shared/helpers';
+import { toFinnishDateString, getCssForDateField, getCssForNumberField } from '../../shared/helpers';
 import { handleUserChange, handleAmountChange, handleDateChange, handleCategoryChange } from '../../shared/components/table/change-handlers';
 import MonthSelection from './month-selection';
 import AmountsForUsers from './amounts-for-users';
@@ -67,7 +67,7 @@ class BillsTable extends React.Component {
                         <input type="number" name="amount"
                             defaultValue={b.amount}
                             onBlur={(e) => handleAmountChange(handleAttributeChange, b.id, e, target)}
-                            className="text-right"/>
+                            className={getCssForNumberField("text-right",b.amount)}/>
                       </td>
                       <td className="col-2">
                         <select className="form-control" id="categoriesForBill" defaultValue={b.categoryid} onChange={(e) => handleCategoryChange(handleAttributeChange, b.id, e, target)}>
@@ -80,7 +80,7 @@ class BillsTable extends React.Component {
                         <input type="text" name="date"
                             defaultValue={toFinnishDateString(b.date)}
                             onBlur={(e) => handleDateChange(handleAttributeChange, b.id, e, target)}
-                            className="text-right"/>
+                            className={getCssForDateField("text-right",b.date)}/>
                       </td>
                       <td className="col">
                         <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(b.id)}>

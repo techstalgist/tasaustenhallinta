@@ -35,6 +35,6 @@ export function handleDateChange (next, id, e, target) {
     const isoDate = toISOCompatibleString(e.target.value);
     next("date", id, isoDate, target);
   } else {
-    // change CSS style, maybe via Redux dispatch
+    next("date", id, e.target.value, target);
   }
 }

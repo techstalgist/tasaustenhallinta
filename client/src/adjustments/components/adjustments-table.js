@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments, setAdjustmentToRemove, submitDeleteAdjustment, closeDeletePopup  } from '../actions';
-import { toFinnishDateString } from '../../shared/helpers';
+import { toFinnishDateString, getCssForDateField, getCssForNumberField } from '../../shared/helpers';
 import { handleAmountChange, handleUserChange, handleDateChange } from '../../shared/components/table/change-handlers';
 import {changeAttribute} from '../../shared/actions';
 
@@ -46,13 +46,13 @@ class AdjustmentsTable extends React.Component {
                         <input type="number" name="amount"
                             defaultValue={a.amount}
                             onBlur={(e) => handleAmountChange(handleAttributeChange, a.id, e, target)}
-                            className="text-right"/>
+                            className={getCssForNumberField("text-right", a.amount)}/>
                       </td>
                       <td className="col-3 text-right">
                         <input type="text" name="date"
                             defaultValue={toFinnishDateString(a.date)}
                             onBlur={(e) => handleDateChange(handleAttributeChange, a.id, e, target)}
-                            className="text-right"/>
+                            className={getCssForDateField("text-right", a.date)}/>
                       </td>
                       <td className="col-2 text-center">
                         <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(a.id)}>

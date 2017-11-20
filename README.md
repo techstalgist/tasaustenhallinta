@@ -11,12 +11,14 @@
 
 Testikäyttäjä: "eka", salasana: "testaa"
 
-Käyttöliittymän sivut:
+Kirjautumissivu:
+* [kirjautuminen](https://ruuskmik.users.cs.helsinki.fi)
+
+Kirjautumisen vaativat sivut:
 * [tasaukset](https://ruuskmik.users.cs.helsinki.fi/auth/adjustments)
 * [laskut](https://ruuskmik.users.cs.helsinki.fi/auth/bills)
 * [kategoriat](https://ruuskmik.users.cs.helsinki.fi/auth/categories)
 * [analyysi](https://ruuskmik.users.cs.helsinki.fi/auth/analysis)
-
 
 # Dokumentaatio
 

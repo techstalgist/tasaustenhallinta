@@ -13,3 +13,7 @@
   display: block;
   background-color: rgba(52,58,64,0.5);
 }
+
+.danger {
+  background-color: rgba(220,53,69,0.5);
+}

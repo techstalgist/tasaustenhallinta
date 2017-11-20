@@ -204,6 +204,7 @@ function findBillToRemove(bills, monthStr, billId) {
 function dateAndMonthChangeReducer(bills, oldMonthStr, billId, newDateObj) {
   const newMonthStr = createMonthFromDate(newDateObj).toString();
   const bill = bills[oldMonthStr].filter((b) => b.id === billId)[0];
+  // TODO fix for "if newDateObj is invalid"
   const updatedBill = setDate(bill, newDateObj.toISOString().substr(0,10));
   return {
     ...bills,

@@ -10,7 +10,11 @@ export function serialize(obj) {
 }
 
 export function toFinnishDateString(isoDate) {
-  return moment(isoDate).format('DD.MM.YYYY');
+  if (moment(isoDate, 'YYYY-MM-DD', true).isValid()) {
+    return moment(isoDate).format('DD.MM.YYYY');
+  } else {
+    return isoDate;
+  }
 }
 
 export function toISOCompatibleString(finDate) {
@@ -18,11 +22,31 @@ export function toISOCompatibleString(finDate) {
 }
 
 export function isValidFinnishDate(date) {
-  return moment(date, 'DD.MM.YYYY').isValid();
+  return moment(date, 'DD.MM.YYYY', true).isValid();
+}
+
+export function isValidISODate(date) {
+  return moment(date, 'YYYY-MM-DD', true).isValid();
 }
 
 export function showRounded(number, precision) {
   return number.toFixed(precision).replace(".", ",");
+}
+
+export function getCssForDateField(otherCss, value) {
+  if (isValidISODate(value)) {
+    return otherCss;
+  } else {
+    return otherCss + " danger";
+  }
+}
+
+export function getCssForNumberField(otherCss, value) {
+  if (value === null || value.length === 0) {
+    return otherCss + " danger";
+  } else {
+    return otherCss;
+  }
 }
 
 export function toProperCase(text) {
