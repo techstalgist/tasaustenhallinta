@@ -18,7 +18,6 @@ export const getBills = (bills, isNew) => {
       if (isNew && b.newbill) {
         returnObj.bills.push(b);
       } else if (b.changed && !isNew) {
-        console.log(b);
         returnObj.bills.push(b);
       }
       if (!b.isValid()) {
