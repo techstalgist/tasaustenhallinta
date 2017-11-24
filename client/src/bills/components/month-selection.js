@@ -5,7 +5,7 @@ const MonthSelection = (props) => {
     return(
       <div className="form-group">
         <label htmlFor="months"><strong>Kuukausi</strong></label>
-        <select onChange={(e) => handleMonthChange(e)} className="form-control" id="months" defaultValue={selectedMonth.toString()}>
+        <select onChange={(e) => handleMonthChange(e)} className="form-control p-1" id="months" defaultValue={selectedMonth.toString()}>
           {months.map((m) => {
             return (<option value={m.toString()} key={m.toString()}>{m.toString()}</option>);
           })}

@@ -15,7 +15,10 @@ export const getBills = (bills, isNew) => {
   for (let k in bills) {
     for(let i = 0; i < bills[k].length; i++) {
       let b = bills[k][i];
-      if (b.newbill === isNew) {
+      if (isNew && b.newbill) {
+        returnObj.bills.push(b);
+      } else if (b.changed && !isNew) {
+        console.log(b);
         returnObj.bills.push(b);
       }
       if (!b.isValid()) {

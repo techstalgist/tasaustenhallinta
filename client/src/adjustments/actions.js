@@ -1,5 +1,12 @@
-import { getAdjustments, validateAdjustments } from './selectors';
+import { getAdjustments } from './selectors';
 import { fetchUsers, callApi, Interface } from '../shared/actions';
+import {validateArray} from '../shared/helpers';
+
+export function hideMessages() {
+  return {
+    type: 'HIDE_MESSAGES'
+  };
+}
 
 export function requestAdjustments() {
   return {
@@ -127,7 +134,7 @@ export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
   return function (dispatch, getState) {
     const allAdjustments = getState().adjustmentsData.adjustments;
     const neededAdjustments = getAdjustments(allAdjustments, isCreate);
-    if (!validateAdjustments(neededAdjustments)) {
+    if (!validateArray(neededAdjustments)) {
       dispatch(failure({message: "Antamissasi tiedoissa on virheitä."}));
     } else {
       const adjustmentsInterface = new Interface('/adjustments', httpVerb, success, failure, submit);

@@ -11,7 +11,7 @@ function Month(year, month) {
 const SELECT = 'select '+
                'bills.id,users.username,users.id as userid, bills.amount, '+
                'categories.id as categoryid, categories.name as categoryname, bills.date '+
-               'from bills inner join users on bills.user_id = users.id inner join categories on bills.category_id = categories.id '+
+               'from bills inner join users on bills.user_id = users.id left join categories on bills.category_id = categories.id '+
                'order by bills.date asc;';
 
 function groupBillsByMonth(allBills) {

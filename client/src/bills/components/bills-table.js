@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import { fetchBills, changeMonth, addBill, createBills, updateBills, setBillToRemove, closeDeletePopup, submitDeleteBill } from '../actions';
+import { fetchBills, changeMonth, addBill, createBills, updateBills, setBillToRemove, closeDeletePopup, submitDeleteBill, hideMessages } from '../actions';
 import { getBillsForSelectedMonth } from '../selectors';
-import { toFinnishDateString, getCssForDateField, getCssForNumberField } from '../../shared/helpers';
+import { toFinnishDateString, getCssForDateField, getCssForNumberField, getCssForCategoryField } from '../../shared/helpers';
 import { handleUserChange, handleAmountChange, handleDateChange, handleCategoryChange } from '../../shared/components/table/change-handlers';
 import MonthSelection from './month-selection';
 import AmountsForUsers from './amounts-for-users';
@@ -17,6 +17,10 @@ class BillsTable extends React.Component {
     if (!this.props.dataReceived) {
       this.props.dispatch(fetchBills());
     }
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(hideMessages());
   }
 
   handleMonthChange = (e) => {
@@ -58,7 +62,8 @@ class BillsTable extends React.Component {
                 (
                   <tr key={b.id} id={b.id} className="table-row">
                       <th className="col-1">
-                        {i+1} {b.newbill ? <span className="badge badge-secondary">Uusi</span> : null}
+                        {i+1} {b.newbill ? <span className="badge badge-secondary small-font">Uusi</span> : null}
+                        {b.changed ? <span className="badge badge-secondary small-font">Muutos</span> : null}
                       </th>
                       <td className="col-2">
                         <UserDropdown next={handleAttributeChange} target={target} dataID={b.id} defaultValue={b.userid} users={users} domID="userForBill" changeFunction={handleUserChange} />
@@ -67,10 +72,11 @@ class BillsTable extends React.Component {
                         <input type="number" name="amount"
                             defaultValue={b.amount}
                             onBlur={(e) => handleAmountChange(handleAttributeChange, b.id, e, target)}
-                            className={getCssForNumberField("text-right",b.amount)}/>
+                            className={getCssForNumberField("text-right form-control p-1",b.amount)}/>
                       </td>
                       <td className="col-2">
-                        <select className="form-control" id="categoriesForBill" defaultValue={b.categoryid} onChange={(e) => handleCategoryChange(handleAttributeChange, b.id, e, target)}>
+                        <select className={getCssForCategoryField("form-control p-1", b.categoryid)} id="categoriesForBill" defaultValue={b.categoryid} onChange={(e) => handleCategoryChange(handleAttributeChange, b.id, e, target)}>
+                          <option value={0} key={0}>--Ei valittu--</option>
                           {categories.map((c) => {
                             return (<option value={c.id} key={c.id}>{c.name}</option>);
                           })}
@@ -80,7 +86,7 @@ class BillsTable extends React.Component {
                         <input type="text" name="date"
                             defaultValue={toFinnishDateString(b.date)}
                             onBlur={(e) => handleDateChange(handleAttributeChange, b.id, e, target)}
-                            className={getCssForDateField("text-right",b.date)}/>
+                            className={getCssForDateField("text-right form-control p-1",b.date)}/>
                       </td>
                       <td className="col">
                         <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(b.id)}>
@@ -98,7 +104,7 @@ class BillsTable extends React.Component {
           <div className="col-6">
             <button onClick={addBill} type="button" className="btn btn-primary">Lisää uusi lasku</button>
             <button onClick={createBills} type="button" className="btn btn-primary ml-1">Tallenna uudet laskut</button>
-            <button onClick={updateBills} type="button" className="btn btn-primary ml-1">Päivitä vanhat laskut</button>
+            <button onClick={updateBills} type="button" className="btn btn-primary ml-1">Tallenna muutetut laskut</button>
           </div>
           <div className="col-6">
             {successMessage

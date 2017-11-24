@@ -33,16 +33,24 @@ export function showRounded(number, precision) {
   return number.toFixed(precision).replace(".", ",");
 }
 
+export function isValidAmount(value) {
+  return !(value === null || value.length === 0);
+}
+
+export function isValidName(name) {
+  return !(name === null || name.length === 0);
+}
+
+export function isValidCategory(value) {
+  return !(value === null || value === 0);
+}
+
 export function getCssForDateField(otherCss, value) {
   if (isValidISODate(value)) {
     return otherCss;
   } else {
     return otherCss + " danger";
   }
-}
-
-export function isValidAmount(value) {
-  return !(value === null || value.length === 0);
 }
 
 export function getCssForNumberField(otherCss, value) {
@@ -53,6 +61,36 @@ export function getCssForNumberField(otherCss, value) {
   }
 }
 
+export function getCssForCategoryField(otherCss, value) {
+  if (isValidCategory(value)) {
+    return otherCss;
+  } else {
+    return otherCss + " danger";
+  }
+}
+
+export function getCssForTextField(otherCss, value) {
+  if (isValidName(value)) {
+    return otherCss;
+  } else {
+    return otherCss + " danger";
+  }
+}
+
 export function toProperCase(text) {
   return text.charAt(0).toUpperCase() + text.substring(1);
+}
+
+export function validateArray(array) {
+  for (let i = 0; i < array.length; i++) {
+    if (!array[i].isValid()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+export function getIndexById(id, arr) {
+  const ids = arr.map( (a) => a.id );
+  return ids.indexOf(id);
 }

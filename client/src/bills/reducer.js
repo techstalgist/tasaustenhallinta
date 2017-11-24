@@ -1,6 +1,6 @@
 import { v4 } from 'node-uuid';
 import { getCurrentMonth, getMonths, getMonth, createMonthFromDate } from './months';
-import {toFinnishDateString, isValidISODate, isValidAmount} from '../shared/helpers';
+import {toFinnishDateString, isValidISODate, isValidAmount, getIndexById, isValidCategory} from '../shared/helpers';
 
 function getInitialState() {
   return {
@@ -18,6 +18,17 @@ function getInitialState() {
 
 export function reducer(state = getInitialState(), action) {
   switch (action.type) {
+    case 'HIDE_MESSAGES':
+      return {
+        ...state,
+        successMessage: null,
+        errorMessage: null
+      }
+    case 'SHOULD_FETCH_BILLS':
+      return {
+        ...state,
+        dataReceived: false
+      }
     case 'REQUEST_BILLS':
       return {
         ...state,
@@ -123,6 +134,7 @@ export function reducer(state = getInitialState(), action) {
     case 'BILL_UPDATE_SUCCESS':
       return {
         ...state,
+        bills: billsDataReducer(state.bills, updateChanged),
         successMessage: action.message,
         errorMessage: null
       }
@@ -198,8 +210,10 @@ function handleBillFromBackend(b) {
     newbill: false,
     toUIObject: billToUIObject(),
     isValid: function() {
-      return isValidISODate(this.date) && isValidAmount(this.amount);
-    }
+      return isValidISODate(this.date) && isValidAmount(this.amount) && isValidCategory(this.categoryid);
+    },
+    categoryid: b.categoryid || 0,
+    changed: false
   }
 }
 
@@ -253,9 +267,10 @@ function createNewBill(user, category) {
     categoryid: category.id,
     date: new Date().toISOString().substr(0,10),
     newbill: true,
+    changed: false,
     toUIObject: billToUIObject(),
     isValid: function() {
-      return isValidISODate(this.date) && isValidAmount(this.amount);
+      return isValidISODate(this.date) && isValidAmount(this.amount) && isValidCategory(this.categoryid);
     }
   }
 }
@@ -269,7 +284,7 @@ function updateBillReducer(currentBills, selectedMonth, id, updateFunction, newV
 
 function updateBillInMonth(bills, updateFunction, id, newValue) {
   let updatedBillsForMonth = bills;
-  const index = getBillIndexById(id, updatedBillsForMonth);
+  const index = getIndexById(id, updatedBillsForMonth);
   updatedBillsForMonth = [
     ...updatedBillsForMonth.slice(0, index),
     updateFunction(updatedBillsForMonth[index], newValue),
@@ -280,7 +295,7 @@ function updateBillInMonth(bills, updateFunction, id, newValue) {
 
 function deleteBillInMonth(bills, id) {
   let billsToReturn = bills;
-  const index = getBillIndexById(id, billsToReturn);
+  const index = getIndexById(id, billsToReturn);
   billsToReturn = [
     ...billsToReturn.slice(0, index),
     ...billsToReturn.slice(index+1)
@@ -288,16 +303,12 @@ function deleteBillInMonth(bills, id) {
   return billsToReturn;
 }
 
-function getBillIndexById(id, bills) {
-  const ids = bills.map( (b) => b.id );
-  return ids.indexOf(id);
-}
-
 function setUser(bill, newUser) {
   return {
     ...bill,
     userid: newUser.id,
-    username: newUser.username
+    username: newUser.username,
+    changed: !bill.newbill
   }
 }
 
@@ -305,21 +316,31 @@ function setCategory(bill, newCategory) {
   return {
     ...bill,
     categoryid: newCategory.id,
-    categoryname: newCategory.name
+    categoryname: newCategory.name,
+    changed: !bill.newbill
   }
 }
 
 function setDate(bill, newDate) {
   return {
     ...bill,
-    date: newDate
+    date: newDate,
+    changed: !bill.newbill
   }
 }
 
 function setAmount(bill, newAmount) {
   return {
     ...bill,
-    amount: newAmount
+    amount: newAmount,
+    changed: !bill.newbill
+  }
+}
+
+function updateChanged(b) {
+  return {
+    ...b,
+    changed: false
   }
 }
 

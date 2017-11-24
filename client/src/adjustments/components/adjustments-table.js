@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments, setAdjustmentToRemove, submitDeleteAdjustment, closeDeletePopup  } from '../actions';
+import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments, setAdjustmentToRemove, submitDeleteAdjustment, closeDeletePopup, hideMessages  } from '../actions';
 import { toFinnishDateString, getCssForDateField, getCssForNumberField } from '../../shared/helpers';
 import { handleAmountChange, handleUserChange, handleDateChange } from '../../shared/components/table/change-handlers';
 import {changeAttribute} from '../../shared/actions';
@@ -15,6 +15,10 @@ class AdjustmentsTable extends React.Component {
     if (!this.props.dataReceived) {
       this.props.dispatch(fetchAdjustments());
     }
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(hideMessages());
   }
 
   render() {
@@ -39,7 +43,8 @@ class AdjustmentsTable extends React.Component {
                 {adjustments.map((a, i) =>
                   <tr key={a.id} id={i+1} className="table-row">
                       <th scope="row" className="col-2">
-                        {i+1} {a.newadjustment ? <span className="badge badge-secondary">Uusi</span> : null}
+                        {i+1} {a.newadjustment ? <span className="badge badge-secondary small-font">Uusi</span> : null}
+                        {a.changed ? <span className="badge badge-secondary small-font">Muutos</span> : null}
                       </th>
                       <td className="col-2">
                         <UserDropdown next={handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
@@ -48,13 +53,13 @@ class AdjustmentsTable extends React.Component {
                         <input type="number" name="amount"
                             defaultValue={a.amount}
                             onBlur={(e) => handleAmountChange(handleAttributeChange, a.id, e, target)}
-                            className={getCssForNumberField("text-right", a.amount)}/>
+                            className={getCssForNumberField("text-right form-control p-1", a.amount)}/>
                       </td>
                       <td className="col-3 text-right">
                         <input type="text" name="date"
                             defaultValue={toFinnishDateString(a.date)}
                             onBlur={(e) => handleDateChange(handleAttributeChange, a.id, e, target)}
-                            className={getCssForDateField("text-right", a.date)}/>
+                            className={getCssForDateField("text-right form-control p-1", a.date)}/>
                       </td>
                       <td className="col-2 text-center">
                         <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(a.id)}>
@@ -75,7 +80,7 @@ class AdjustmentsTable extends React.Component {
           <div className="col-7">
             <button onClick={addAdjustment} type="button" className="btn btn-primary">Lisää uusi tasaus</button>
             <button onClick={createAdjustments} type="button" className="btn btn-primary ml-1">Tallenna uudet tasaukset</button>
-            <button onClick={updateAdjustments} type="button" className="btn btn-primary ml-1">Päivitä vanhat tasaukset</button>
+            <button onClick={updateAdjustments} type="button" className="btn btn-primary ml-1">Tallenna muutetut tasaukset</button>
           </div>
           <div className="col-5">
             {successMessage

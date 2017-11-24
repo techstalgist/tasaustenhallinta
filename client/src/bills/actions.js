@@ -1,7 +1,13 @@
-import {fetchCategories} from '../categories/actions';
+import {fetchCategories, shouldFetchCategories} from '../categories/actions';
 import {getDefaultCategory} from '../categories/selectors';
 import {fetchUsers, Interface, callApi} from '../shared/actions';
 import {getBills} from './selectors';
+
+export function hideMessages() {
+  return {
+    type: 'HIDE_MESSAGES'
+  };
+}
 
 export function submitNewBills() {
   return {
@@ -15,6 +21,11 @@ export function submitBillsUpdate() {
   };
 }
 
+export function shouldFetchBills() {
+  return {
+    type: 'SHOULD_FETCH_BILLS'
+  };
+}
 
 export function requestBills() {
   return {
@@ -130,6 +141,7 @@ export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
       billsInterface.setHeaders(token, "application/json");
       billsInterface.setBody(neededBills.bills, true);
       dispatch(callApi(billsInterface));
+      dispatch(shouldFetchCategories());
     }
   };
 }

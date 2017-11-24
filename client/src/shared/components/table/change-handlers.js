@@ -38,3 +38,9 @@ export function handleDateChange (next, id, e, target) {
     next("date", id, e.target.value, target, false);
   }
 }
+
+export function handleNameChange (next, id, e, target) {
+  e.preventDefault();
+  e.stopPropagation();
+  next("name", id, e.target.value, target, true);
+}

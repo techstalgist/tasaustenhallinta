@@ -1,5 +1,5 @@
 import { v4 } from 'node-uuid';
-import {toFinnishDateString, isValidISODate, isValidAmount} from '../shared/helpers';
+import {toFinnishDateString, isValidISODate, isValidAmount, getIndexById} from '../shared/helpers';
 
 function getInitialState() {
   return {
@@ -15,6 +15,12 @@ function getInitialState() {
 
 export function reducer(state = getInitialState(), action) {
   switch (action.type) {
+    case 'HIDE_MESSAGES':
+      return {
+        ...state,
+        successMessage: null,
+        errorMessage: null
+      }
     case 'REQUEST':
       return {
         ...state,
@@ -89,7 +95,9 @@ export function reducer(state = getInitialState(), action) {
     case 'UPDATE_SUCCESS':
       return {
         ...state,
-        successMessage: action.message
+        adjustments: adjustmentsDataReducer(state.adjustments, updateChanged),
+        successMessage: action.message,
+        errorMessage: null
       }
     case 'UPDATE_FAILURE':
       return {
@@ -106,7 +114,7 @@ export function reducer(state = getInitialState(), action) {
     case 'SET_ADJUSTMENT_TO_REMOVE':
       return {
         ...state,
-        toRemove: state.adjustments[getAdjustmentIndexById(action.id, state.adjustments)],
+        toRemove: state.adjustments[getIndexById(action.id, state.adjustments)],
         showPopup: true
       }
     case 'CLOSE_DELETE_ADJUSTMENT_POPUP':
@@ -132,7 +140,7 @@ export function reducer(state = getInitialState(), action) {
 }
 
 function removeAdjustmentFromState(newData, toRemove) {
-  const i = getAdjustmentIndexById(toRemove.id, newData);
+  const i = getIndexById(toRemove.id, newData);
   let updatedAdjustments = newData;
   updatedAdjustments = [
     ...updatedAdjustments.slice(0, i),
@@ -157,7 +165,7 @@ function adjustmentsDataReducer(newData, updateFunction) {
 
 function changeOneAdjustment(currentAdjustments, id, next, newValue) {
   let updatedAdjustments = currentAdjustments;
-  const i = getAdjustmentIndexById(id, updatedAdjustments);
+  const i = getIndexById(id, updatedAdjustments);
   updatedAdjustments = [
     ...updatedAdjustments.slice(0, i),
     next(updatedAdjustments[i], newValue),
@@ -176,6 +184,7 @@ function newAdjustmentReducer(currentAdjustments, user) {
       amount: null,
       date: new Date().toISOString().substr(0,10),
       newadjustment: true,
+      changed: false,
       toUIObject: adjustmentToUIObject(),
       isValid: function() {
         return isValidISODate(this.date) && isValidAmount(this.amount);
@@ -193,21 +202,31 @@ function updateDateAndId(a) {
     toUIObject: adjustmentToUIObject(),
     isValid: function() {
       return isValidISODate(this.date) && isValidAmount(this.amount);
-    }
+    },
+    changed: false
+  }
+}
+
+function updateChanged(a) {
+  return {
+    ...a,
+    changed: false
   }
 }
 
 function setAmount(a, amount) {
   return {
     ...a,
-    amount: amount
+    amount: amount,
+    changed: !a.newadjustment
   }
 }
 
 function setDate(a, date) {
   return {
     ...a,
-    date: date
+    date: date,
+    changed: !a.newadjustment
   }
 }
 
@@ -215,15 +234,10 @@ function setUserIDAndUsername(a, user) {
   return {
     ...a,
     userid: user.id,
-    username: user.username
+    username: user.username,
+    changed: !a.newadjustment
   }
 }
-
-function getAdjustmentIndexById(id, adjustments) {
-  const ids = adjustments.map( (a) => a.id );
-  return ids.indexOf(id);
-}
-
 
 function adjustmentToUIObject() {
   return function() {
