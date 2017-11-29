@@ -1,5 +1,6 @@
-insert into users(username, password) values ('eka','$2a$10$By7LeJRmUe0F4ieERHVMoeDDkdQ/hvcLhoK0314yi4.Ygd5mgFBFO');
-insert into users(username, password) values ('toinen','$2a$10$By7LeJRmUe0F4ieERHVMoeDDkdQ/hvcLhoK0314yi4.Ygd5mgFBFO');
+insert into user_groups(name, password) values('Eka ja toka', '$2a$10$By7LeJRmUe0F4ieERHVMoeDDkdQ/hvcLhoK0314yi4.Ygd5mgFBFO')
+insert into users(username, password,user_group_id) values ('eka','$2a$10$By7LeJRmUe0F4ieERHVMoeDDkdQ/hvcLhoK0314yi4.Ygd5mgFBFO',1);
+insert into users(username, password,user_group_id) values ('toinen','$2a$10$By7LeJRmUe0F4ieERHVMoeDDkdQ/hvcLhoK0314yi4.Ygd5mgFBFO',1);
 insert into categories(name) values ('Ruokaostokset');
 insert into categories(name) values ('Sähkölasku');
 

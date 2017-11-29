@@ -139,6 +139,8 @@ export function reducer(state = getInitialState(), action) {
   }
 }
 
+
+//TODO Yleistä tämä
 function removeAdjustmentFromState(newData, toRemove) {
   const i = getIndexById(toRemove.id, newData);
   let updatedAdjustments = newData;
@@ -149,6 +151,7 @@ function removeAdjustmentFromState(newData, toRemove) {
   return updatedAdjustments;
 }
 
+//TODO Yleistä tämä
 function adjustmentsDataReducer(newData, updateFunction) {
   let i;
   let updatedAdjustments = newData;
@@ -162,7 +165,7 @@ function adjustmentsDataReducer(newData, updateFunction) {
   return updatedAdjustments;
 }
 
-
+//TODO Yleistä tämä
 function changeOneAdjustment(currentAdjustments, id, next, newValue) {
   let updatedAdjustments = currentAdjustments;
   const i = getIndexById(id, updatedAdjustments);
@@ -174,6 +177,7 @@ function changeOneAdjustment(currentAdjustments, id, next, newValue) {
   return updatedAdjustments;
 }
 
+//TODO Yleistä tämä. arrayhyn lisäämisen voi yleistää.
 function newAdjustmentReducer(currentAdjustments, user) {
   return [
     ...currentAdjustments,

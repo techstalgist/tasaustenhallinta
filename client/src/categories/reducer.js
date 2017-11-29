@@ -134,6 +134,7 @@ export function reducer(state = getInitialState(), action) {
   }
 }
 
+//TODO Yleistä tämä
 function removeCategoryFromState(newData, toRemove) {
   const i = getIndexById(toRemove.id, newData);
   let updated = newData;
@@ -144,6 +145,7 @@ function removeCategoryFromState(newData, toRemove) {
   return updated;
 }
 
+//TODO Yleistä tämä
 function categoryDataReducer(newData, updateFunction) {
   let i;
   let updated = newData;
@@ -157,6 +159,7 @@ function categoryDataReducer(newData, updateFunction) {
   return updated;
 }
 
+//TODO Yleistä tämä
 function changeOneCategory(current, id, next, newValue) {
   let updated = current;
   const i = getIndexById(id, updated);
@@ -168,6 +171,7 @@ function changeOneCategory(current, id, next, newValue) {
   return updated;
 }
 
+//TODO Yleistä tämä. newCategory -kutsu luo uuden objektin. Mutta arrayhyn lisäämisen voi yleistää.
 function newCategoryReducer(categories) {
   return [
     ...categories,

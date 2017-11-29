@@ -1,6 +1,6 @@
-const db = require('./db');
+const db = require('../db');
 
-function User(userData) {
+function UserObject(userData) {
   this.id = userData.id;
   this.username = userData.username;
   this.password = userData.password;
@@ -25,7 +25,7 @@ function findOne(data, next) {
       if (data.length == 0) {
         return next(null, false);
       }
-      return next(null, new User(data[0]));
+      return next(null, new UserObject(data[0]));
     })
     .catch((err) => {
       return next(err);
@@ -38,32 +38,27 @@ function findById(id, next) {
       if (data.length == 0) {
         return next(null, false);
       }
-      return next(null, new User(data[0]));
+      return next(null, new UserObject(data[0]));
     })
     .catch((err) => {
       return next(err);
     });
 }
 
-function getUsers(req, res, next) {
+function findAll(success, failure) {
   db.any('select id, username from users')
     .then((data) => {
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Käyttäjät haettu.'
-        });
+      return success(data);
     })
     .catch((err) => {
-      return next(err);
+      return failure(err);
     });
 }
 
 module.exports = {
-  User: User,
+  UserObject: UserObject,
   findOne: findOne,
   findById: findById,
   save: save,
-  getUsers: getUsers
+  findAll: findAll
 };

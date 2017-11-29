@@ -2,10 +2,10 @@ const passport = require('passport');
 const passportJwt = require('passport-jwt');
 const JwtStrategy = passportJwt.Strategy;
 const jwtOptions = require('./jwt');
-const UserDao = require('../user-dao');
+const User = require('../models/user');
 
 let strategy = new JwtStrategy(jwtOptions, (payload, done) => {
-  UserDao.findById(payload.id, (err, user) => {
+  User.findById(payload.id, (err, user) => {
     if (err) {
       return done(err, false);
     }

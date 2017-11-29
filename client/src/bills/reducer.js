@@ -191,6 +191,7 @@ function billsDataReducer(newData, updateFunction) {
   return updated;
 }
 
+//TODO Yleistä tämä
 function handleOneMonth(bills, updateFunction) {
   let updatedBillsForMonth = bills;
   for(let i = 0; i < bills.length; i++) {
@@ -282,6 +283,7 @@ function updateBillReducer(currentBills, selectedMonth, id, updateFunction, newV
   }
 }
 
+//TODO Yleistä tämä
 function updateBillInMonth(bills, updateFunction, id, newValue) {
   let updatedBillsForMonth = bills;
   const index = getIndexById(id, updatedBillsForMonth);
@@ -293,6 +295,7 @@ function updateBillInMonth(bills, updateFunction, id, newValue) {
   return updatedBillsForMonth;
 }
 
+//TODO Yleistä tämä
 function deleteBillInMonth(bills, id) {
   let billsToReturn = bills;
   const index = getIndexById(id, billsToReturn);
