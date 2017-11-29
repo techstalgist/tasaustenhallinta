@@ -1,14 +1,14 @@
+CREATE TABLE user_groups (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR,
+  password VARCHAR
+);
+
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   username VARCHAR,
   password VARCHAR,
   user_group_id INTEGER references user_groups(id)
-);
-
-CREATE TABLE user_groups (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR,
-  password VARCHAR
 );
 
 CREATE TABLE adjustments (
