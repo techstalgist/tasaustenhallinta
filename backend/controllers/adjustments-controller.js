@@ -1,7 +1,7 @@
 const Adjustment = require('../models/adjustment');
 
 function getAdjustments(req, res, next) {
-
+  const userGroupId = parseInt(req.user.userGroupId);
   const successCall = (data) => {
     res.status(200)
       .json({
@@ -10,7 +10,7 @@ function getAdjustments(req, res, next) {
         message: 'Kaikki tasaukset haettu.'
       });
   };
-  Adjustment.findAll(successCall, next);
+  Adjustment.findAll(userGroupId, successCall, next);
 }
 
 function deleteAdjustment(req, res, next) {
@@ -28,6 +28,7 @@ function deleteAdjustment(req, res, next) {
 }
 
 function createAdjustments(req, res, next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   let newValuesStr;
   const newOnesExist = req.body.length > 0;
 
@@ -58,7 +59,7 @@ function createAdjustments(req, res, next) {
       });
   };
 
-  Adjustment.createOneOrMany(newValuesStr, successCall, next);
+  Adjustment.createOneOrMany(userGroupId, newValuesStr, successCall, next);
 }
 
 function updateAdjustments(req, res, next) {

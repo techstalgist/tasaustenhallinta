@@ -5,11 +5,11 @@ CREATE TABLE users (
   user_group_id INTEGER references user_groups(id)
 );
 
-CREATE TABLE user_groups {
+CREATE TABLE user_groups (
   id SERIAL PRIMARY KEY,
   name VARCHAR,
   password VARCHAR
-}
+);
 
 CREATE TABLE adjustments (
   id SERIAL PRIMARY KEY,

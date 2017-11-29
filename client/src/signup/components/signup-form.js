@@ -4,10 +4,10 @@ import {connect} from 'react-redux';
 import { submitSignup } from '../actions';
 
 let SignUpForm = props => {
-    const {handleSubmit} = props;
+    const {handleSubmit, userGroup} = props;
     return(
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="mb-2">
           <label>Käyttäjänimi</label>
           <div>
             <Field name="username" component="input" type="text" />
@@ -19,8 +19,14 @@ let SignUpForm = props => {
             <Field name="password" component="input" type="password" />
           </div>
         </div>
+        <div className="mb-3">
+          <label>Käyttäjäryhmä</label>
+          <div>
+            <strong>{userGroup.name}</strong>
+          </div>
+        </div>
         <div>
-          <button type="submit" className="btn btn-primary">Rekisteröidy</button>
+          <button type="submit" className="btn btn-primary">Luo uusi käyttäjä käyttäjäryhmään</button>
         </div>
     </form>
     )
@@ -40,7 +46,8 @@ const mapDispatchToProps = (dispatch) => (
 
 const mapStateToProps = (state) => (
   {
-    initialValues: getFormValues('SignUp')(state)
+    initialValues: getFormValues('SignUp')(state),
+    userGroup: state.signUpData.userGroup
   }
 );
 

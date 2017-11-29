@@ -1,6 +1,7 @@
 const Category = require('../models/category');
 
 function getDataForUser(req,res,next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   const users = JSON.parse("[" + req.body.users + "]");
   const successCall = (data) => {
     res.status(200)
@@ -11,7 +12,7 @@ function getDataForUser(req,res,next) {
       });
   };
 
-  Category.getAnalysisDataForUsers(users, successCall, next);
+  Category.getAnalysisDataForUsers(userGroupId, users, successCall, next);
 }
 
 function getTemplateObject(untilDate) {

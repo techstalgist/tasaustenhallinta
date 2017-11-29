@@ -4,10 +4,11 @@ const SELECT = 'select '+
                'bills.id,users.username,users.id as userid, bills.amount, '+
                'categories.id as categoryid, categories.name as categoryname, bills.date '+
                'from bills inner join users on bills.user_id = users.id left join categories on bills.category_id = categories.id '+
+               'where users.user_group_id = $1 ' +
                'order by bills.date asc;';
 
-function findAll(success, failure) {
-  db.any(SELECT)
+function findAll(userGroupId, success, failure) {
+  db.any(SELECT, userGroupId)
     .then((data) => {
       return success(data);
     })
@@ -16,13 +17,13 @@ function findAll(success, failure) {
     });
 }
 
-function createOneOrMany(values, success, failure) {
+function createOneOrMany(userGroupId, values, success, failure) {
   db.tx(t => {
       let queries = [];
       const insert = t.none('insert into bills (amount, category_id, user_id, date)'+
                         values);
       queries.push(insert);
-      queries.push(t.any(SELECT));
+      queries.push(t.any(SELECT, userGroupId));
       return t.batch(queries);
   })
     .then((data) => {

@@ -4,39 +4,60 @@ import {connect} from 'react-redux';
 
 class Header extends React.Component {
 
+   getLinks (loggedIn, loggedIntoGroup) {
+     let links;
+      if (!loggedIn) {
+        links = [
+          {
+            title: "Kirjautuminen",
+            url: "/login"
+          }
+        ];
+        if (loggedIntoGroup) {
+          links.push({
+            title: "Käyttäjän luonti",
+            url: "/auth/signup"
+          });
+        } else {
+          links.push({
+            title: "Käyttäjäryhmään kirjautuminen",
+            url: "/grouplogin"
+          });
+          links.push({
+            title: "Käyttäjäryhmän luonti",
+            url: "/groupsignup"
+          });
+        }
+        return links;
+      } else {
+        links = [
+          {
+            title: "Tasaukset",
+            url: "/auth/adjustments"
+          },
+          {
+            title: "Laskut",
+            url: "/auth/bills"
+          },
+          {
+            title: "Kategoriat",
+            url: "/auth/categories"
+          },
+          {
+            title: "Analyysi",
+            url: "/auth/analysis"
+          },
+          {
+            title: "Kirjaudu ulos",
+            url: "/login"
+          }
+        ];
+        return links;
+      }
+  }
   render() {
-    const {loggedIn, currentRoute} = this.props;
-    const links = !loggedIn ? [
-      {
-        title: "Kirjautuminen",
-        url: "/login"
-      },
-      {
-        title: "Rekisteröityminen",
-        url: "/signup"
-      }
-    ] : [
-      {
-        title: "Tasaukset",
-        url: "/auth/adjustments"
-      },
-      {
-        title: "Laskut",
-        url: "/auth/bills"
-      },
-      {
-        title: "Kategoriat",
-        url: "/auth/categories"
-      },
-      {
-        title: "Analyysi",
-        url: "/auth/analysis"
-      },
-      {
-        title: "Kirjaudu ulos",
-        url: "/login"
-      }
-    ];
+    const {loggedIn, currentRoute, loggedIntoGroup} = this.props;
+    const links = this.getLinks(loggedIn, loggedIntoGroup);
     const updatedLinks = links.map((link) => {
       link.className = "nav-item nav-link";
       link.className = link.url === currentRoute ? link.className + " active" : link.className;
@@ -68,7 +89,8 @@ class Header extends React.Component {
 
 const mapStateToProps = (state) => (
   {
-    loggedIn: state.loginData.logInInfo.loggedIn
+    loggedIn: state.loginData.logInInfo.loggedIn,
+    loggedIntoGroup: state.signUpData.loggedIntoGroup
   }
 );
 

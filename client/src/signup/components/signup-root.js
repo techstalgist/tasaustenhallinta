@@ -6,7 +6,7 @@ export default class SignUpRoot extends React.Component {
 
   render() {
     return(
-      <PageRoot heading="Rekisteröityminen">
+      <PageRoot heading="Käyttäjän luonti">
         <SignUp />
       </PageRoot>
     )

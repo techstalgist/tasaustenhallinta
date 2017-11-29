@@ -1,9 +1,12 @@
 const db = require('../db');
 
-const SELECT = 'select adjustments.id, users.username, users.id as userid, adjustments.amount, adjustments.date from adjustments inner join users on adjustments.user_id = users.id order by adjustments.date asc;';
+const SELECT = 'select adjustments.id, users.username, users.id as userid, adjustments.amount, adjustments.date ' +
+               'from adjustments inner join users on adjustments.user_id = users.id ' +
+               'where users.user_group_id = $1 ' +
+               'order by adjustments.date asc;';
 
-function findAll(success, failure) {
-  db.any(SELECT)
+function findAll(userGroupId, success, failure) {
+  db.any(SELECT, userGroupId)
     .then(data => {
       return success(data);
     }).catch((err) => {
@@ -21,13 +24,13 @@ function deleteById(id, success, failure) {
     });
 }
 
-function createOneOrMany(values, success, failure) {
+function createOneOrMany(userGroupId, values, success, failure) {
   db.tx(t => {
       let queries = [];
       const insert = t.none('insert into adjustments (amount, user_id, date)'+
                         values);
       queries.push(insert);
-      queries.push(t.any(SELECT));
+      queries.push(t.any(SELECT, userGroupId));
       return t.batch(queries);
   })
     .then((data) => {

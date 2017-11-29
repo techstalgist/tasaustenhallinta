@@ -30,6 +30,9 @@ store.subscribe(throttle(() => {
   saveState({
     loginData: {
       logInInfo: store.getState().loginData.logInInfo
+    },
+    signUpData: {
+      userGroup: store.getState().signUpData.userGroup
     }
   });
 }, 1000)); // save state only max once per sec.

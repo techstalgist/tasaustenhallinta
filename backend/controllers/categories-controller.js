@@ -1,6 +1,7 @@
 const Category = require('../models/category');
 
 function getCategories(req, res, next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   const successCall = (data) => {
     res.status(200)
       .json({
@@ -10,10 +11,11 @@ function getCategories(req, res, next) {
       });
   };
 
-  Category.findAll(successCall, next);
+  Category.findAll(userGroupId, successCall, next);
 }
 
 function createCategories(req, res, next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   let newValuesStr;
   const newOnesExist = req.body.length > 0;
 
@@ -42,7 +44,7 @@ function createCategories(req, res, next) {
       });
   };
 
-  Category.createOneOrMany(newValuesStr, successCall, next);
+  Category.createOneOrMany(userGroupId, newValuesStr, successCall, next);
 }
 
 function updateCategories(req, res, next) {

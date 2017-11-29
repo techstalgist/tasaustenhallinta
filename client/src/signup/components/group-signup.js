@@ -1,20 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import SignUpForm from './signup-form';
-import {hideSignUpMessages} from '../actions';
+import GroupSignUpForm from './group-signup-form';
 import {Redirect} from 'react-router-dom';
 
-class SignUp extends React.Component {
-
-  componentWillUnmount() {
-    this.props.dispatch(hideSignUpMessages());
-  }
+class GroupSignUp extends React.Component {
 
   render() {
-    const {loggedIn, errorMessage,successMessage} = this.props;
-    if (loggedIn) {
+    const {loggedIntoGroup, errorMessage,successMessage} = this.props;
+    if (loggedIntoGroup) {
       return (
-        <Redirect to="/login" />
+        <Redirect to="/auth/signup" />
       )
     }
     return(
@@ -32,7 +27,7 @@ class SignUp extends React.Component {
               </div>
             : null
            }
-          <SignUpForm />
+          <GroupSignUpForm />
         </div>
       </div>
     )
@@ -42,7 +37,7 @@ class SignUp extends React.Component {
 const mapStateToProps = (state) => (
   {
     errorMessage: state.signUpData.errorMessage,
-    loggedIn: state.loginData.logInInfo.loggedIn,
+    loggedIntoGroup: state.signUpData.loggedIntoGroup,
     successMessage: state.signUpData.successMessage
   }
 );
@@ -53,9 +48,9 @@ const mapDispatchToProps = (dispatch) => (
   }
 )
 
-SignUp = connect(
+GroupSignUp = connect(
   mapStateToProps,
   mapDispatchToProps
-)(SignUp)
+)(GroupSignUp)
 
-export default SignUp;
+export default GroupSignUp;

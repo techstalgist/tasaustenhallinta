@@ -14,7 +14,7 @@ class Login extends React.Component {
     const fromText = from.length === 0 ? "Kirjaudu sisään." : "Sinun täytyy kirjautua sisään nähdäksesi sivun, jonka osoite on " + from + ".";
     return(
       <div className="row">
-        <div className="col-6">
+        <div className="col-8">
       {
         !loggedIn ?
         <p>

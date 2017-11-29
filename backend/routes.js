@@ -5,10 +5,13 @@ const UsersController = require('./controllers/users-controller');
 const AdjustmentsController = require('./controllers/adjustments-controller');
 const BillsController = require('./controllers/bills-controller');
 const CategoriesController = require('./controllers/categories-controller');
+const UserGroupsController = require('./controllers/user-groups-controller');
 const router = express.Router();
 
 router.post('/signup', UsersController.signUp);
 router.post('/login', UsersController.logIn);
+router.post('/user_groups/login', UserGroupsController.logIntoGroup);
+router.post('/user_groups/signup', UserGroupsController.signUpGroup);
 router.get('/users', passport.authenticate('jwt', { session: false }), UsersController.getUsers);
 
 router.get('/adjustments', passport.authenticate('jwt', { session: false }), AdjustmentsController.getAdjustments);

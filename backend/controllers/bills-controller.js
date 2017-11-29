@@ -2,6 +2,7 @@ const db = require('../db');
 const Bill = require('../models/bill');
 
 function getBills(req, res, next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   const successCall = (data) => {
     res.status(200)
       .json({
@@ -11,7 +12,7 @@ function getBills(req, res, next) {
       });
   };
 
-  Bill.findAll(successCall, next);
+  Bill.findAll(userGroupId, successCall, next);
 }
 
 function deleteBill(req, res, next) {
@@ -27,6 +28,7 @@ function deleteBill(req, res, next) {
 }
 
 function createBills(req, res, next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   let newValuesStr;
   const newOnesExist = req.body.length > 0;
 
@@ -57,7 +59,7 @@ function createBills(req, res, next) {
       });
   };
 
-  Bill.createOneOrMany(newValuesStr, successCall, next);
+  Bill.createOneOrMany(userGroupId, newValuesStr, successCall, next);
 }
 
 function updateBills(req, res, next) {
