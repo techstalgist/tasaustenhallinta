@@ -1,0 +1,95 @@
+const Category = require('../models/category');
+
+function getCategories(req, res, next) {
+  const successCall = (data) => {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: data,
+        message: 'Kategoriat haettu.'
+      });
+  };
+
+  Category.findAll(successCall, next);
+}
+
+function createCategories(req, res, next) {
+  let newValuesStr;
+  const newOnesExist = req.body.length > 0;
+
+  if (!newOnesExist) {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: null,
+        message: 'Ei uusia kategorioita.'
+      });
+    return;
+  }
+  newValuesStr = 'values ';
+  req.body.map((c, i) => {
+    newValuesStr = newValuesStr + '(\'' + c.name + '\')';
+    if (i+1 != req.body.length) {
+      newValuesStr = newValuesStr + ',';
+    }
+  });
+  const successCall = (data) => {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: data[1],
+        message: 'Uudet kategoriat luotu.'
+      });
+  };
+
+  Category.createOneOrMany(newValuesStr, successCall, next);
+}
+
+function updateCategories(req, res, next) {
+  const oldOnesExist = req.body.length > 0;
+
+  if (!oldOnesExist) {
+    res.status(200)
+      .json({
+        status: 'success',
+        message: 'Ei päivitettäviä kategorioita.'
+      });
+    return;
+  }
+
+  let oldValuesStr;
+  oldValuesStr = 'values ';
+  req.body.map((c, i) => {
+    oldValuesStr = oldValuesStr + '(' + parseInt(c.id) + ',\'' + c.name + '\')';
+    if (i+1 != req.body.length) {
+      oldValuesStr = oldValuesStr + ',';
+    }
+  });
+  const successCall = () => {
+    res.status(200)
+      .json({
+        status: 'success',
+        message: 'Kategorioiden tiedot päivitetty.'
+      });
+  };
+  Category.update(oldValuesStr, successCall, next);
+}
+
+function deleteCategory(req, res, next) {
+  const id = parseInt(req.params.id);
+  const successCall = () => {
+    res.status(200)
+      .json({
+        status: 'success',
+        message: 'Kategoria poistettu laskuilta ja kategorioista.'
+      });
+  };
+  Category.deleteById(id, successCall, next);
+}
+
+module.exports = {
+  getCategories: getCategories,
+  createCategories: createCategories,
+  updateCategories: updateCategories,
+  deleteCategory: deleteCategory
+};
