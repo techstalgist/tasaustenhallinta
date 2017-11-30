@@ -8,14 +8,13 @@ const routes = require('./backend/routes');
 
 const app = express();
 app.use(expressLogging(logger));
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
-  console.log("serving static assets");
   app.use(express.static('client/build'));
 }
 
