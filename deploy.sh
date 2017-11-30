@@ -13,7 +13,8 @@ source $DIR/environment.sh
 echo "Siirretään tiedostot users-palvelimelle..."
 
 # Tämä komento siirtää tiedostot palvelimelle
-rsync -z -r -e ssh $DIR/client/build $DIR/backend $DIR/sql $DIR/server.js $DIR/ecosystem.json $DIR/package.json users.cs:$PROJECT_FOLDER
+rsync -z -r -e ssh $DIR/backend $DIR/sql $DIR/server.js $DIR/ecosystem.json $DIR/package.json users.cs:$PROJECT_FOLDER
+rsync -z -r -e ssh $DIR/client/build users.cs:$PROJECT_FOLDER/client
 
 echo "Valmis!"
 

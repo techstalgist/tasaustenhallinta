@@ -19,9 +19,11 @@
     "pm2": "^2.7.1"
   },
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node ./node_modules/.bin/pm2 start ecosystem.json --env production",
+    "dev-start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
-    "client": "node start-client.js"
+    "client": "node start-client.js",
+    "postinstall": "cd client && npm run build && cd .."
   },
   "devDependencies": {
     "concurrently": "3.1.0"
