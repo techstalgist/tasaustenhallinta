@@ -23,7 +23,7 @@
     "dev-start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
     "client": "node start-client.js",
-    "postinstall": "cd client && npm run build && cd .."
+    "postinstall": "cd client && npm install && npm run build && cd .."
   },
   "devDependencies": {
     "concurrently": "3.1.0"
