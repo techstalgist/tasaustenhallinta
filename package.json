@@ -19,7 +19,7 @@
     "pm2": "^2.7.1"
   },
   "scripts": {
-    "start": "node ./node_modules/.bin/pm2 start ecosystem.json --env production",
+    "start": "pm2 start ecosystem.json --env production",
     "dev-start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
     "client": "node start-client.js",
