@@ -1,4 +1,4 @@
-require('dotenv').config();
+//require('dotenv').config();
 const express = require('express');
 const expressLogging = require('express-logging');
 const logger = require('logops');
@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
+  console.log("serving static assets");
   app.use(express.static('client/build'));
 }
 
