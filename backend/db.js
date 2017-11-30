@@ -5,13 +5,19 @@ const options = {
 };
 const pgp = require('pg-promise')(options);
 
-const config = {
-  host: 'localhost',
-  port: 5432,
-  database: process.env.DB_NAME,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-};
+let config;
+
+if (process.env.DATABASE_URL !== undefined) {
+  config = process.env.DATABASE_URL;
+} else {
+  config = {
+    host: 'localhost',
+    port: 5432,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+  };
+}
 
 // select typname, oid, typarray from pg_type where typname = 'date' order by oid
 // 1082 is oid for datatype 'date'
