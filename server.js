@@ -1,4 +1,4 @@
-//require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const expressLogging = require('express-logging');
 const logger = require('logops');
