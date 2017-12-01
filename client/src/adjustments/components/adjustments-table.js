@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {fetchAdjustments, addAdjustment, createAdjustments, updateAdjustments, setAdjustmentToRemove, submitDeleteAdjustment, closeDeletePopup, hideMessages  } from '../actions';
 import { toFinnishDateString, getCssForDateField, getCssForNumberField } from '../../shared/helpers';
-import { handleAmountChange, handleUserChange, handleDateChange } from '../../shared/components/table/change-handlers';
+import { handleAmountChange, handleUserChange, handleDateChange, handleCommentChange } from '../../shared/components/table/change-handlers';
 import {changeAttribute} from '../../shared/actions';
 
 import TableHeaders from '../../shared/components/table/table-headers';
@@ -27,39 +27,46 @@ class AdjustmentsTable extends React.Component {
           removeSuccess, toRemove, adjustments, users, addAdjustment, createAdjustments,
           updateAdjustments, successMessage, errorMessage} = this.props;
     const headersData = [
-      {cssClass: "col-2", title: "#"},
+      {cssClass: "col-1", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
-      {cssClass: "col-3 text-right", title: "Summa"},
-      {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col-2 text-right", title: "Summa"},
+      {cssClass: "col-2 text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col-3", title: "Kommentti"},
       {cssClass: "col-2", title:""}
     ];
     const target = "adjustment";
     const table = (
         <div className="row">
-          <div className="col-8">
+          <div className="col">
             <table className="table table-sm border">
               <TableHeaders headers={headersData} rowClass="table-row"/>
               <tbody>
                 {adjustments.map((a, i) =>
                   <tr key={a.id} id={i+1} className="table-row">
-                      <th scope="row" className="col-2">
+                      <th scope="row" className="col-1">
                         {i+1} {a.newadjustment ? <span className="badge badge-secondary small-font">Uusi</span> : null}
                         {a.changed ? <span className="badge badge-secondary small-font">Muutos</span> : null}
                       </th>
                       <td className="col-2">
                         <UserDropdown next={handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
                       </td>
-                      <td className="col-3 text-right">
+                      <td className="col-2 text-right">
                         <input type="number" name="amount"
                             defaultValue={a.amount}
                             onBlur={(e) => handleAmountChange(handleAttributeChange, a.id, e, target)}
                             className={getCssForNumberField("text-right form-control p-1", a.amount)}/>
                       </td>
-                      <td className="col-3 text-right">
+                      <td className="col-2 text-right">
                         <input type="text" name="date"
                             defaultValue={toFinnishDateString(a.date)}
                             onBlur={(e) => handleDateChange(handleAttributeChange, a.id, e, target)}
                             className={getCssForDateField("text-right form-control p-1", a.date)}/>
+                      </td>
+                      <td className="col-3">
+                        <input type="text" name="comment"
+                            defaultValue={a.comment}
+                            onBlur={(e) => handleCommentChange(handleAttributeChange, a.id, e, target)}
+                            className="form-control"/>
                       </td>
                       <td className="col-2 text-center">
                         <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(a.id)}>

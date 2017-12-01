@@ -67,6 +67,13 @@ export function reducer(state = getInitialState(), action) {
         successMessage: null,
         errorMessage: null
       }
+    case 'CHANGE_ADJUSTMENT_COMMENT':
+      return {
+        ...state,
+        adjustments: changeOneAdjustment(state.adjustments, action.id, setComment, action.newComment),
+        successMessage: null,
+        errorMessage: null
+      }
     case 'CHANGE_ADJUSTMENT_USER':
       return {
         ...state,
@@ -187,6 +194,7 @@ function newAdjustmentReducer(currentAdjustments, user) {
       username: user.username,
       amount: null,
       date: new Date().toISOString().substr(0,10),
+      comment: null,
       newadjustment: true,
       changed: false,
       toUIObject: adjustmentToUIObject(),
@@ -219,14 +227,34 @@ function updateChanged(a) {
 }
 
 function setAmount(a, amount) {
+  if (a.amount === amount) {
+    return {...a};
+  }
   return {
     ...a,
     amount: amount,
-    changed: !a.newadjustment
+    changed: !a.newadjustment && (amount !== a.amount)
+  }
+}
+
+function setComment(a, comment) {
+  if ((a.comment === null || a.comment === '') && comment === '') {
+    return {
+      ...a
+    }
+  } else {
+    return {
+      ...a,
+      comment: comment,
+      changed: !a.newadjustment
+    }
   }
 }
 
 function setDate(a, date) {
+  if (a.date === date) {
+    return {...a};
+  }
   return {
     ...a,
     date: date,
@@ -235,6 +263,9 @@ function setDate(a, date) {
 }
 
 function setUserIDAndUsername(a, user) {
+  if (user.id === a.userid) {
+    return {...a};
+  }
   return {
     ...a,
     userid: user.id,

@@ -15,7 +15,8 @@ CREATE TABLE adjustments (
   id SERIAL PRIMARY KEY,
   user_id integer references users(id),
   amount numeric,
-  date date
+  date date,
+  comment text
 );
 
 CREATE TABLE categories (

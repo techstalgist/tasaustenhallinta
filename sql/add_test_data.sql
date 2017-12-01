@@ -9,5 +9,5 @@ insert into bills(user_id, category_id, amount, date) values (1, 1, 40, '2017-10
 insert into bills(user_id, category_id, amount, date) values (2, 1, 30, '2017-11-10');
 insert into bills(user_id, category_id, amount, date) values (2, 1, 60, '2017-10-18');
 
-insert into adjustments(user_id, amount, date) values (2, 30, '2017-10-31');
-insert into adjustments(user_id, amount, date) values (1, 20, '2017-11-30');
+insert into adjustments(user_id, amount, date, comment) values (2, 30, '2017-10-31', 'Lokakuun tasaus');
+insert into adjustments(user_id, amount, date, comment) values (1, 20, '2017-11-30', 'Marraskuun tasaus');

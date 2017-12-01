@@ -44,7 +44,10 @@ function createAdjustments(req, res, next) {
 
   newValuesStr = 'values ';
   req.body.map((a, i) => {
-    newValuesStr = newValuesStr + '(' + parseInt(a.amount) + ',' + parseInt(a.userid) + ',\'' +  a.date + '\')';
+    newValuesStr = newValuesStr + '(' + parseInt(a.amount) +
+                                ',' + parseInt(a.userid) +
+                                ',\'' +  (a.comment ||'') + '\'' +
+                                ',\'' +  a.date + '\')';
     if (i+1 != req.body.length) {
       newValuesStr = newValuesStr + ',';
     }
@@ -78,7 +81,11 @@ function updateAdjustments(req, res, next) {
 
   oldValuesStr = 'values ';
   req.body.map((a, i) => {
-    oldValuesStr = oldValuesStr + '(' + parseInt(a.id) + ',' + parseInt(a.userid) + ',' + parseInt(a.amount) + ',\'' +  a.date + '\'::date)';
+    oldValuesStr = oldValuesStr + '(' + parseInt(a.id) +
+                                  ','+ parseInt(a.userid) +
+                                  ',' + parseInt(a.amount) +
+                                  ',\'' +  (a.comment ||'') + '\'' + 
+                                  ',\'' +  a.date + '\'::date)';
     if (i+1 != req.body.length) {
       oldValuesStr = oldValuesStr + ',';
     }

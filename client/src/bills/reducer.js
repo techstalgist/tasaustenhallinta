@@ -307,6 +307,9 @@ function deleteBillInMonth(bills, id) {
 }
 
 function setUser(bill, newUser) {
+  if (newUser.id === bill.userid) {
+    return {...bill};
+  }
   return {
     ...bill,
     userid: newUser.id,
@@ -316,6 +319,9 @@ function setUser(bill, newUser) {
 }
 
 function setCategory(bill, newCategory) {
+  if (newCategory.id === bill.categoryid) {
+    return {...bill};
+  }
   return {
     ...bill,
     categoryid: newCategory.id,
@@ -325,6 +331,9 @@ function setCategory(bill, newCategory) {
 }
 
 function setDate(bill, newDate) {
+  if (newDate === bill.date) {
+    return {...bill};
+  }
   return {
     ...bill,
     date: newDate,
@@ -333,6 +342,9 @@ function setDate(bill, newDate) {
 }
 
 function setAmount(bill, newAmount) {
+  if (newAmount === bill.amount) {
+    return {...bill};
+  }
   return {
     ...bill,
     amount: newAmount,

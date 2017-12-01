@@ -37,7 +37,7 @@ export function reducer(state = getInitialState(), action) {
       return {
         ...state,
         dataReceived: true,
-        categories: categoryDataReducer(action.data, updateDateAndId)
+        categories: categoryDataReducer(action.data, handleCategoryFromBackend)
       }
     case 'NEW_CATEGORY':
       return {
@@ -102,7 +102,7 @@ export function reducer(state = getInitialState(), action) {
       return {
           ...state,
           successMessage: action.message,
-          categories: categoryDataReducer(action.data, updateDateAndId)
+          categories: categoryDataReducer(action.data, handleCategoryFromBackend)
       }
     case 'CATEGORY_CREATION_FAILURE':
       return {
@@ -189,7 +189,7 @@ function newCategoryReducer(categories) {
   ]
 }
 
-function updateDateAndId(c) {
+function handleCategoryFromBackend(c) {
   return {
     ...c,
     id: c.id.toString(),
@@ -204,6 +204,9 @@ function updateDateAndId(c) {
 }
 
 function updateName(c, name) {
+  if (name === c.name) {
+    return {...c};
+  }
   return {
     ...c,
     name: name,

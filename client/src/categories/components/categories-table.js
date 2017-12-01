@@ -27,7 +27,7 @@ class CategoriesTable extends React.Component {
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-6", title: "Kategoria"},
       {cssClass: "col-2 text-right", title: "Laskujen lkm"},
-      {cssClass: "col-2", title:""}
+      {cssClass: "col", title:""}
     ];
     const target = "category";
     const table = (
@@ -51,7 +51,7 @@ class CategoriesTable extends React.Component {
                     <td className="col-2 text-right">
                       {c.bills_count}
                     </td>
-                    <td className="col-2 text-center">
+                    <td className="col text-center">
                       <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(c.id)}>
                         <span aria-hidden="true">&times;</span>
                       </button>

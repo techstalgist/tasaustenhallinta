@@ -44,3 +44,9 @@ export function handleNameChange (next, id, e, target) {
   e.stopPropagation();
   next("name", id, e.target.value, target, true);
 }
+
+export function handleCommentChange (next, id, e, target) {
+  e.preventDefault();
+  e.stopPropagation();
+  next("comment", id, e.target.value, target, true);
+}

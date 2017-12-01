@@ -1,7 +1,13 @@
 const db = require('../db');
 
-const SELECT = 'select adjustments.id, users.username, users.id as userid, adjustments.amount, adjustments.date ' +
-               'from adjustments inner join users on adjustments.user_id = users.id ' +
+const SELECT = 'select adjustments.id, '+
+               'users.username, '+
+               'users.id as userid, '+
+               'adjustments.amount, ' +
+               'adjustments.date, ' +
+               'adjustments.comment ' +
+               'from adjustments '+
+               'inner join users on adjustments.user_id = users.id ' +
                'where users.user_group_id = $1 ' +
                'order by adjustments.date asc;';
 
@@ -27,7 +33,7 @@ function deleteById(id, success, failure) {
 function createOneOrMany(userGroupId, values, success, failure) {
   db.tx(t => {
       let queries = [];
-      const insert = t.none('insert into adjustments (amount, user_id, date)'+
+      const insert = t.none('insert into adjustments (amount, user_id, comment, date)'+
                         values);
       queries.push(insert);
       queries.push(t.any(SELECT, userGroupId));
@@ -41,8 +47,13 @@ function createOneOrMany(userGroupId, values, success, failure) {
 }
 
 function update(values, success, failure) {
-  db.none('update adjustments as a set amount = a2.amount, user_id = a2.user_id, date = a2.date from (' + values +
-                    ') as a2(id, user_id, amount, date) where a2.id = a.id')
+  db.none('update adjustments as a ' +
+          'set amount = a2.amount, '+
+          'user_id = a2.user_id, '+
+          'comment = a2.comment, ' +
+          'date = a2.date ' +
+          'from (' + values + ') as a2(id, user_id, amount, comment, date) ' +
+          'where a2.id = a.id')
     .then(() => {
       return success();
     })
