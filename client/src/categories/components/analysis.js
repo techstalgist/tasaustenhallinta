@@ -13,6 +13,10 @@ class Analysis extends React.Component {
     }
   }
 
+  showValue(value) {
+    return value > 0 ? showRounded(value, 0) + " €" : null;
+  }
+
   render() {
     const { analysisData, users, handleAttributeChange } = this.props;
     let cols = [];
@@ -38,12 +42,18 @@ class Analysis extends React.Component {
             <tbody>
             {Object.keys(analysisData).map((c, i) =>
               <tr key={c} className="table-row">
-                  <td className="col">{c}
+                  <td className="col">
+                   {c === "Yhteensä" ? (<strong>{c}</strong>) : c}
                   </td>
                   {Object.keys(analysisData[c]).map((y) => {
                     const value = parseFloat(analysisData[c][y]);
                     return (
-                      <td key={y} className="col text-right">{value > 0 ? showRounded(value, 0) + " €" : null}
+                      <td key={y} className="col text-right">
+                        {
+                          c === "Yhteensä" ?
+                            (<strong>{this.showValue(value)}</strong>)
+                          : this.showValue(value)
+                        }
                       </td>
                     )
                   })}

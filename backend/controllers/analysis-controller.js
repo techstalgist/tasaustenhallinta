@@ -13,10 +13,11 @@ function getDataForUser(req,res,next) {
   }
   const users = JSON.parse("[" + req.body.users + "]");
   const successCall = (data) => {
+    const categoriesAndTotal = [...data[1], ...data[0]]; //yhteensä ensin, kategoriat sitten
     res.status(200)
       .json({
         status: 'success',
-        data: groupSumsByCategory(data),
+        data: groupSumsByCategory(categoriesAndTotal),
         message: 'Analyysidatat haettu.'
       });
   };

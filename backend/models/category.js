@@ -24,6 +24,21 @@ const ANALYSIS_SELECT =
               'group by c.name, p.year ' +
               'order by c.name asc, p.year asc; ';
 
+const ANALYSIS_TOTAL_SELECT =
+              'with periods as ( ' +
+              'SELECT date_part(\'year\', generate_series) as year '+
+              'FROM generate_series(\'2014-01-01 00:00\'::timestamp, now(), \'1 year\') ' +
+              ') '+
+              'select \'Yhteensä\' as name, p.year, sum(b.amount) '+
+              'from users u '+
+              'cross join periods p '+
+              'left join bills b on '+
+              'b.user_id = u.id '+
+              'and date_part(\'year\',b.date) = p.year '+
+              'where u.id in ($1:csv) and u.user_group_id = $2 '+
+              'group by p.year ' +
+              'order by p.year asc; ';
+
 function findAll(userGroupId, success, failure) {
   db.any(SELECT, userGroupId)
     .then((data) => {
@@ -85,7 +100,12 @@ function getAnalysisDataForUsers(userGroupId, users,success,failure) {
 }
 
 function getAnalysisDataForUserIds(userGroupId, userIds, query, success, failure) {
-  db.any(query, [userIds, userGroupId])
+  db.tx(t => {
+      let queries = [];
+      queries.push(t.any(query, [userIds, userGroupId]));
+      queries.push(t.any(ANALYSIS_TOTAL_SELECT, [userIds, userGroupId]));
+      return t.batch(queries);
+  })
     .then((data) => {
       return success(data);
     })
