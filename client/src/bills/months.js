@@ -5,7 +5,7 @@ export function Month(year, month) {
     return this.month + "/" + this.year;
   };
   this.getAsDate = function() {
-    return new Date(this.year, this.month-1, 1);
+    return new Date(Date.UTC(this.year,this.month-1,1));
   };
 }
 

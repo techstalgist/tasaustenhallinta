@@ -107,7 +107,7 @@ export function reducer(state = getInitialState(), action) {
           }
       }
     case 'NEW_BILL':
-      const newBill = createNewBill(action.user, action.category);
+      const newBill = createNewBill(action.user, action.category, state.selectedMonth.getAsDate());
       return {
         ...state,
         bills: newBillReducer(state.bills, state.selectedMonth.toString(), newBill),
@@ -246,7 +246,7 @@ function newBillToMonthReducer(currentBillsForMonth, newBill) {
   ]
 }
 
-function createNewBill(user, category) {
+function createNewBill(user, category, date) {
   return {
     id: v4(),
     userid: user.id,
@@ -254,7 +254,7 @@ function createNewBill(user, category) {
     amount: null,
     categoryname: category.name,
     categoryid: category.id,
-    date: new Date().toISOString().substr(0,10),
+    date: date.toISOString().substr(0,10),
     newbill: true,
     changed: false,
     toUIObject: billToUIObject(),
