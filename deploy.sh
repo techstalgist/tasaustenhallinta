@@ -24,9 +24,7 @@ echo "Suoritetaan build palvelimella"
 # pm2 toimii, koska palvelimen ~/.bashrc :ssä sourcetetaan nvm -bash skripti
 ssh users.cs "
 cd $PROJECT_FOLDER
-npm install
-pm2 stop all
-pm2 start ecosystem.json --env production
+pm2 restart ecosystem.json --env production
 exit"
 
 echo "Valmis! Sovelluksesi on nyt valmiina osoitteessa $USERNAME.users.cs.helsinki.fi"
