@@ -8,14 +8,21 @@ const SELECT ='select c.id, c.name, count(b.id) as bills_count '+
               'where ug.id = $1 '+
               'group by c.id '+
               'order by c.name asc;';
-const ANALYSIS_SELECT = 'select categories.name,sum(amount),date_part(\'year\',bills.date) as year '+
-              'from bills '+
-              'inner join users on bills.user_id = users.id '+
-              'inner join categories on bills.category_id = categories.id ' +
-              'where users.user_group_id = $2'; //TODO add users.id in ($1:csv) and
-const ANALYSIS_GROUP_BY_WITH_USER = 'group by categories.id,users.id,date_part(\'year\',bills.date) ';
-const ANALYSIS_GROUP_BY_WITHOUT_USER = 'group by categories.id,date_part(\'year\',bills.date) ';
-const ANALYSIS_ORDER_BY = 'order by categories.name,year asc;';
+const ANALYSIS_SELECT =
+              'with periods as ( ' +
+              'SELECT date_part(\'year\', generate_series) as year '+
+              'FROM generate_series(\'2014-01-01 00:00\'::timestamp, now(), \'1 year\') ' +
+              ') '+
+              'select c.name, p.year, sum(b.amount) '+
+              'from users u '+
+              'cross join categories c '+
+              'cross join periods p '+
+              'left join bills b on b.category_id = c.id '+
+              'and b.user_id = u.id '+
+              'and date_part(\'year\',b.date) = p.year '+
+              'where u.id in ($1:csv) and u.user_group_id = $2 '+
+              'group by c.name, p.year ' +
+              'order by c.name asc, p.year asc; ';
 
 function findAll(userGroupId, success, failure) {
   db.any(SELECT, userGroupId)
@@ -73,7 +80,7 @@ function deleteById(id, success, failure) {
 }
 
 function getAnalysisDataForUsers(userGroupId, users,success,failure) {
-  const query = ANALYSIS_SELECT + (users.length > 1 ? ANALYSIS_GROUP_BY_WITHOUT_USER : ANALYSIS_GROUP_BY_WITH_USER) + ANALYSIS_ORDER_BY;
+  const query = ANALYSIS_SELECT;
   return getAnalysisDataForUserIds(userGroupId, users, query, success, failure);
 }
 

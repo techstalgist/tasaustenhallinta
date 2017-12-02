@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import TableHeaders from '../../shared/components/table/table-headers';
-import {fetchAnalysisData} from '../actions';
+import {fetchAnalysisData, changeSelectedUser} from '../actions';
 import { showRounded } from '../../shared/helpers';
+import { handleSelectedChange } from '../../shared/components/table/change-handlers';
 
 class Analysis extends React.Component {
 
@@ -13,26 +14,36 @@ class Analysis extends React.Component {
   }
 
   render() {
-    const { analysisData } = this.props;
+    const { analysisData, users, handleAttributeChange } = this.props;
+    let cols = [];
+    // TODO sarakkeet backendistä frontin lähettämien tietojen perusteella
+    if (Object.keys(analysisData) !== undefined) {
+      const first = analysisData[Object.keys(analysisData)[0]];
+      if (first !== undefined) {
+        cols = Object.keys(first);
+      }
+    }
+    const colsToObjects = cols.map((c) => {
+      return {cssClass: "col text-right", title: c};
+    });
+
     const headersData = [
-      {cssClass: "col-4", title: "Kategoria"},
-      {cssClass: "col-2 text-right", title: "2014"},
-      {cssClass: "col-2 text-right", title: "2015"},
-      {cssClass: "col-2 text-right", title: "2016"},
-      {cssClass: "col-2 text-right", title: "2017"}
+      {cssClass: "col", title: "Kategoria"},
+      ...colsToObjects
     ];
+    const target = "user";
     const table = (
           <table className="table table-sm border">
             <TableHeaders headers={headersData} rowClass="table-row"/>
             <tbody>
             {Object.keys(analysisData).map((c, i) =>
               <tr key={c} className="table-row">
-                  <td className="col-4">{c}
+                  <td className="col">{c}
                   </td>
                   {Object.keys(analysisData[c]).map((y) => {
                     const value = parseFloat(analysisData[c][y]);
                     return (
-                      <td key={y} className="col-2 text-right">{value > 0 ? showRounded(value, 0) + " €" : null}
+                      <td key={y} className="col text-right">{value > 0 ? showRounded(value, 0) + " €" : null}
                       </td>
                     )
                   })}
@@ -44,9 +55,35 @@ class Analysis extends React.Component {
     return (
       <div className="row">
         <div className="col-7">
-          {table}
+            <div className="row">
+              <div className="col">
+                <ul className="list-inline mb-1">
+                  <li className="list-inline-item">
+                    <span className="mr-1">Rajaa käyttäjän mukaan: </span>
+                  </li>
+                  <li className="list-inline-item">
+                    {users.map((u) => {
+                      return (
+                        <div className="form-check form-check-inline" key={u.id}>
+                          <label className="form-check-label nonselectable-text">
+                            <input type="checkbox" className="form-check-input" checked={u.selectedForAnalysis}
+                              onChange={(e) => handleSelectedChange(handleAttributeChange, u.id, e, target)}/>
+                              {u.username}
+                          </label>
+                        </div>
+                      )
+                    })}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                {table}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
     )
   }
 }
@@ -54,13 +91,17 @@ class Analysis extends React.Component {
 const mapStateToProps = (state) => (
   {
     analysisData: state.categoriesData.analysisData,
-    analysisDataReceived: state.categoriesData.analysisDataReceived
+    analysisDataReceived: state.categoriesData.analysisDataReceived,
+    users: state.sharedData.users
   }
 );
 
 const mapDispatchToProps = (dispatch) => (
   {
-    dispatch: dispatch
+    dispatch: dispatch,
+    handleAttributeChange: (attribute, id, value, target, isValid) => (
+      dispatch(changeSelectedUser(attribute, id, value, target, isValid))
+    ),
   }
 );
 

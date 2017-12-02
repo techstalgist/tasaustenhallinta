@@ -59,6 +59,12 @@ export function receiveUsers(json) {
   };
 }
 
+export function getUsersInterface(token) {
+  const usersInterface = new Interface('/users', 'GET', receiveUsers, null, requestUsers);
+  usersInterface.setHeaders(token, null);
+  return usersInterface;
+}
+
 export function fetchUsers() {
   return function (dispatch, getState) {
     if (getState().sharedData.usersDataReceived) {

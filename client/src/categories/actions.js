@@ -1,8 +1,8 @@
-import { callApi, Interface } from '../shared/actions';
+import { callApi, Interface, changeAttribute, getUsersInterface } from '../shared/actions';
 import {validateArray} from '../shared/helpers';
 import { getCategories } from './selectors';
 import {shouldFetchBills} from '../bills/actions';
-
+import {getSelectedUsers} from '../shared/selectors';
 
 export function hideMessages() {
   return {
@@ -109,6 +109,14 @@ export function shouldFetchCategories() {
   };
 }
 
+export function changeSelectedUser(attribute, id, newValue, target, isValid) {
+  return function (dispatch, getState) {
+    Promise.all([dispatch(changeAttribute(attribute, id, newValue, target, isValid))]).then(() => {
+      dispatch(fetchAnalysisData());
+    });
+  };
+}
+
 export function submitDeleteCategory() {
   return function (dispatch, getState) {
     const toRemove = getState().categoriesData.toRemove;
@@ -127,14 +135,28 @@ export function submitDeleteCategory() {
   };
 }
 
-export function fetchAnalysisData() {
+export function callAnalysisInterface() {
   return function (dispatch, getState) {
     const analysisInterface = new Interface('/analysis', 'POST', receiveAnalysisData, null, null);
     const token = getState().loginData.logInInfo.token;
-    const data = {users: [1, 2]}; // TODO
+    const data = {users: getSelectedUsers(getState().sharedData.users)};
     analysisInterface.setHeaders(token, "application/x-www-form-urlencoded");
     analysisInterface.setBody(data, false);
     dispatch(callApi(analysisInterface));
+  };
+}
+
+export function fetchAnalysisData() {
+  return function (dispatch, getState) {
+    const token = getState().loginData.logInInfo.token;
+    const usersInterface = getUsersInterface(token);
+    if (!getState().sharedData.usersDataReceived) {
+      Promise.all([dispatch(callApi(usersInterface))]).then(() => {
+        dispatch(callAnalysisInterface());
+      });
+    } else {
+      dispatch(callAnalysisInterface());
+    }
   };
 }
 

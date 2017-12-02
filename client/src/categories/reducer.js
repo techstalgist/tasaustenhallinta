@@ -1,5 +1,6 @@
 import { v4 } from 'node-uuid';
-import {isValidName, getIndexById} from '../shared/helpers';
+import {isValidName} from '../shared/helpers';
+import {updateArrayWithUpdateFunction, changeOneItemInArray, removeItemFromArray, getIndexById} from '../shared/reducer-helpers';
 
 function getInitialState() {
   return {
@@ -37,7 +38,7 @@ export function reducer(state = getInitialState(), action) {
       return {
         ...state,
         dataReceived: true,
-        categories: categoryDataReducer(action.data, handleCategoryFromBackend)
+        categories: updateArrayWithUpdateFunction(action.data, handleCategoryFromBackend)
       }
     case 'NEW_CATEGORY':
       return {
@@ -67,7 +68,7 @@ export function reducer(state = getInitialState(), action) {
     case 'CHANGE_CATEGORY_NAME':
       return {
         ...state,
-        categories: changeOneCategory(state.categories, action.id, updateName, action.newName)
+        categories: changeOneItemInArray(state.categories, action.id, updateName, action.newName)
       }
     case 'SET_CATEGORY_TO_REMOVE':
       return {
@@ -85,7 +86,7 @@ export function reducer(state = getInitialState(), action) {
     case 'DELETE_CATEGORY_TO_REMOVE':
       return {
         ...state,
-        categories: removeCategoryFromState(state.categories, state.toRemove),
+        categories: removeItemFromArray(state.categories, state.toRemove.id),
         toRemove: {
           ...state.toRemove,
           removed: true
@@ -102,7 +103,7 @@ export function reducer(state = getInitialState(), action) {
       return {
           ...state,
           successMessage: action.message,
-          categories: categoryDataReducer(action.data, handleCategoryFromBackend)
+          categories: updateArrayWithUpdateFunction(action.data, handleCategoryFromBackend)
       }
     case 'CATEGORY_CREATION_FAILURE':
       return {
@@ -113,7 +114,7 @@ export function reducer(state = getInitialState(), action) {
     case 'CATEGORY_UPDATE_SUCCESS':
       return {
         ...state,
-        categories: categoryDataReducer(state.categories, updateChanged),
+        categories: updateArrayWithUpdateFunction(state.categories, updateChanged),
         successMessage: action.message,
         errorMessage: null
       }
@@ -132,43 +133,6 @@ export function reducer(state = getInitialState(), action) {
     default:
       return state;
   }
-}
-
-//TODO Yleistä tämä
-function removeCategoryFromState(newData, toRemove) {
-  const i = getIndexById(toRemove.id, newData);
-  let updated = newData;
-  updated = [
-    ...updated.slice(0, i),
-    ...updated.slice(i+1)
-  ]
-  return updated;
-}
-
-//TODO Yleistä tämä
-function categoryDataReducer(newData, updateFunction) {
-  let i;
-  let updated = newData;
-  for(i = 0; i < newData.length; i++) {
-    updated = [
-      ...updated.slice(0, i),
-      updateFunction(updated[i]),
-      ...updated.slice(i+1)
-    ]
-  }
-  return updated;
-}
-
-//TODO Yleistä tämä
-function changeOneCategory(current, id, next, newValue) {
-  let updated = current;
-  const i = getIndexById(id, updated);
-  updated = [
-    ...updated.slice(0, i),
-    next(updated[i], newValue),
-    ...updated.slice(i+1),
-  ]
-  return updated;
 }
 
 //TODO Yleistä tämä. newCategory -kutsu luo uuden objektin. Mutta arrayhyn lisäämisen voi yleistää.

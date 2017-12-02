@@ -89,8 +89,3 @@ export function validateArray(array) {
   }
   return true;
 }
-
-export function getIndexById(id, arr) {
-  const ids = arr.map( (a) => a.id );
-  return ids.indexOf(id);
-}

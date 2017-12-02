@@ -2,6 +2,15 @@ const Category = require('../models/category');
 
 function getDataForUser(req,res,next) {
   const userGroupId = parseInt(req.user.userGroupId);
+  if (req.body.users.length === 0) {
+    res.status(200)
+      .json({
+        status: 'success',
+        data: {},
+        message: 'Käyttäjiä ei valittu.'
+      });
+    return;
+  }
   const users = JSON.parse("[" + req.body.users + "]");
   const successCall = (data) => {
     res.status(200)

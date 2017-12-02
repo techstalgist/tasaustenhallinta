@@ -1,6 +1,7 @@
 import { v4 } from 'node-uuid';
 import { getCurrentMonth, getMonths, getMonth, createMonthFromDate } from './months';
-import {toFinnishDateString, isValidISODate, isValidAmount, getIndexById, isValidCategory} from '../shared/helpers';
+import {toFinnishDateString, isValidISODate, isValidAmount, isValidCategory} from '../shared/helpers';
+import {updateArrayWithUpdateFunction, changeOneItemInArray, removeItemFromArray} from '../shared/reducer-helpers';
 
 function getInitialState() {
   return {
@@ -185,23 +186,10 @@ function billsDataReducer(newData, updateFunction) {
   for(let i = 0; i < Object.keys(newData).length; i++) {
     updated = {
       ...updated,
-      [Object.keys(newData)[i]]: handleOneMonth(newData[Object.keys(newData)[i]], updateFunction)
+      [Object.keys(newData)[i]]: updateArrayWithUpdateFunction(newData[Object.keys(newData)[i]], updateFunction)
     }
   }
   return updated;
-}
-
-//TODO Yleistä tämä
-function handleOneMonth(bills, updateFunction) {
-  let updatedBillsForMonth = bills;
-  for(let i = 0; i < bills.length; i++) {
-    updatedBillsForMonth = [
-      ...updatedBillsForMonth.slice(0, i),
-      updateFunction(updatedBillsForMonth[i]),
-      ...updatedBillsForMonth.slice(i+1),
-    ]
-  }
-  return updatedBillsForMonth;
 }
 
 function handleBillFromBackend(b) {
@@ -221,7 +209,7 @@ function handleBillFromBackend(b) {
 function deleteBillReducer(bills, monthStr, billId) {
   return {
     ...bills,
-    [monthStr]: deleteBillInMonth(bills[monthStr], billId)
+    [monthStr]: removeItemFromArray(bills[monthStr], billId)
   }
 }
 
@@ -236,7 +224,7 @@ function dateAndMonthChangeReducer(bills, oldMonthStr, billId, newDateObj) {
   const updatedBill = setDate(bill, newDateObj.toISOString().substr(0,10));
   return {
     ...bills,
-    [oldMonthStr]: deleteBillInMonth(bills[oldMonthStr], billId),
+    [oldMonthStr]: removeItemFromArray(bills[oldMonthStr], billId),
     [newMonthStr]: newBillToMonthReducer(bills[newMonthStr], updatedBill)
   }
 }
@@ -279,31 +267,8 @@ function createNewBill(user, category) {
 function updateBillReducer(currentBills, selectedMonth, id, updateFunction, newValue) {
   return {
     ...currentBills,
-    [selectedMonth.toString()]: updateBillInMonth(currentBills[selectedMonth.toString()], updateFunction, id, newValue)
+    [selectedMonth.toString()]: changeOneItemInArray(currentBills[selectedMonth.toString()], id, updateFunction, newValue)
   }
-}
-
-//TODO Yleistä tämä
-function updateBillInMonth(bills, updateFunction, id, newValue) {
-  let updatedBillsForMonth = bills;
-  const index = getIndexById(id, updatedBillsForMonth);
-  updatedBillsForMonth = [
-    ...updatedBillsForMonth.slice(0, index),
-    updateFunction(updatedBillsForMonth[index], newValue),
-    ...updatedBillsForMonth.slice(index+1),
-  ]
-  return updatedBillsForMonth;
-}
-
-//TODO Yleistä tämä
-function deleteBillInMonth(bills, id) {
-  let billsToReturn = bills;
-  const index = getIndexById(id, billsToReturn);
-  billsToReturn = [
-    ...billsToReturn.slice(0, index),
-    ...billsToReturn.slice(index+1)
-  ]
-  return billsToReturn;
 }
 
 function setUser(bill, newUser) {

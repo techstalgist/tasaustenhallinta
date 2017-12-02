@@ -50,3 +50,7 @@ export function handleCommentChange (next, id, e, target) {
   e.stopPropagation();
   next("comment", id, e.target.value, target, true);
 }
+
+export function handleSelectedChange(next, id, e, target) {
+  next("selected", id, e.target.checked, target, true);
+}

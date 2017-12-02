@@ -125,8 +125,9 @@ export function fetchAdjustments() {
     const fetchAdjustmentsInterface = new Interface('/adjustments', 'GET', receiveAdjustments, null, requestAdjustments);
     const token = getState().loginData.logInInfo.token;
     fetchAdjustmentsInterface.setHeaders(token, null);
-    dispatch(callApi(fetchAdjustmentsInterface));
-    dispatch(fetchUsers()); // TODO these dispatches are now run in async manner. second one doesn't wait for the completion of 1st one.
+    Promise.all([dispatch(callApi(fetchAdjustmentsInterface))]).then(() => {
+      dispatch(fetchUsers());
+    });
   };
 }
 

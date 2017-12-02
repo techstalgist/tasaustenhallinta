@@ -1,5 +1,6 @@
 import { v4 } from 'node-uuid';
-import {toFinnishDateString, isValidISODate, isValidAmount, getIndexById} from '../shared/helpers';
+import {toFinnishDateString, isValidISODate, isValidAmount} from '../shared/helpers';
+import {updateArrayWithUpdateFunction, changeOneItemInArray, removeItemFromArray, getIndexById} from '../shared/reducer-helpers';
 
 function getInitialState() {
   return {
@@ -41,7 +42,7 @@ export function reducer(state = getInitialState(), action) {
     case 'RECEIVE':
       return {
         ...state,
-        adjustments: adjustmentsDataReducer(action.data, updateDateAndId),
+        adjustments: updateArrayWithUpdateFunction(action.data, updateDateAndId),
         dataReceived: true,
         successMessage: null,
         errorMessage: null
@@ -56,28 +57,28 @@ export function reducer(state = getInitialState(), action) {
     case 'CHANGE_ADJUSTMENT_AMOUNT':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setAmount, action.newAmount),
+        adjustments: changeOneItemInArray(state.adjustments, action.id, setAmount, action.newAmount),
         successMessage: null,
         errorMessage: null
       }
     case 'CHANGE_ADJUSTMENT_DATE':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setDate, action.newDate),
+        adjustments: changeOneItemInArray(state.adjustments, action.id, setDate, action.newDate),
         successMessage: null,
         errorMessage: null
       }
     case 'CHANGE_ADJUSTMENT_COMMENT':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setComment, action.newComment),
+        adjustments: changeOneItemInArray(state.adjustments, action.id, setComment, action.newComment),
         successMessage: null,
         errorMessage: null
       }
     case 'CHANGE_ADJUSTMENT_USER':
       return {
         ...state,
-        adjustments: changeOneAdjustment(state.adjustments, action.id, setUserIDAndUsername, action.newUser),
+        adjustments: changeOneItemInArray(state.adjustments, action.id, setUserIDAndUsername, action.newUser),
         successMessage: null,
         errorMessage: null
       }
@@ -91,7 +92,7 @@ export function reducer(state = getInitialState(), action) {
       return {
           ...state,
           successMessage: action.message,
-          adjustments: adjustmentsDataReducer(action.data, updateDateAndId)
+          adjustments: updateArrayWithUpdateFunction(action.data, updateDateAndId)
       }
     case 'CREATION_FAILURE':
       return {
@@ -102,7 +103,7 @@ export function reducer(state = getInitialState(), action) {
     case 'UPDATE_SUCCESS':
       return {
         ...state,
-        adjustments: adjustmentsDataReducer(state.adjustments, updateChanged),
+        adjustments: updateArrayWithUpdateFunction(state.adjustments, updateChanged),
         successMessage: action.message,
         errorMessage: null
       }
@@ -134,7 +135,7 @@ export function reducer(state = getInitialState(), action) {
     case 'DELETE_ADJUSTMENT_TO_REMOVE':
       return {
         ...state,
-        adjustments: removeAdjustmentFromState(state.adjustments, state.toRemove),
+        adjustments: removeItemFromArray(state.adjustments, state.toRemove.id),
         toRemove: {
           ...state.toRemove,
           removed: true
@@ -146,43 +147,6 @@ export function reducer(state = getInitialState(), action) {
   }
 }
 
-
-//TODO Yleistä tämä
-function removeAdjustmentFromState(newData, toRemove) {
-  const i = getIndexById(toRemove.id, newData);
-  let updatedAdjustments = newData;
-  updatedAdjustments = [
-    ...updatedAdjustments.slice(0, i),
-    ...updatedAdjustments.slice(i+1)
-  ]
-  return updatedAdjustments;
-}
-
-//TODO Yleistä tämä
-function adjustmentsDataReducer(newData, updateFunction) {
-  let i;
-  let updatedAdjustments = newData;
-  for(i = 0; i < newData.length; i++) {
-    updatedAdjustments = [
-      ...updatedAdjustments.slice(0, i),
-      updateFunction(updatedAdjustments[i]),
-      ...updatedAdjustments.slice(i+1)
-    ]
-  }
-  return updatedAdjustments;
-}
-
-//TODO Yleistä tämä
-function changeOneAdjustment(currentAdjustments, id, next, newValue) {
-  let updatedAdjustments = currentAdjustments;
-  const i = getIndexById(id, updatedAdjustments);
-  updatedAdjustments = [
-    ...updatedAdjustments.slice(0, i),
-    next(updatedAdjustments[i], newValue),
-    ...updatedAdjustments.slice(i+1),
-  ]
-  return updatedAdjustments;
-}
 
 //TODO Yleistä tämä. arrayhyn lisäämisen voi yleistää.
 function newAdjustmentReducer(currentAdjustments, user) {

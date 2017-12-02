@@ -1,3 +1,5 @@
+import {updateArrayWithUpdateFunction, changeOneItemInArray} from '../shared/reducer-helpers';
+
 function getInitialState() {
   return {
     users: [],
@@ -13,12 +15,31 @@ export function reducer(state = getInitialState(), action) {
         usersDataReceived: false
       };
     case 'RECEIVE_USERS':
-    return {
-      ...state,
-      usersDataReceived: true,
-      users: action.data
-    }
+      return {
+        ...state,
+        usersDataReceived: true,
+        users: updateArrayWithUpdateFunction(action.data, updateSelected)
+      }
+    case 'CHANGE_USER_SELECTED':
+      return {
+        ...state,
+        users: changeOneItemInArray(state.users, action.id, setSelected, action.newSelected)
+      }
     default:
       return state;
+  }
+}
+
+function updateSelected(u) {
+  return {
+    ...u,
+    selectedForAnalysis: true
+  }
+}
+
+function setSelected(u, val) {
+  return {
+    ...u,
+    selectedForAnalysis: !u.selectedForAnalysis
   }
 }

@@ -123,9 +123,10 @@ export function fetchBills() {
     const fetchInterface = new Interface('/bills', 'GET', receiveBills, null, requestBills);
     const token = getState().loginData.logInInfo.token;
     fetchInterface.setHeaders(token, null);
-    dispatch(callApi(fetchInterface));
-    dispatch(fetchCategories()); // TODO same as below
-    dispatch(fetchUsers()); // TODO these dispatches are now run in async manner. second one doesn't wait for the completion of 1st one.
+    Promise.all([dispatch(callApi(fetchInterface))]).then(() => {
+      dispatch(fetchCategories());
+      dispatch(fetchUsers());
+    });
   };
 }
 
@@ -141,7 +142,7 @@ export function createOrUpdate(isCreate, httpVerb, success, failure, submit) {
       billsInterface.setHeaders(token, "application/json");
       billsInterface.setBody(neededBills.bills, true);
       dispatch(callApi(billsInterface));
-      dispatch(shouldFetchCategories());
+      dispatch(shouldFetchCategories()); // tämä kutsu ei vielä hae dataa, joten sen voi tehdä asynkronoituna.
     }
   };
 }
