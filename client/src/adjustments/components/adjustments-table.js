@@ -30,9 +30,9 @@ class AdjustmentsTable extends React.Component {
       {cssClass: "col-1", title: "#"},
       {cssClass: "col-2", title: "Käyttäjä"},
       {cssClass: "col-2 text-right", title: "Summa"},
-      {cssClass: "col-2 text-right", title: "Pvm (pp.kk.vvvv)"},
+      {cssClass: "col-2 text-right", title: "Pvm"},
       {cssClass: "col-3", title: "Kommentti"},
-      {cssClass: "col-2", title:""}
+      {cssClass: "col-2 text-center", title:""}
     ];
     const target = "adjustment";
     const table = (
@@ -69,7 +69,7 @@ class AdjustmentsTable extends React.Component {
                             className="form-control"/>
                       </td>
                       <td className="col-2 text-center">
-                        <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(a.id)}>
+                        <button type="button" className="btn btn-outline-danger px-2 py-1" onClick={() => handleRemoveButtonClick(a.id)}>
                       	  <span aria-hidden="true">&times;</span>
                     		</button>
                       </td>
@@ -85,9 +85,9 @@ class AdjustmentsTable extends React.Component {
         {adjustments.length > 0 ? table : null}
         <div className="row mb-3">
           <div className="col-7">
-            <button onClick={addAdjustment} type="button" className="btn btn-primary">Lisää uusi tasaus</button>
-            <button onClick={createAdjustments} type="button" className="btn btn-primary ml-1">Tallenna uudet tasaukset</button>
-            <button onClick={updateAdjustments} type="button" className="btn btn-primary ml-1">Tallenna muutetut tasaukset</button>
+            <button onClick={addAdjustment} type="button" className="btn btn-primary mb-1 ml-1">Lisää uusi tasaus</button>
+            <button onClick={createAdjustments} type="button" className="btn btn-primary ml-1 mb-1">Tallenna uudet tasaukset</button>
+            <button onClick={updateAdjustments} type="button" className="btn btn-primary ml-1 mb-1">Tallenna muutetut tasaukset</button>
           </div>
           <div className="col-5">
             {successMessage

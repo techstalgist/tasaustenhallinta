@@ -64,7 +64,7 @@ class Analysis extends React.Component {
     )
     return (
       <div className="row">
-        <div className="col-7">
+        <div className="col-lg-8 col">
             <div className="row">
               <div className="col">
                 <ul className="list-inline mb-1">

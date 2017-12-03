@@ -27,12 +27,12 @@ class CategoriesTable extends React.Component {
       {cssClass: "col-2", title: "#"},
       {cssClass: "col-6", title: "Kategoria"},
       {cssClass: "col-2 text-right", title: "Laskujen lkm"},
-      {cssClass: "col", title:""}
+      {cssClass: "col text-center", title:""}
     ];
     const target = "category";
     const table = (
         <div className="row">
-          <div className="col-8">
+          <div className="col-lg-8 col">
             <table className="table table-sm border">
               <TableHeaders headers={headersData} rowClass="table-row"/>
               <tbody>
@@ -52,7 +52,7 @@ class CategoriesTable extends React.Component {
                       {c.bills_count}
                     </td>
                     <td className="col text-center">
-                      <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(c.id)}>
+                      <button type="button" className="btn btn-outline-danger px-2 py-1" onClick={() => handleRemoveButtonClick(c.id)}>
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </td>
@@ -68,9 +68,9 @@ class CategoriesTable extends React.Component {
         {table}
         <div className="row mb-3">
           <div className="col-7">
-            <button onClick={addCategory} type="button" className="btn btn-primary">Lisää uusi kategoria</button>
-            <button onClick={createCategories} type="button" className="btn btn-primary ml-1">Tallenna uudet kategoriat</button>
-            <button onClick={updateCategories} type="button" className="btn btn-primary ml-1">Tallenna muutetut kategoriat</button>
+            <button onClick={addCategory} type="button" className="btn btn-primary ml-1 mb-1">Lisää uusi kategoria</button>
+            <button onClick={createCategories} type="button" className="btn btn-primary ml-1 mb-1">Tallenna uudet kategoriat</button>
+            <button onClick={updateCategories} type="button" className="btn btn-primary ml-1 mb-1">Tallenna muutetut kategoriat</button>
           </div>
           <div className="col-5">
             {successMessage

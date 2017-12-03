@@ -39,22 +39,22 @@ class BillsTable extends React.Component {
       {cssClass: "col-2", title: "Käyttäjä"},
       {cssClass: "col-3 text-right", title: "Summa"},
       {cssClass: "col-2", title: "Kategoria"},
-      {cssClass: "col-3 text-right", title: "Pvm (pp.kk.vvvv)"},
-      {cssClass: "col", title: ""}
+      {cssClass: "col-3 text-right", title: "Pvm"},
+      {cssClass: "col text-center", title: ""}
     ];
     const target = "bill";
     return (
       <div>
         <div className="row">
-          <div className="col-2">
+          <div className="col-md-2 col-4">
             <MonthSelection months={months} selectedMonth={selectedMonth} handleMonthChange={this.handleMonthChange}/>
           </div>
-          <div className="col-5">
+          <div className="col-md-6 col-8">
             <AmountsForUsers bills={billsForSelectedMonth} users={users} />
           </div>
         </div>
         <div className="row">
-          <div className="col-10">
+          <div className="col-lg-10 col">
             <table className="table table-sm border">
               <TableHeaders headers={headersData} rowClass="table-row"/>
               <tbody>
@@ -88,8 +88,8 @@ class BillsTable extends React.Component {
                             onBlur={(e) => handleDateChange(handleAttributeChange, b.id, e, target)}
                             className={getCssForDateField("text-right form-control p-1",b.date)}/>
                       </td>
-                      <td className="col">
-                        <button type="button" className="btn btn-outline-danger" onClick={() => handleRemoveButtonClick(b.id)}>
+                      <td className="col text-center">
+                        <button type="button" className="btn btn-outline-danger px-2 py-1" onClick={() => handleRemoveButtonClick(b.id)}>
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </td>
@@ -98,13 +98,12 @@ class BillsTable extends React.Component {
               </tbody>
             </table>
           </div>
-          <div className="col-2"/>
         </div>
         <div className="row mb-3">
           <div className="col-6">
-            <button onClick={addBill} type="button" className="btn btn-primary">Lisää uusi lasku</button>
-            <button onClick={createBills} type="button" className="btn btn-primary ml-1">Tallenna uudet laskut</button>
-            <button onClick={updateBills} type="button" className="btn btn-primary ml-1">Tallenna muutetut laskut</button>
+            <button onClick={addBill} type="button" className="btn btn-primary ml-1 mb-1">Lisää uusi lasku</button>
+            <button onClick={createBills} type="button" className="btn btn-primary ml-1 mb-1">Tallenna uudet laskut</button>
+            <button onClick={updateBills} type="button" className="btn btn-primary ml-1 mb-1">Tallenna muutetut laskut</button>
           </div>
           <div className="col-6">
             {successMessage
