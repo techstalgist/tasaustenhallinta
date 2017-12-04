@@ -170,6 +170,7 @@ export function submitDeleteBill() {
       const token = getState().loginData.logInInfo.token;
       deleteInterface.setHeaders(token, null);
       dispatch(callApi(deleteInterface));
+      dispatch(shouldFetchCategories());
     }
   };
 }
