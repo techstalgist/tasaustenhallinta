@@ -1,20 +1,21 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { submitLogout } from '../actions';
+import {Redirect, Link} from 'react-router-dom';
 
 let Logout = props => {
-    const {handleLogout, user} = props;
+    const {handleLogout, loggedIn} = props;
+    if (!loggedIn) {
+      return (<Redirect to="/login"/>)
+    }
     return(
-      <div>
-        <p>Olet kirjautuneena sisään käyttäjänä <strong>{user.username}</strong> käyttäjäryhmässä <strong>{user.userGroupName}</strong>.</p>
-        <button type="button" className="btn btn-primary" onClick={handleLogout}>Kirjaudu ulos</button>
-      </div>
+      <Link onClick={handleLogout} key="/logout" className="nav-item nav-link" to="/logout">Kirjaudu ulos</Link>
     )
 }
 
 const mapStateToProps = (state) => (
   {
-    user: state.loginData.logInInfo.user
+    loggedIn: state.loginData.logInInfo.loggedIn,
   }
 );
 

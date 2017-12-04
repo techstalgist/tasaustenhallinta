@@ -9,6 +9,30 @@ export function logIn(json) {
   };
 }
 
+export function cleanAdjustmentsState() {
+  return {
+    type: 'CLEAN_ADJUSTMENTS_STATE'
+  };
+}
+
+export function cleanBillsState() {
+  return {
+    type: 'CLEAN_BILLS_STATE'
+  };
+}
+
+export function cleanCategoriesState() {
+  return {
+    type: 'CLEAN_CATEGORIES_STATE'
+  };
+}
+
+export function cleanSharedState() {
+  return {
+    type: 'CLEAN_SHARED_STATE'
+  };
+}
+
 export function failedLogin(json) {
   return {
     type: 'FAILED_LOGIN',
@@ -39,5 +63,9 @@ export function submitLogout() {
   // apparently no real need to invalidate tokens on server side.
   return function (dispatch) {
     dispatch(logOut());
+    dispatch(cleanAdjustmentsState());
+    dispatch(cleanBillsState());
+    dispatch(cleanCategoriesState());
+    dispatch(cleanSharedState());
   };
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
+import Logout from '../../login/components/logout';
 
 class Header extends React.Component {
 
@@ -48,8 +49,8 @@ class Header extends React.Component {
             url: "/auth/analysis"
           },
           {
-            title: "Kirjaudu ulos",
-            url: "/login"
+            title: "Käyttäjän tiedot",
+            url: "/auth/user"
           }
         ];
         return links;
@@ -76,6 +77,7 @@ class Header extends React.Component {
                            <Link key={link.url} className={link.className} to={link.url}>{link.title}</Link>
                        )
                      )}
+                     <Logout/>
                   </div>
                 </nav>
               </div>

@@ -9,6 +9,7 @@ import AdjustmentsRoot from './adjustments/components/adjustments-root';
 import BillsRoot from './bills/components/bills-root';
 import CategoriesRoot from './categories/components/categories-root';
 import AnalysisRoot from './categories/components/analysis-root';
+import UserInfoRoot from './login/components/user-info-root';
 import Authenticate from './authenticate';
 
 const PrivateRoute = ({ component: Component, auth: Authenticate, ...rest }) => {
@@ -44,6 +45,7 @@ const RouterComponent = (props) => {
           <PrivateRoute path="/auth/bills" component={BillsRoot} auth={userAuth} />
           <PrivateRoute path="/auth/categories" component={CategoriesRoot} auth={userAuth} />
           <PrivateRoute path="/auth/analysis" component={AnalysisRoot} auth={userAuth} />
+          <PrivateRoute path="/auth/user" component={UserInfoRoot} auth={userAuth} />
         </div>
     </BrowserRouter>
   )

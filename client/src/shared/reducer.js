@@ -9,6 +9,8 @@ function getInitialState() {
 
 export function reducer(state = getInitialState(), action) {
   switch (action.type) {
+    case 'CLEAN_SHARED_STATE':
+      return getInitialState();
     case 'REQUEST_USERS':
       return {
         ...state,

@@ -16,6 +16,8 @@ function getInitialState() {
 
 export function reducer(state = getInitialState(), action) {
   switch (action.type) {
+    case 'CLEAN_ADJUSTMENTS_STATE':
+      return getInitialState();
     case 'HIDE_MESSAGES':
       return {
         ...state,

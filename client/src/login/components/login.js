@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import LoginForm from './login-form';
-import Logout from './logout';
 import {hideLoginSuccess} from '../actions';
+import {Redirect} from 'react-router-dom';
 
 class Login extends React.Component {
   componentWillUnmount() {
@@ -12,6 +12,11 @@ class Login extends React.Component {
   render() {
     const {from, loggedIn, successMessage, errorMessage} = this.props;
     const fromText = from.length === 0 ? "Kirjaudu sisään." : "Sinun täytyy kirjautua sisään nähdäksesi sivun, jonka osoite on " + from + ".";
+    if (loggedIn) {
+      return (
+        <Redirect to="/auth/user" />
+      )
+    }
     return(
       <div className="row">
         <div className="col-8">
@@ -34,7 +39,7 @@ class Login extends React.Component {
              </div>
            : null
           }
-        {!loggedIn ? <LoginForm /> : <Logout />}
+        <LoginForm />
         </div>
       </div>
     )
