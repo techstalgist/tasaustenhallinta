@@ -31,4 +31,15 @@ router.delete('/categories/:id', passport.authenticate('jwt', { session: false }
 
 router.post('/analysis', passport.authenticate('jwt', { session: false }), AnalysisController.getDataForUser);
 
+// nämä ovat UI-sovelluksen polkuja, mutta jos joku yrittää suoraan käyttää ko. polkuja ilman kirjautumista, niin ennen kirjautumista
+// pyyntö menee backendiin asti => pyyntö on ohjattava uudelleen juureen
+router.get('/login', redirectToRoot);
+router.get('/grouplogin', redirectToRoot);
+router.get('/groupsignup', redirectToRoot);
+router.get('/auth/*', redirectToRoot);
+
+function redirectToRoot(req, res, next) {
+  res.redirect('/');
+}
+
 module.exports = router;
