@@ -1,6 +1,6 @@
 import {fetchCategories, shouldFetchCategories} from '../categories/actions';
 import {getDefaultCategory} from '../categories/selectors';
-import {fetchUsers, Interface, callApi} from '../shared/actions';
+import {getUsersInterface, Interface, callApi} from '../shared/actions';
 import {getBills} from './selectors';
 
 export function hideMessages() {
@@ -123,9 +123,11 @@ export function fetchBills() {
     const fetchInterface = new Interface('/bills', 'GET', receiveBills, null, requestBills);
     const token = getState().loginData.logInInfo.token;
     fetchInterface.setHeaders(token, null);
+    const usersInterface = getUsersInterface(token);
     Promise.all([dispatch(callApi(fetchInterface))]).then(() => {
-      dispatch(fetchCategories());
-      dispatch(fetchUsers());
+      Promise.all([dispatch(callApi(usersInterface))]).then(() => {
+        dispatch(fetchCategories());
+      });
     });
   };
 }

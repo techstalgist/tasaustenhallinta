@@ -29,7 +29,8 @@ export function reducer(state = getInitialState(), action) {
     case 'SHOULD_FETCH_CATEGORIES':
       return {
         ...state,
-        dataReceived: false
+        dataReceived: false,
+        analysisDataReceived: false
       }
     case 'REQUEST_CATEGORIES':
       return {
@@ -158,7 +159,7 @@ function newCategoryReducer(categories) {
 function handleCategoryFromBackend(c) {
   return {
     ...c,
-    id: c.id.toString(),
+    id: c.id,
     newcategory: false,
     changed: false,
     isValid: function() {

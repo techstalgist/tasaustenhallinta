@@ -48,7 +48,7 @@ class AdjustmentsTable extends React.Component {
                         {a.changed ? <span className="badge badge-secondary small-font">Muutos</span> : null}
                       </th>
                       <td className="col-2">
-                        <UserDropdown next={handleAttributeChange} target={target} dataID={a.id} defaultValue={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
+                        <UserDropdown next={handleAttributeChange} target={target} dataID={a.id} value={a.userid} users={users} domID="Adjustmentuser" changeFunction={handleUserChange} />
                       </td>
                       <td className="col-2 text-right">
                         <input type="number" name="amount"

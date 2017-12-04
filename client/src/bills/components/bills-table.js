@@ -66,7 +66,7 @@ class BillsTable extends React.Component {
                         {b.changed ? <span className="badge badge-secondary small-font">Muutos</span> : null}
                       </th>
                       <td className="col-2">
-                        <UserDropdown next={handleAttributeChange} target={target} dataID={b.id} defaultValue={b.userid} users={users} domID="userForBill" changeFunction={handleUserChange} />
+                        <UserDropdown next={handleAttributeChange} target={target} dataID={b.id} value={b.userid} users={users} changeFunction={handleUserChange} />
                       </td>
                       <td className="col-3 text-right">
                         <input type="number" name="amount"
@@ -75,7 +75,7 @@ class BillsTable extends React.Component {
                             className={getCssForNumberField("text-right form-control p-1",b.amount)}/>
                       </td>
                       <td className="col-2">
-                        <select className={getCssForCategoryField("form-control p-1", b.categoryid)} id="categoriesForBill" defaultValue={b.categoryid} onChange={(e) => handleCategoryChange(handleAttributeChange, b.id, e, target)}>
+                        <select className={getCssForCategoryField("form-control p-1", b.categoryid)} value={b.categoryid} onChange={(e) => handleCategoryChange(handleAttributeChange, b.id, e, target)}>
                           <option value={0} key={0}>--Ei valittu--</option>
                           {categories.map((c) => {
                             return (<option value={c.id} key={c.id}>{c.name}</option>);
