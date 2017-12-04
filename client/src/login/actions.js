@@ -46,12 +46,6 @@ export function logOut(json) {
   };
 }
 
-export function hideLoginSuccess() {
-  return {
-    type: 'HIDE_LOGIN_SUCCESS'
-  };
-}
-
 export function submitLogin(data) {
   const loginInterface = new Interface('/login', 'POST', logIn, failedLogin, null);
   loginInterface.setHeaders(null, "application/x-www-form-urlencoded");

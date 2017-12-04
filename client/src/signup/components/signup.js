@@ -14,7 +14,7 @@ class SignUp extends React.Component {
     const {loggedIn, errorMessage,successMessage} = this.props;
     if (loggedIn) {
       return (
-        <Redirect to="/login" />
+        <Redirect to="/auth/user" />
       )
     }
     return(

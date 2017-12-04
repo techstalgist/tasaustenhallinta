@@ -23,6 +23,12 @@ export function reducer(state = getInitialState(), action) {
         errorMessage: action.message,
         successMessage: null
       }
+    case 'SIGNUP_SUCCESS':
+      return {
+        ...state,
+        successMessage: action.message,
+        errorMessage: null
+      }
     case 'FAILED_SIGNUP':
       return {
         ...state,

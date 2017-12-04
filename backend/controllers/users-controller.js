@@ -41,7 +41,7 @@ function signUp(req, res, next) {
       else {
         const payload = {id: user.id, user: user.username};
         const token = jwt.sign(payload, jwtOptions.secretOrKey);
-        res.status(200).json({ token, user, message: 'Rekisteröityminen onnistui!' });
+        res.status(200).json({ message: 'Käyttäjän luonti onnistui! Voit nyt kirjautua sisään luomallasi käyttäjällä.' });
       }
     });
   });

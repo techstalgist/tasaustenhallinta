@@ -1,9 +1,15 @@
-import { logIn } from '../login/actions';
 import { Interface, callApi } from '../shared/actions';
 
 export function failedSignup(json) {
   return {
     type: 'FAILED_SIGNUP',
+    message: json.message
+  };
+}
+
+export function signUpSuccess(json) {
+  return {
+    type: 'SIGNUP_SUCCESS',
     message: json.message
   };
 }
@@ -42,7 +48,7 @@ export function submitSignup(data) {
       ...data,
       user_group_id: getState().signUpData.userGroup.id
     }
-    const signUpInterface = new Interface('/signup', 'POST', logIn, failedSignup, null);
+    const signUpInterface = new Interface('/signup', 'POST', signUpSuccess, failedSignup, null);
     signUpInterface.setHeaders(null, "application/x-www-form-urlencoded");
     signUpInterface.setBody(dataWithGroup, false);
     dispatch(callApi(signUpInterface));
