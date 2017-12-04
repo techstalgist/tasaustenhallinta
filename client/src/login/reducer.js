@@ -40,6 +40,12 @@ export function reducer(state = getInitialState(), action) {
           user: null
         }
       }
+      case 'HIDE_LOGIN_SUCCESS':
+        return {
+          ...state,
+          successMessage: null,
+          errorMessage: null
+        }
     default:
       return state;
   }
