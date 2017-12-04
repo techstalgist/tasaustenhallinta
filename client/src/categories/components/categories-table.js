@@ -64,31 +64,33 @@ class CategoriesTable extends React.Component {
         </div>
     )
     return (
-      <div>
-        {table}
-        <div className="row mb-3">
-          <div className="col-7">
-            <button onClick={addCategory} type="button" className="btn btn-primary ml-1 mb-1">Lisää uusi kategoria</button>
-            <button onClick={createCategories} type="button" className="btn btn-primary ml-1 mb-1">Tallenna uudet kategoriat</button>
-            <button onClick={updateCategories} type="button" className="btn btn-primary ml-1 mb-1">Tallenna muutetut kategoriat</button>
+      <div className="row">
+        <div className="col">
+          {table}
+          <div className="row mb-3">
+            <div className="col-7">
+              <button onClick={addCategory} type="button" className="btn btn-primary ml-1 mb-1">Lisää uusi kategoria</button>
+              <button onClick={createCategories} type="button" className="btn btn-primary ml-1 mb-1">Tallenna uudet kategoriat</button>
+              <button onClick={updateCategories} type="button" className="btn btn-primary ml-1 mb-1">Tallenna muutetut kategoriat</button>
+            </div>
+            <div className="col-5">
+              {successMessage
+                ? <div className="alert alert-success" role="alert">
+                    {successMessage}
+                  </div>
+                : null
+               }
+               {errorMessage
+                 ? <div className="alert alert-danger" role="alert">
+                     {errorMessage}
+                   </div>
+                 : null
+                }
+            </div>
+            {showPopup ?
+               <DeletePopup title="kategoria" onSubmit={submitDeleteCategory} objectToRemove={toRemove} success={removeSuccess} onPopupClose={closeDeletePopup} />
+             : null}
           </div>
-          <div className="col-5">
-            {successMessage
-              ? <div className="alert alert-success" role="alert">
-                  {successMessage}
-                </div>
-              : null
-             }
-             {errorMessage
-               ? <div className="alert alert-danger" role="alert">
-                   {errorMessage}
-                 </div>
-               : null
-              }
-          </div>
-          {showPopup ?
-             <DeletePopup title="kategoria" onSubmit={submitDeleteCategory} objectToRemove={toRemove} success={removeSuccess} onPopupClose={closeDeletePopup} />
-           : null}
         </div>
       </div>
     )
