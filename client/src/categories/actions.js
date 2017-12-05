@@ -84,9 +84,10 @@ export function setCategoryToRemove(id) {
   };
 }
 
-export function deleteCategoryToRemove() {
+export function deleteCategoryToRemove(json) {
   return {
-    type: 'DELETE_CATEGORY_TO_REMOVE'
+    type: 'DELETE_CATEGORY_TO_REMOVE',
+    didRemove: json.data !== null
   };
 }
 

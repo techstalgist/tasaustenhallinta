@@ -77,17 +77,19 @@ function update(values, success, failure) {
     });
 }
 
-function deleteById(id, success, failure) {
+function deleteById(id, userGroupId, success, failure) {
   db.tx(t => {
       let queries = [];
-      const update = t.none('update bills set category_id = null where category_id = $1', id);
+      const update = t.none('update bills b set category_id = null from users u where b.user_id = u.id and b.category_id = $1 and u.user_group_id = $2', [id, userGroupId]);
       queries.push(update);
-      const deleteQuery = t.none('delete from categories where id = $1', id);
+      const deleteQuery = t.oneOrNone('delete from categories where id = $1 and id in ' +
+                                 '(select c.id from categories c left join bills b on b.category_id = c.id group by c.id having count(b.id) = 0) '+
+                                 'returning id', id);
       queries.push(deleteQuery);
       return t.batch(queries);
   })
-    .then(() => {
-      return success();
+    .then((data) => {
+      return success(data);
     })
     .catch((err) => {
       return failure(err);

@@ -89,7 +89,7 @@ export function reducer(state = getInitialState(), action) {
     case 'DELETE_CATEGORY_TO_REMOVE':
       return {
         ...state,
-        categories: removeItemFromArray(state.categories, state.toRemove.id),
+        categories: action.didRemove ? removeItemFromArray(state.categories, state.toRemove.id) : changeOneItemInArray(state.categories, state.toRemove.id, updateBillCount, 0),
         toRemove: {
           ...state.toRemove,
           removed: true
@@ -185,6 +185,13 @@ function updateChanged(c) {
   return {
     ...c,
     changed: false
+  }
+}
+
+function updateBillCount(c, count) {
+  return {
+    ...c,
+    bills_count: count
   }
 }
 

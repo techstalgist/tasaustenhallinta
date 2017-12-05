@@ -78,15 +78,17 @@ function updateCategories(req, res, next) {
 }
 
 function deleteCategory(req, res, next) {
+  const userGroupId = parseInt(req.user.userGroupId);
   const id = parseInt(req.params.id);
-  const successCall = () => {
+  const successCall = (data) => {
     res.status(200)
       .json({
+        data: data[1], //toisessa queryssa palautetaan poistetun kategorian id, jos se todella poistettiin.
         status: 'success',
         message: 'Kategoria poistettu laskuilta ja kategorioista.'
       });
   };
-  Category.deleteById(id, successCall, next);
+  Category.deleteById(id, userGroupId, successCall, next);
 }
 
 module.exports = {
