@@ -70,17 +70,18 @@ export function receiveAdjustments(json) {
   };
 }
 
-export function newAdjustment(user) {
+export function newAdjustment(user, amount) {
   return {
     type: 'NEW_ADJUSTMENT',
-    user: user
+    user: user,
+    amount: amount
   };
 }
 
-export function addAdjustment() {
+export function addAdjustment(user, amount) {
   return function (dispatch, getState) {
-    const user = getState().loginData.logInInfo.user;
-    dispatch(newAdjustment(user));
+    const userFromState = getState().loginData.logInInfo.user;
+    dispatch(newAdjustment(user || userFromState, amount));
   };
 }
 

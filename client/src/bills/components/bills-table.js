@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { fetchBills, changeMonth, addBill, createBills, updateBills, setBillToRemove, closeDeletePopup, submitDeleteBill, hideMessages } from '../actions';
+import { addAdjustment, fetchAdjustments } from '../../adjustments/actions';
 import { getBillsForSelectedMonth } from '../selectors';
 import { toFinnishDateString, getCssForDateField, getCssForNumberField, getCssForCategoryField } from '../../shared/helpers';
 import { handleUserChange, handleAmountChange, handleDateChange, handleCategoryChange } from '../../shared/components/table/change-handlers';
@@ -17,6 +18,9 @@ class BillsTable extends React.Component {
     if (!this.props.dataReceived) {
       this.props.dispatch(fetchBills());
     }
+    if (!this.props.adjustmentsDataReceived) {
+      this.props.dispatch(fetchAdjustments());
+    }
   }
 
   componentWillUnmount() {
@@ -31,7 +35,8 @@ class BillsTable extends React.Component {
 
   render() {
     const { addBill, createBills, updateBills, bills, users, months, selectedMonth, categories, handleAttributeChange,
-            successMessage, errorMessage, handleRemoveButtonClick, closeDeletePopup, removeSuccess, toRemove, submitDeleteBill, showPopup } = this.props;
+            successMessage, errorMessage, handleRemoveButtonClick, closeDeletePopup, removeSuccess, toRemove,
+            submitDeleteBill, showPopup, addAdjustment } = this.props;
 
     const billsForSelectedMonth = getBillsForSelectedMonth(bills, selectedMonth);
     const headersData = [
@@ -50,7 +55,7 @@ class BillsTable extends React.Component {
             <MonthSelection months={months} selectedMonth={selectedMonth} handleMonthChange={this.handleMonthChange}/>
           </div>
           <div className="col-md-6 col-8">
-            <AmountsForUsers bills={billsForSelectedMonth} users={users} />
+            <AmountsForUsers bills={billsForSelectedMonth} users={users} addAdjustment={addAdjustment} />
           </div>
         </div>
         <div className="row">
@@ -134,6 +139,7 @@ const mapStateToProps = (state) => (
   {
     bills: state.billsData.bills,
     dataReceived: state.billsData.dataReceived,
+    adjustmentsDataReceived: state.adjustmentsData.dataReceived,
     successMessage: state.billsData.successMessage,
     errorMessage: state.billsData.errorMessage,
     months: state.billsData.months,
@@ -170,9 +176,12 @@ const mapDispatchToProps = (dispatch) => (
     submitDeleteBill: () => (
       dispatch(submitDeleteBill())
     ),
-    closeDeletePopup: () => {
+    closeDeletePopup: () => (
       dispatch(closeDeletePopup())
-    }
+    ),
+    addAdjustment: (user, amount, date) => (
+      dispatch(addAdjustment(user, amount, date))
+    ),
   }
 );
 

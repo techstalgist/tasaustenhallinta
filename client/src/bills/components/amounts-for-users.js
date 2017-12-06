@@ -1,6 +1,8 @@
 import React from 'react';
+import UserRow from './user-row';
 import { showRounded } from '../../shared/helpers';
 import TableHeaders from '../../shared/components/table/table-headers';
+import {getUserByName} from '../../shared/selectors';
 
 function calculateAmountsForUsers(bills, users) {
     let amountsForUsers = {
@@ -33,30 +35,23 @@ function calculateAdjustment(paid, total, userCount) {
 }
 
 const AmountsForUsers = (props) => {
-    const {bills, users} = props;
+    const {bills, users, addAdjustment} = props;
     const amountsForUsers = calculateAmountsForUsers(bills, users);
     const userCount = Object.keys(amountsForUsers.users).length;
     const headersData = [
       {cssClass: "text-right", title: "Käyttäjä"},
       {cssClass: "text-right", title: "Maksanut yht"},
-      {cssClass: "text-right", title: "Tasaus €"}
+      {cssClass: "text-right", title: "Tasaus €"},
+      {cssClass: "", title:""}
     ];
     return(
         <table className="table table-sm border">
           <TableHeaders headers={headersData} rowClass=""/>
           <tbody>
             {Object.keys(amountsForUsers.users).map((k) => (
-                <tr key={k}>
-                  <td className="text-right">
-                    {k}
-                  </td>
-                  <td className="text-right">
-                    {showRounded(amountsForUsers.users[k], 2)} €
-                  </td>
-                  <td className="text-right">
-                    {showRounded(calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total, userCount), 2)} €
-                  </td>
-                </tr>
+              <UserRow key={k} k={k} user={getUserByName(users,k)} paidAmount={showRounded(amountsForUsers.users[k], 2)}
+                        adjustment={calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total, userCount)}
+                        addAdjustment={addAdjustment} />
              )
             )}
             <tr>
@@ -65,7 +60,7 @@ const AmountsForUsers = (props) => {
               </td>
               <td className="text-right"><strong> {showRounded(amountsForUsers.total, 2)} € </strong>
               </td>
-              <td></td>
+              <td colSpan="2"></td>
             </tr>
           </tbody>
         </table>
