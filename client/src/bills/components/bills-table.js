@@ -55,7 +55,7 @@ class BillsTable extends React.Component {
             <MonthSelection months={months} selectedMonth={selectedMonth} handleMonthChange={this.handleMonthChange}/>
           </div>
           <div className="col-md-6 col-8">
-            <AmountsForUsers bills={billsForSelectedMonth} users={users} addAdjustment={addAdjustment} />
+            <AmountsForUsers month={selectedMonth.toString()} bills={billsForSelectedMonth} users={users} addAdjustment={addAdjustment} />
           </div>
         </div>
         <div className="row">
@@ -179,8 +179,8 @@ const mapDispatchToProps = (dispatch) => (
     closeDeletePopup: () => (
       dispatch(closeDeletePopup())
     ),
-    addAdjustment: (user, amount, date) => (
-      dispatch(addAdjustment(user, amount, date))
+    addAdjustment: (user, amount, date, comment) => (
+      dispatch(addAdjustment(user, amount, date, comment))
     ),
   }
 );

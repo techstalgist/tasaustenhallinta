@@ -70,18 +70,19 @@ export function receiveAdjustments(json) {
   };
 }
 
-export function newAdjustment(user, amount) {
+export function newAdjustment(user, amount, comment) {
   return {
     type: 'NEW_ADJUSTMENT',
     user: user,
-    amount: amount
+    amount: amount,
+    comment: comment
   };
 }
 
-export function addAdjustment(user, amount) {
+export function addAdjustment(user, amount, comment) {
   return function (dispatch, getState) {
     const userFromState = getState().loginData.logInInfo.user;
-    dispatch(newAdjustment(user || userFromState, amount));
+    dispatch(newAdjustment(user || userFromState, amount, comment));
   };
 }
 

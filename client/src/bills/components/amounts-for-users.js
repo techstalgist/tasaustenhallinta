@@ -35,7 +35,7 @@ function calculateAdjustment(paid, total, userCount) {
 }
 
 const AmountsForUsers = (props) => {
-    const {bills, users, addAdjustment} = props;
+    const {bills, users, addAdjustment, month} = props;
     const amountsForUsers = calculateAmountsForUsers(bills, users);
     const userCount = Object.keys(amountsForUsers.users).length;
     const headersData = [
@@ -49,7 +49,7 @@ const AmountsForUsers = (props) => {
           <TableHeaders headers={headersData} rowClass=""/>
           <tbody>
             {Object.keys(amountsForUsers.users).map((k) => (
-              <UserRow key={k} k={k} user={getUserByName(users,k)} paidAmount={showRounded(amountsForUsers.users[k], 2)}
+              <UserRow month={month} key={k} k={k} user={getUserByName(users,k)} paidAmount={showRounded(amountsForUsers.users[k], 2)}
                         adjustment={calculateAdjustment(amountsForUsers.users[k],amountsForUsers.total, userCount)}
                         addAdjustment={addAdjustment} />
              )

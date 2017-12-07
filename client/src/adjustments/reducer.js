@@ -52,7 +52,7 @@ export function reducer(state = getInitialState(), action) {
     case 'NEW_ADJUSTMENT':
       return {
         ...state,
-        adjustments: newAdjustmentReducer(state.adjustments, action.user, action.amount),
+        adjustments: newAdjustmentReducer(state.adjustments, action.user, action.amount, action.comment),
         successMessage: null,
         errorMessage: null
       }
@@ -151,7 +151,7 @@ export function reducer(state = getInitialState(), action) {
 
 
 //TODO Yleistä tämä. arrayhyn lisäämisen voi yleistää.
-function newAdjustmentReducer(currentAdjustments, user, amount) {
+function newAdjustmentReducer(currentAdjustments, user, amount, comment) {
   return [
     ...currentAdjustments,
     {
@@ -160,7 +160,7 @@ function newAdjustmentReducer(currentAdjustments, user, amount) {
       username: user.username,
       amount: amount || null,
       date: new Date().toISOString().substr(0,10),
-      comment: null,
+      comment: comment || null,
       newadjustment: true,
       changed: false,
       toUIObject: adjustmentToUIObject(),

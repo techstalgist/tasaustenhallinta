@@ -1,8 +1,9 @@
 import React from 'react';
 import { showRounded } from '../../shared/helpers';
+import {withRouter} from 'react-router-dom';
 
-const UserRow = (props) => {
-    const {k, user, paidAmount, adjustment, addAdjustment} = props;
+let UserRow = (props) => {
+    const {month, k, user, paidAmount, adjustment, addAdjustment, history} = props;
     return(
           <tr key={k}>
             <td className="text-right">
@@ -15,10 +16,15 @@ const UserRow = (props) => {
               {showRounded(adjustment,2)} €
             </td>
             <td className="text-right">
-              <button onClick={(e) => addAdjustment(user, parseFloat(adjustment.toFixed(2)))} type="button" className="btn btn-primary btn-sm">Luo tasaus</button>
+              <button onClick={(e) => {
+                                  addAdjustment(user, parseFloat(adjustment.toFixed(2)), month);
+                                  history.push('/auth/adjustments');
+                              }} type="button" className="btn btn-primary btn-sm">Luo tasaus</button>
             </td>
           </tr>
       )
 };
+
+UserRow = withRouter(UserRow);
 
 export default UserRow;
