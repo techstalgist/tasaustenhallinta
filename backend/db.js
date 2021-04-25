@@ -7,8 +7,15 @@ const pgp = require('pg-promise')(options);
 
 let config;
 
-if (process.env.DATABASE_URL !== undefined) {
-  config = process.env.DATABASE_URL;
+if (process.env.DB_NAME !== "tasaukset") {
+  config = {
+    host: process.env.DB_HOST,
+    port: 5432,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    ssl: true
+  };
 } else {
   config = {
     host: 'localhost',
