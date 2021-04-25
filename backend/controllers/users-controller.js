@@ -57,15 +57,11 @@ function logIn(req, res, next) {
 
   User.findOne(username, (err, user) => {
     if (!user) {
-      console.log("Could not find user");
-      res.status(401).json({ message: 'Käyttäjänimi tai salasana on väärä.' });
+      res.status(401).json({ message: 'Käyttäjänimi on väärä.' });
       return;
     }
     if (password !== user.password) {
-      console.log("Password didn't match");
-      console.log(password);
-      console.log(user.password);
-      res.status(401).json({ message: 'Käyttäjänimi tai salasana on väärä.' });
+      res.status(401).json({ message: 'Salasana on väärä.' });
     } else {
       delete user.password; // cannot send password to frontend
       const payload = {id: user.id, user: user.username};
