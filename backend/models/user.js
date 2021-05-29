@@ -84,23 +84,23 @@ function findAll(userGroupId, success, failure) {
     });
 }
 
-function updateResetLink(id, link, success, failure) {
+function updateResetLink(id, link, next) {
   db.none('update users set reset_link  = \'' + link + '\' where id = ' + id)
   .then(() => {
-    return success();
+    return next(null);
   })
-  .catch((err) => {
-    return failure(err);
+  .catch(err => {
+    return next(err);
   });
 }
 
-function updatePassword(id, password, success, failure) {
-  db.none('update users set password  = \'' + password + '\' where id = ' + id)
+function updatePassword(id, password, next) {
+  db.none('update users set password  = \'' + password + '\', reset_link = null where id = ' + id)
   .then(() => {
-    return success();
+    return next(null);
   })
-  .catch((err) => {
-    return failure(err);
+  .catch(err => {
+    return next(err);
   });
 }
 

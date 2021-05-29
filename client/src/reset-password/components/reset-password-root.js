@@ -6,10 +6,9 @@ export default class ResetPasswordRoot extends React.Component {
 
   render() {
     const { match: { params } } = this.props;
-    console.log(params.token);
     return(
       <PageRoot heading="Salasanan resetointi">
-        <ResetPassword/>
+        <ResetPassword inHeritedToken={params.token} />
       </PageRoot>
     )
   }

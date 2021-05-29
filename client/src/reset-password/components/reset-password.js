@@ -1,11 +1,19 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import ResetPasswordForm from './reset-password-form';
+import { addToken } from '../actions';
 
 class ResetPassword extends React.Component {
 
+  componentWillMount() {
+    const token = this.props.inHeritedToken;
+    if (token) {
+      this.props.dispatch(addToken(token))
+    }
+  }
+
   render() {
-    const {successMessage, errorMessage} = this.props;
+    const { successMessage, errorMessage } = this.props;
     return(
       <div className="row">
         <div className="col-8">
@@ -36,9 +44,15 @@ const mapStateToProps = (state) => (
   }
 );
 
+const mapDispatchToProps = (dispatch) => (
+  {
+    dispatch: dispatch
+  }
+);
+
 ResetPassword = connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(ResetPassword)
 
 export default ResetPassword;

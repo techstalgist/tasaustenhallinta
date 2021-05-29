@@ -107,15 +107,19 @@ function forgotPassword(req, res, next) {
     } else {
       const resetLink = jwt.sign({ email: user.email }, jwtOptions.secretOrKey, { expiresIn: '10m' });
       const userId = user.id;
-      const successCall = () => {
-        sendEmail(email, resetLink);
-        res.status(200)
+      User.updateResetLink(userId, resetLink, (err) => {
+        if (err) {
+          res.status(400).json({ message: err });
+        }
+        else {
+          sendEmail(email, resetLink);
+          res.status(200)
           .json({
             status: 'success',
             message: 'Tarkista sähköpostisi.'
           });
-      };
-      User.updateResetLink(userId, resetLink, successCall, next);
+        }
+      });
     }
   })
 }
@@ -139,14 +143,18 @@ function forgotPassword(req, res, next) {
         let salt = bcrypt.genSaltSync(bcryptSalt);
         let hashPass = bcrypt.hashSync(password, salt);
         const userId = user.id;
-        const successCall = () => {
-          res.status(200)
+        User.updatePassword(userId, hashPass, (err) => {
+          if (err) {
+            res.status(400).json({ message: err });
+          }
+          else {
+            res.status(200)
             .json({
               status: 'success',
               message: 'Salasana päivitetty.'
             });
-        };
-        User.updatePassword(userId, hashPass, successCall, next);
+          }
+        });
       }
     })
   }
