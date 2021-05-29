@@ -39,7 +39,7 @@ router.post('/api/analysis', passport.authenticate('jwt', { session: false }), A
 router.get('/*', sendIndexHtml);
 
 function sendIndexHtml(req, res) {
-  res.sendFile(path.join(__dirname, 'client/build/index.html'));
+  res.sendFile('client/build/index.html');
 }
 
 module.exports = router;
