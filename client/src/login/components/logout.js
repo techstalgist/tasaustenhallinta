@@ -1,12 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import { submitLogout } from '../actions';
-import {Redirect, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 let Logout = props => {
     const {handleLogout, loggedIn} = props;
     if (!loggedIn) {
-      return (<Redirect to="/login"/>)
+      // cannot use Redirect to login here. Otherwise all direct links (e.g. password reset) will not work, 
+      // instead they will also redirect to /login.
+      return (<div></div>)
     }
     return(
       <Link onClick={handleLogout} key="/logout" className="nav-item nav-link" to="/logout">Kirjaudu ulos</Link>

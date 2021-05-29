@@ -1,3 +1,3 @@
 //makes sense if there are many components to export
 
-export * from './forgot-password-root';
+export * from './reset-password-root';

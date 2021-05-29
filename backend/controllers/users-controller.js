@@ -160,7 +160,7 @@ function forgotPassword(req, res, next) {
       html: `
       <p>
         Voit resetoida salasanan Tasaustenhallintaan tästä linkistä. Älä klikkaa sitä jos et pyytänyt resetointia itse.
-        <a href="${clientURL}/reset-password/${token}">${token}</a>
+        <a href="${clientURL}/reset-password/${token}">Linkki</a>
       </p> 
      `
     };

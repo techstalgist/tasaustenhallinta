@@ -12,6 +12,7 @@ import AnalysisRoot from './categories/components/analysis-root';
 import UserInfoRoot from './login/components/user-info-root';
 import Authenticate from './authenticate';
 import ForgotPasswordRoot from './forgot-password/components/forgot-password-root';
+import ResetPasswordRoot from './reset-password/components/reset-password-root';
 
 const PrivateRoute = ({ component: Component, auth: Authenticate, ...rest }) => {
   const fromPath = rest.path;
@@ -37,7 +38,8 @@ const RouterComponent = (props) => {
     <BrowserRouter>
         <div>
           <HeaderRootWithRouter />
-          <Route exact path="/" render={() => (<Redirect to="/login"/>)}/>
+          <Route exact path="/" component={LoginRoot} />
+          <Route exact path="/reset-password/:token" component={ResetPasswordRoot} />
           <Route path="/login" component={LoginRoot} />
           <Route path="/forgotpass" component={ForgotPasswordRoot} />
           <Route path="/grouplogin" component={GroupLoginRoot} />

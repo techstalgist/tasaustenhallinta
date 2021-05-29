@@ -16,6 +16,10 @@ class Header extends React.Component {
           {
             title: "Unohtunut salasana",
             url: "/forgotpass"
+          },
+          {
+            title: "Test",
+            url: "/reset-password/123"
           }
         ];
         if (loggedIntoGroup) {
