@@ -1,8 +1,8 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const jwtOptions = require('../config/jwt');
-//const bcrypt = require('bcrypt');
-//const bcryptSalt = 10;
+const bcrypt = require('bcrypt');
+const bcryptSalt = 10;
 
 function signUp(req, res, next) {
   let username = req.body.username;
@@ -25,12 +25,12 @@ function signUp(req, res, next) {
       return;
     }
 
-    //let salt = bcrypt.genSaltSync(bcryptSalt);
-    //let hashPass = bcrypt.hashSync(password, salt);
+    let salt = bcrypt.genSaltSync(bcryptSalt);
+    let hashPass = bcrypt.hashSync(password, salt);
 
     const newUser = new User.UserObject({
       username: username,
-      password: password,
+      password: hashPass,
       user_group_id: groupId
     });
 
@@ -60,15 +60,16 @@ function logIn(req, res, next) {
       res.status(401).json({ message: 'Käyttäjänimi on väärä.' });
       return;
     }
-    if (password !== user.password) {
-      res.status(401).json({ message: 'Salasana on väärä.' });
-    } else {
-      delete user.password; // cannot send password to frontend
-      const payload = {id: user.id, user: user.username};
-      const token = jwt.sign(payload, jwtOptions.secretOrKey);
-      res.status(200).json({ token, user, message: 'Kirjautuminen onnistui!' });
-    }
-    // bcrypt.compare(password, user.password, (err, isMatch) => {});
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (!isMatch) {
+        res.status(401).json({ message: 'Salasana on väärä.' });
+      } else {
+        delete user.password; // cannot send password to frontend
+        const payload = {id: user.id, user: user.username};
+        const token = jwt.sign(payload, jwtOptions.secretOrKey);
+        res.status(200).json({ token, user, message: 'Kirjautuminen onnistui!' });
+      }
+    })
   });
 }
 
