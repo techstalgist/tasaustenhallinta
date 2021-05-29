@@ -33,10 +33,10 @@ router.delete('/api/categories/:id', passport.authenticate('jwt', { session: fal
 
 router.post('/api/analysis', passport.authenticate('jwt', { session: false }), AnalysisController.getDataForUser);
 
-// nämä ovat UI-sovelluksen polkuja, mutta jos joku yrittää suoraan käyttää ko. polkuja ilman kirjautumista, niin ennen kirjautumista
-// pyyntö menee backendiin asti => pyyntö on ohjattava uudelleen juureen
+// UI sovelluksen poluille pitää vastata index.html:llä, jotta ReactRouter voi hoitaa routingin siitä eteenpäin
 router.get('/*', sendIndexHtml);
 
+// TODO tämä polku toimii Herokussa, pitäisi korjata että toimisi myös lokaalisti
 function sendIndexHtml(req, res) {
   res.sendFile('/app/client/build/index.html');
 }
