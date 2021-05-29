@@ -4,12 +4,13 @@ function UserObject(userData) {
   this.id = userData.id;
   this.username = userData.username;
   this.password = userData.password;
+  this.email = userData.email;
   this.userGroupId = userData.user_group_id;
   this.userGroupName = userData.user_group_name;
 }
 
 function save(user, next) {
-  db.one('insert into users(username, password, user_group_id) values($1, $2, $3) returning id', [user.username, user.password, user.userGroupId])
+  db.one('insert into users(username, password, email, user_group_id) values($1, $2, $3, $4) returning id', [user.username, user.password, user.email, user.userGroupId])
     .then(data => {
       const newUser = Object.assign({}, user);
       delete newUser.password; // cannot send password to frontend

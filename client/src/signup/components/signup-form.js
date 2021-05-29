@@ -19,6 +19,12 @@ let SignUpForm = props => {
             <Field name="password" component="input" type="password" />
           </div>
         </div>
+        <div className="mb-2">
+          <label>Sähköposti</label>
+          <div>
+            <Field name="email" component="input" type="text" />
+          </div>
+        </div>
         <div className="mb-3">
           <label>Käyttäjäryhmä</label>
           <div>

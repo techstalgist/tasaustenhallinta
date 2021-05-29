@@ -8,6 +8,8 @@ CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   username VARCHAR,
   password VARCHAR,
+  email VARCHAR,
+  reset_link VARCHAR,
   user_group_id INTEGER references user_groups(id)
 );
 

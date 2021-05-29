@@ -1,0 +1,3 @@
+ALTER TABLE users
+ADD COLUMN email VARCHAR,
+ADD COLUMN reset_link VARCHAR

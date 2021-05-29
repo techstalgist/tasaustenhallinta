@@ -7,8 +7,8 @@ const bcryptSalt = 10;
 function signUp(req, res, next) {
   let username = req.body.username;
   let password = req.body.password;
+  let email = req.body.email;
   let groupId = req.body.user_group_id;
-
   if (!groupId) {
     res.status(400).json({ message: 'Käyttäjäryhmää ei annettu.' });
     return;
@@ -31,6 +31,7 @@ function signUp(req, res, next) {
     const newUser = new User.UserObject({
       username: username,
       password: hashPass,
+      email: email,
       user_group_id: groupId
     });
 
