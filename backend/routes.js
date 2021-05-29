@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const passport = require('./config/passport');
 const AnalysisController = require('./controllers/analysis-controller');
 const UsersController = require('./controllers/users-controller');
@@ -39,7 +38,7 @@ router.post('/api/analysis', passport.authenticate('jwt', { session: false }), A
 router.get('/*', sendIndexHtml);
 
 function sendIndexHtml(req, res) {
-  res.sendFile('client/build/index.html');
+  res.sendFile('/app/client/build/index.html');
 }
 
 module.exports = router;
