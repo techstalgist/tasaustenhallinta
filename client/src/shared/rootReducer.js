@@ -6,10 +6,12 @@ import { reducer as adjustmentsReducer } from '../adjustments/reducer';
 import { reducer as billsReducer } from '../bills/reducer';
 import { reducer as categoriesReducer } from '../categories/reducer';
 import { reducer as sharedReducer } from './reducer';
+import { reducer as forgotPasswordReducer } from '../forgot-password/reducer';
 
 export default combineReducers({
   adjustmentsData: adjustmentsReducer,
   loginData: loginReducer,
+  forgotPasswordData: forgotPasswordReducer,
   form: formReducer,
   billsData: billsReducer,
   categoriesData: categoriesReducer,

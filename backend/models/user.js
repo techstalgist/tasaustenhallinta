@@ -48,6 +48,32 @@ function findById(id, next) {
     });
 }
 
+function findByEmail(email, next) {
+  db.any('select users.* from users where users.email=$1',email)
+    .then((data) => {
+      if (data.length == 0) {
+        return next(null, false);
+      }
+      return next(null, new UserObject(data[0]));
+    })
+    .catch((err) => {
+      return next(err);
+    });
+}
+
+function findByResetLink(link, next) {
+  db.any('select users.* from users where users.reset_link=$1',link)
+    .then((data) => {
+      if (data.length == 0) {
+        return next(null, false);
+      }
+      return next(null, new UserObject(data[0]));
+    })
+    .catch((err) => {
+      return next(err);
+    });
+}
+
 function findAll(userGroupId, success, failure) {
   db.any('select id, username from users where user_group_id = $1', userGroupId)
     .then((data) => {
@@ -58,10 +84,34 @@ function findAll(userGroupId, success, failure) {
     });
 }
 
+function updateResetLink(id, link, success, failure) {
+  db.none('update users set reset_link  = \'' + link + '\' where id = ' + id)
+  .then(() => {
+    return success();
+  })
+  .catch((err) => {
+    return failure(err);
+  });
+}
+
+function updatePassword(id, password, success, failure) {
+  db.none('update users set password  = \'' + password + '\' where id = ' + id)
+  .then(() => {
+    return success();
+  })
+  .catch((err) => {
+    return failure(err);
+  });
+}
+
 module.exports = {
   UserObject: UserObject,
   findOne: findOne,
   findById: findById,
   save: save,
-  findAll: findAll
+  findAll: findAll,
+  findByEmail: findByEmail,
+  updateResetLink: updateResetLink,
+  findByResetLink: findByResetLink,
+  updatePassword: updatePassword
 };

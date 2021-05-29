@@ -11,6 +11,7 @@ import CategoriesRoot from './categories/components/categories-root';
 import AnalysisRoot from './categories/components/analysis-root';
 import UserInfoRoot from './login/components/user-info-root';
 import Authenticate from './authenticate';
+import ForgotPasswordRoot from './forgot-password/components/forgot-password-root';
 
 const PrivateRoute = ({ component: Component, auth: Authenticate, ...rest }) => {
   const fromPath = rest.path;
@@ -38,6 +39,7 @@ const RouterComponent = (props) => {
           <HeaderRootWithRouter />
           <Route exact path="/" render={() => (<Redirect to="/login"/>)}/>
           <Route path="/login" component={LoginRoot} />
+          <Route path="/forgotpass" component={ForgotPasswordRoot} />
           <Route path="/grouplogin" component={GroupLoginRoot} />
           <Route path="/groupsignup" component={GroupSignUpRoot} />
           <PrivateRoute path="/auth/signup" component={SignUpRoot} auth={userGroupAuth} />

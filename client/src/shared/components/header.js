@@ -12,6 +12,10 @@ class Header extends React.Component {
           {
             title: "Kirjautuminen",
             url: "/login"
+          },
+          {
+            title: "Unohtunut salasana",
+            url: "/forgotpass"
           }
         ];
         if (loggedIntoGroup) {

@@ -13,6 +13,8 @@ router.post('/login', UsersController.logIn);
 router.post('/user_groups/login', UserGroupsController.logIntoGroup);
 router.post('/user_groups/signup', UserGroupsController.signUpGroup);
 router.get('/users', passport.authenticate('jwt', { session: false }), UsersController.getUsers);
+router.patch('/forgot-password', UsersController.forgotPassword)
+router.patch('/reset-password/:token', UsersController.resetPassword)
 
 router.get('/adjustments', passport.authenticate('jwt', { session: false }), AdjustmentsController.getAdjustments);
 router.post('/adjustments', passport.authenticate('jwt', { session: false }), AdjustmentsController.createAdjustments);
