@@ -175,7 +175,7 @@ function forgotPassword(req, res, next) {
   
     sgMail.send(msg)
       .then(() => {
-        console.log("Sähköposti lähetetty");
+        console.log("Email sent");
     }).catch((error) => {
         console.error(error);
     })
