@@ -3,7 +3,7 @@ import {toProperCase} from './helpers';
 import { serialize } from './helpers';
 
 export function Interface(endpoint, httpVerb, successCall, failureCall, submitCall) {
-  this.endpoint = endpoint;
+  this.endpoint = '/api' + endpoint;
   this.httpVerb = httpVerb;
   this.successCall = successCall;
   this.failureCall = failureCall;
